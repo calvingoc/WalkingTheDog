@@ -18,4 +18,8 @@
     <string name="delete_dog">Take</string>
     <string name="delete_dog_fail">Couldn\'t take</string>
     <string name="farm">to the farm.</string>
+
+    <!--Main Activity Strings-->
+    <string name="main_pet_name">\'s Progress</string>
+    <string name="streak">Streak:</string>
 </resources>
