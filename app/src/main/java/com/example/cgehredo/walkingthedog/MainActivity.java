@@ -25,20 +25,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         DbHelp = new DbHelper(this);
         dbRead = DbHelp.getReadableDatabase();
-        Cursor cursor = dbRead.query(
-                PetContract.WalkTheDog.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
-        if (cursor.getCount() == 0){
-            Intent intent = new Intent(this, AddPet.class);
-            startActivity(intent);
-        }
-
-
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -51,6 +37,24 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Cursor cursor = dbRead.query(
+                PetContract.WalkTheDog.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+        if (cursor.getCount() == 0){
+            Intent intent = new Intent(this, AddPet.class);
+            intent.putExtra(getString(R.string.pet_id), -1);
+            startActivity(intent);
+        }
     }
 
     @Override

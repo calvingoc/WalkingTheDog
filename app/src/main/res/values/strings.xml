@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">WalkingTheDog</string>
     <string name="action_settings">Settings</string>
+    <string name="pet_id" translatable="false">addUpdate</string>
 
     <!--Add Pet Strings-->
     <string name="add_pet_title">Please Add A Dog!</string>
+    <string name="update_pet_title">Update Dog!</string>
     <string name="add_dog_name">Name</string>
     <string name="goals">Per Day Goals:</string>
     <string name="num_walks_goal">Walks</string>
@@ -11,4 +13,7 @@
     <string name="dist_text">Distance in Miles</string>
     <string name="add_button_text">Add</string>
     <string name="missing_data">Missing Data</string>
+    <string name="delete_dog">Take</string>
+    <string name="delete_dog_fail">Couldn\'t take</string>
+    <string name="farm">to the farm.</string>
 </resources>
