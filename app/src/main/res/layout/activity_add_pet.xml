@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_add_pet"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.cgehredo.walkingthedog.AddPet"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/add_pet_title"
+        android:text="@string/add_pet_title"
+        android:textStyle="bold"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/add_dog_name"
+        android:id="@+id/edit_name"
+        android:textAlignment="center"
+        android:background="@drawable/edittextstyle"
+        android:layout_weight="0.10" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/per_day_goals"
+        android:text="@string/goals"
+        android:textSize="25dp"
+        android:textAlignment="center"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/num_walks_goal"
+        android:id="@+id/et_walks_goals"
+        android:textSize="20dp"
+        android:textAlignment="center"
+        android:background="@drawable/edittextstyle"
+        android:layout_weight="0.08"
+        android:inputType="number"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/time_text"
+        android:id="@+id/et_time_goals"
+        android:textSize="20dp"
+        android:textAlignment="center"
+        android:background="@drawable/edittextstyle"
+        android:layout_weight="0.08"
+        android:inputType="number"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/dist_text"
+        android:id="@+id/et_dist_goals"
+        android:textSize="20dp"
+        android:textAlignment="center"
+        android:background="@drawable/edittextstyle"
+        android:layout_weight="0.08"
+        android:inputType="number"/>
+
+    <Button
+        android:id="@+id/add_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorPrimary"
+        android:onClick="addDog"
+        android:text="@string/add_button_text"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
+        android:layout_weight="0.04" />
+
+
+</LinearLayout>
