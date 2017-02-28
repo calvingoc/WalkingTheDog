@@ -1,9 +1,11 @@
 package com.example.cgehredo.walkingthedog;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,10 +17,14 @@ import android.view.MenuItem;
 import com.example.cgehredo.walkingthedog.data.DbHelper;
 import com.example.cgehredo.walkingthedog.data.PetContract;
 
-public class MainActivity extends AppCompatActivity {
+import static java.lang.Long.getLong;
+
+public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private DbHelper DbHelp;
     private SQLiteDatabase dbRead;
     private SQLiteDatabase dbWrite;
+    private SharedPreferences shrdPrefs;
+    private long defaultId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        shrdPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        shrdPrefs.registerOnSharedPreferenceChangeListener(this);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,15 +49,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        Cursor cursor = dbRead.query(
-                PetContract.WalkTheDog.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null);
-        if (cursor.getCount() == 0){
+        defaultId = shrdPrefs.getLong(getString(R.string.default_dog), -1);
+
+        //Cursor cursor = dbRead.query(
+          //      PetContract.WalkTheDog.TABLE_NAME,
+          //      null,
+            //    null,
+              //  null,
+                //null,
+                //null,
+                //null);
+        if (defaultId == -1){
             Intent intent = new Intent(this, AddPet.class);
             intent.putExtra(getString(R.string.pet_id), -1);
             startActivity(intent);
@@ -77,5 +86,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+
     }
 }

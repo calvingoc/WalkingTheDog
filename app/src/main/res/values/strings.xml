@@ -2,6 +2,8 @@
     <string name="app_name">WalkingTheDog</string>
     <string name="action_settings">Settings</string>
     <string name="pet_id" translatable="false">addUpdate</string>
+    <string name="default_dog" translatable="false">defDog</string>
+    <string name="default_walks_dog" translatable="false">defWlkDg</string>
 
     <!--Add Pet Strings-->
     <string name="add_pet_title">Please Add A Dog!</string>

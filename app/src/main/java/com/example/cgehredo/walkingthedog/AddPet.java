@@ -2,8 +2,11 @@ package com.example.cgehredo.walkingthedog;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -77,6 +80,7 @@ public class AddPet extends AppCompatActivity {
         }
         if (petID == -1) petID = addNewDog(petName.getText().toString(), pWalk, pTime, pDist);
         else updateDog(petID, petName.getText().toString(), pWalk, pTime, pDist);
+        updateSharedPrefs(false);
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(getString(R.string.pet_id), petID);
         startActivity(intent);
@@ -106,6 +110,7 @@ public class AddPet extends AppCompatActivity {
     public void deleteDog(View view){
         if(dbWrite.delete(PetContract.WalkTheDog.TABLE_NAME, PetContract.WalkTheDog._ID
                 + "=" + petID, null) > 0){
+            updateSharedPrefs(true);
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
@@ -152,6 +157,48 @@ public class AddPet extends AppCompatActivity {
             deleteButton.setText(getString(R.string.delete_dog) + " " + petNameString + " "
             + getString(R.string.farm));
             addButton.setText(getString(R.string.add_button_text));
+            cursor.close();
         }
+    }
+    //update shared preferences
+    private void updateSharedPrefs(boolean deleted){
+        Cursor cursor = dbWrite.query(
+                PetContract.WalkTheDog.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+        SharedPreferences shrdPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = shrdPrefs.edit();
+        if (cursor.getCount() == 0){
+            editor.putLong(getString(R.string.default_dog), -1);
+            editor.putString(getString(R.string.default_walks_dog), null);
+            editor.commit();
+        }
+        if (cursor.getCount() == 1){
+            cursor.moveToFirst();
+            long tempPetID = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID));
+            editor.putLong(getString(R.string.default_dog), tempPetID);
+            editor.putString(getString(R.string.default_walks_dog), Long.toString(tempPetID) + " ");
+            editor.commit();
+        }
+        if (deleted && cursor.getCount()!= 0){
+            if (shrdPrefs.getLong(getString(R.string.default_dog), -1) == petID){
+                cursor.moveToFirst();
+                editor.putLong(getString(R.string.default_dog), petID);
+                editor.commit();
+            }
+            String dogWalks = shrdPrefs.getString(getString(R.string.default_walks_dog),null);
+            if(!dogWalks.equals(null) && dogWalks.contains(Long.toString(petID))){
+                dogWalks = dogWalks.replace(Long.toString(petID) + " ", null);
+                editor.putString(getString(R.string.default_walks_dog), dogWalks);
+                editor.commit();
+            }
+        }
+
+
     }
 }
