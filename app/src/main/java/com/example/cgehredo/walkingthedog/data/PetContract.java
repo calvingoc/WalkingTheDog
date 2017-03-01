@@ -24,8 +24,12 @@ public class PetContract {
         public static final String TOTAL_TIME = "totalTime";
         public static final String TOTAL_DIST = "totalDist";
         public static final String TOTAL_DAYS ="totalDays";
-        public static final String BEST_TIME = "bestTime";
-        public static final String BEST_DIST = "bestDist";
+        public static final String BEST_TIME = "bestTimeWalk";
+        public static final String BEST_DIST = "BestDistWalk";
+        public static final String BEST_TIME_DAY = "bestTimeDay";
+        public static final String BEST_DIST_DAY = "bestDistDay";
+        public static final String BEST_WALKS = "bestWalks";
+        public static final String BEST_STREAK = "bestStreak";
     }
 
 

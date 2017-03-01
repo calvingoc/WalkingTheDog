@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.example.cgehredo.walkingthedog.data.DbHelper;
 import com.example.cgehredo.walkingthedog.data.PetContract;
 
+import static java.security.AccessController.getContext;
+
 public class AddPet extends AppCompatActivity {
     private DbHelper DbHelp;
     private SQLiteDatabase dbWrite;
@@ -65,7 +67,7 @@ public class AddPet extends AppCompatActivity {
                 petWalks.getText().length() == 0 ||
                 petTime.getText().length() == 0 ||
                 petDist.getText().length() == 0){
-            Toast.makeText(this,getResources().getString(R.string.missing_data),Toast.LENGTH_SHORT);
+            Toast.makeText(AddPet.this,getResources().getString(R.string.missing_data),Toast.LENGTH_SHORT);
             return;
         }
         int pWalk = 3;
@@ -76,7 +78,7 @@ public class AddPet extends AppCompatActivity {
             pTime = Integer.parseInt(petTime.getText().toString());
             pDist = Integer.parseInt(petDist.getText().toString());
         } catch (NumberFormatException ex) {
-            Log.e(LOG_TAG, "Failed to parse party size text to number: " + ex.getMessage());
+            Log.e(LOG_TAG, "Failed to parse text to number: " + ex.getMessage());
         }
         if (petID == -1) petID = addNewDog(petName.getText().toString(), pWalk, pTime, pDist);
         else updateDog(petID, petName.getText().toString(), pWalk, pTime, pDist);
@@ -103,7 +105,7 @@ public class AddPet extends AppCompatActivity {
         cv.put(PetContract.WalkTheDog.WALKS_GOAL, walk);
         cv.put(PetContract.WalkTheDog.TIME_GOAL, time);
         cv.put(PetContract.WalkTheDog.DIST_GOAL, dist);
-        String where = PetContract.WalkTheDog._ID;
+        String where = PetContract.WalkTheDog._ID+"=?";
         String[] whereArgs = new String[] {String.valueOf(petID)};
         dbWrite.update(PetContract.WalkTheDog.TABLE_NAME, cv, where, whereArgs);
     }
@@ -130,7 +132,7 @@ public class AddPet extends AppCompatActivity {
             addButton.setText(getString(R.string.add_button_text));
         }
         else {
-            String where = PetContract.WalkTheDog._ID;
+            String where = PetContract.WalkTheDog._ID+"=?";
             String[] whereArgs = new String[] {String.valueOf(petID)};
             String[] columns = new String[]{PetContract.WalkTheDog.DOG_NAME,
                     PetContract.WalkTheDog.TIME_GOAL,

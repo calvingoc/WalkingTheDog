@@ -13,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.cgehredo.walkingthedog.data.DbHelper;
 import com.example.cgehredo.walkingthedog.data.PetContract;
@@ -50,19 +52,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     protected void onStart() {
         super.onStart();
         defaultId = shrdPrefs.getLong(getString(R.string.default_dog), -1);
-
-        //Cursor cursor = dbRead.query(
-          //      PetContract.WalkTheDog.TABLE_NAME,
-          //      null,
-            //    null,
-              //  null,
-                //null,
-                //null,
-                //null);
         if (defaultId == -1){
             Intent intent = new Intent(this, AddPet.class);
             intent.putExtra(getString(R.string.pet_id), -1);
             startActivity(intent);
+        } else{
+            setUpScreen();
         }
     }
 
@@ -91,5 +86,70 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
 
+    }
+    public void setUpScreen(){
+        String where = PetContract.WalkTheDog._ID + "=?";
+        String[] whereArgs = new String[] {String.valueOf(defaultId)};
+        String[] columns = new String[]{PetContract.WalkTheDog.DOG_NAME,
+                PetContract.WalkTheDog.TIME_GOAL,
+                PetContract.WalkTheDog.WALKS_GOAL,
+                PetContract.WalkTheDog.DIST_GOAL};
+
+        Cursor cursor = dbRead.query(
+                PetContract.WalkTheDog.TABLE_NAME,
+                columns,
+                where,
+                whereArgs,
+                null,
+                null,
+                null);
+        cursor.moveToFirst();
+        String petName = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.DOG_NAME));
+        Long timeGoal = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL));
+        Long walkGoal = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.WALKS_GOAL));
+        Long distGoal = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
+        Long curTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
+        Long curDist = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
+        Long curWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_WALKS));
+        Long streak = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.STREAK));
+        Long bestStreak = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_STREAK));
+        Long totWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_WALKS));
+        Long totTimes = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_TIME));
+        Long totDist = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_DIST));
+        Long totDays = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_DAYS));
+        Long wBestTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME));
+        Long dBestTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME_DAY));
+        Long wBestDist = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_DIST));
+        Long dBestDist = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_DIST_DAY));
+        Long bestWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_WALKS));
+        TextView tv = (TextView) findViewById(R.id.dog_name);
+        tv.setText(petName + getString(R.string.main_pet_name));
+        tv = (TextView) findViewById(R.id.cur_walks);
+        tv.setText(Long.toString(curWalks) + " / " + Long.toString(walkGoal));
+        if (curWalks >= walkGoal){
+            ImageView iv = (ImageView) findViewById(R.id.walks_star);
+            iv.setImageResource(R.drawable.btn_star_big_on);
+        } else {
+            ImageView iv = (ImageView) findViewById(R.id.walks_star);
+            iv.setImageResource(R.drawable.btn_star_big_off);
+        }
+        tv = (TextView) findViewById(R.id.cur_time);
+        tv.setText(Long.toString(curTime) + " / " + Long.toString(timeGoal));
+        if (curTime >= timeGoal){
+            ImageView iv = (ImageView) findViewById(R.id.time_star);
+            iv.setImageResource(R.drawable.btn_star_big_on);
+        } else {
+            ImageView iv = (ImageView) findViewById(R.id.time_star);
+            iv.setImageResource(R.drawable.btn_star_big_off);
+        }
+        tv = (TextView) findViewById(R.id.cur_dist);
+        tv.setText(Long.toString(curDist) + " / " + Long.toString(distGoal));
+        if (curDist >= distGoal){
+            ImageView iv = (ImageView) findViewById(R.id.dist_star);
+            iv.setImageResource(R.drawable.btn_star_big_on);
+        } else {
+            ImageView iv = (ImageView) findViewById(R.id.dist_star);
+            iv.setImageResource(R.drawable.btn_star_big_off);
+        }
     }
 }

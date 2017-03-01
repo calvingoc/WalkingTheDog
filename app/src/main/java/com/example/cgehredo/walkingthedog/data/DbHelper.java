@@ -26,16 +26,20 @@ public class DbHelper extends SQLiteOpenHelper {
                         PetContract.WalkTheDog.TIME_GOAL + " INTEGER NOT NULL, " +
                         PetContract.WalkTheDog.WALKS_GOAL + " INTEGER NOT NULL, " +
                         PetContract.WalkTheDog.DIST_GOAL + " INTEGER NOT NULL, " +
-                        PetContract.WalkTheDog.CUR_TIME + " INTEGER, " +
-                        PetContract.WalkTheDog.CUR_WALKS + " INTEGER, " +
-                        PetContract.WalkTheDog.CUR_DIST + " INTEGER, " +
-                        PetContract.WalkTheDog.STREAK + " INTEGER, " +
-                        PetContract.WalkTheDog.TOTAL_WALKS + " INTEGER, " +
-                        PetContract.WalkTheDog.TOTAL_TIME + " INTEGER, " +
-                        PetContract.WalkTheDog.TOTAL_DIST + " INTEGER, " +
-                        PetContract.WalkTheDog.TOTAL_DAYS + " INTEGER, " +
-                        PetContract.WalkTheDog.BEST_TIME + " INTEGER, " +
-                        PetContract.WalkTheDog.BEST_DIST + " INTEGER" +
+                        PetContract.WalkTheDog.CUR_TIME + " INTEGER DEFAULT 0, " +
+                        PetContract.WalkTheDog.CUR_WALKS + " INTEGER DEFAULT 0, " +
+                        PetContract.WalkTheDog.CUR_DIST + " INTEGER DEFAULT 0, " +
+                        PetContract.WalkTheDog.STREAK + " INTEGER DEFAULT 0, " +
+                        PetContract.WalkTheDog.BEST_STREAK + " INTEGER DEFAULT 0, " +
+                        PetContract.WalkTheDog.TOTAL_WALKS + " INTEGER DEFAULT 0, " +
+                        PetContract.WalkTheDog.TOTAL_TIME + " INTEGER DEFAULT 0, " +
+                        PetContract.WalkTheDog.TOTAL_DIST + " INTEGER DEFAULT 0, " +
+                        PetContract.WalkTheDog.TOTAL_DAYS + " INTEGER DEFAULT 0, " +
+                        PetContract.WalkTheDog.BEST_TIME + " INTEGER DEFAULT 0, " +
+                        PetContract.WalkTheDog.BEST_TIME_DAY + " INTEGER DEFAULT 0, " +
+                        PetContract.WalkTheDog.BEST_DIST_DAY + " INTEGER DEFAULT 0, " +
+                        PetContract.WalkTheDog.BEST_WALKS + " INTEGER DEFAULT 0, " +
+                        PetContract.WalkTheDog.BEST_DIST + " INTEGER DEFAULT 0" +
                         ");";
 
         sqLiteDatabase.execSQL(SQL_CREATE_WALKTHEDOG_TABLE);

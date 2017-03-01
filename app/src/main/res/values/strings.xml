@@ -21,5 +21,23 @@
 
     <!--Main Activity Strings-->
     <string name="main_pet_name">\'s Progress</string>
-    <string name="streak">Streak:</string>
+    <string name="streak">Streak</string>
+    <string name="td_goals">Today\'s Goals</string>
+    <string name="walks">Walks</string>
+    <string name="time">Time</string>
+    <string name="dist">Distance</string>
+    <string name="life_time_stats">Life Time Stats</string>
+    <string name="best_walks">Best Walks in a Day</string>
+    <string name="best_time">Best Time in a Day</string>
+    <string name="best_dist">Best Distance in a Day</string>
+    <string name="best_time_wk">Best Time in a Walk</string>
+    <string name="best_dist_wk">Best Distance in a Walk</string>
+    <string name="best_streak">Best Streak</string>
+    <string name="ave_time_walk">Average Time per Walk</string>
+    <string name="ave_dist_walk">Average Miles per Walk</string>
+    <string name="ave_walk_day">Average Walks per Day</string>
+    <string name="ave_time_day">Average Time per Day</string>
+    <string name="ave_dist_day">Average Miles per Day</string>
+    <string name="ave_mph">Average Miles per Hour</string>
+
 </resources>
