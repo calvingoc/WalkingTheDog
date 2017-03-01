@@ -26,11 +26,16 @@
             android:scaleType="fitCenter"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
+        <TextView
+            android:layout_width="10dp"
+            android:layout_height="0dp"
+            android:id="@+id/padding"
+            app:layout_constraintLeft_toLeftOf="parent"/>
         <TextView
             android:id="@+id/dog_name"
-            android:layout_width="215dp"
-            android:textSize="45sp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:textSize="35sp"
             android:layout_height="150dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/dogPic"
@@ -38,7 +43,10 @@
 
         <TextView
             android:text="@string/td_goals"
-            android:layout_width="365dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:textSize="35sp"
+            android:gravity="center"
             android:layout_height="50dp"
             android:id="@+id/daily_goals"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -48,11 +56,13 @@
 
         <TextView
             android:text="@string/walks"
+            android:gravity="center_vertical"
+            android:textSize="20sp"
             android:layout_width="180dp"
             android:id="@+id/walks_title"
             android:layout_height="50dp"
             app:layout_constraintTop_toBottomOf="@+id/daily_goals"
-            app:layout_constraintLeft_toLeftOf="@+id/daily_goals" />
+            app:layout_constraintLeft_toRightOf="@+id/padding"/>
 
         <ImageView
             app:srcCompat="@android:drawable/btn_star_big_on"
@@ -64,7 +74,8 @@
 
         <TextView
             android:id="@+id/cur_walks"
-            android:layout_width="185dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:layout_height="50dp"
             app:layout_constraintLeft_toRightOf="@+id/walks_title"
             app:layout_constraintTop_toTopOf="@+id/walks_title"
@@ -72,6 +83,8 @@
 
         <TextView
             android:text="@string/time"
+            android:gravity="center_vertical"
+            android:textSize="20sp"
             android:layout_width="180dp"
             android:layout_height="50dp"
             android:id="@+id/time_title"
@@ -79,7 +92,8 @@
             app:layout_constraintTop_toBottomOf="@+id/walks_title"/>
 
         <TextView
-            android:layout_width="185dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:layout_height="50dp"
             android:id="@+id/cur_time"
             app:layout_constraintLeft_toRightOf="@+id/time_title"
@@ -96,6 +110,8 @@
 
         <TextView
             android:text="@string/dist"
+            android:gravity="center_vertical"
+            android:textSize="20sp"
             android:layout_width="180dp"
             android:id="@+id/dist_title"
             android:layout_height="50dp"
@@ -111,7 +127,8 @@
             app:layout_constraintTop_toTopOf="@+id/dist_title"/>
 
         <TextView
-            android:layout_width="185dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/cur_dist"
             android:layout_height="50dp"
             app:layout_constraintLeft_toRightOf="@+id/dist_title"
@@ -126,10 +143,11 @@
             android:id="@+id/streak_title"
             app:layout_constraintLeft_toLeftOf="@+id/dist_title"
             app:layout_constraintTop_toBottomOf="@+id/dist_title"
-            android:gravity="center"/>
+            android:gravity="center_vertical"/>
 
         <TextView
-            android:layout_width="185dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:layout_height="50dp"
             android:id="@+id/cur_streak"
             android:textSize="30sp"
@@ -142,7 +160,8 @@
             android:text="@string/life_time_stats"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:layout_height="50dp"
-            android:layout_width="365dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/life_time_stats"
             app:layout_constraintLeft_toLeftOf="@+id/streak_title"
             app:layout_constraintTop_toBottomOf="@+id/streak_title"
@@ -153,11 +172,14 @@
             android:layout_width="180dp"
             android:id="@+id/all_time_walks_title"
             android:text="@string/walks"
+            android:gravity="center_vertical"
+            android:textSize="17sp"
             app:layout_constraintLeft_toLeftOf="@+id/life_time_stats"
             app:layout_constraintTop_toBottomOf="@+id/life_time_stats"/>
         <TextView
             android:layout_height="50dp"
-            android:layout_width="185dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/all_time_walks_val"
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/all_time_walks_title"
@@ -167,11 +189,14 @@
             android:layout_height="50dp"
             android:id="@+id/all_time_time_title"
             android:text="@string/time"
+            android:gravity="center_vertical"
+            android:textSize="17sp"
             app:layout_constraintLeft_toLeftOf="@+id/all_time_walks_title"
             app:layout_constraintTop_toBottomOf="@+id/all_time_walks_title"/>
         <TextView
             android:layout_height="50dp"
-            android:layout_width="185dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/all_time_time_val"
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/all_time_time_title"
@@ -181,11 +206,14 @@
             android:layout_height="50dp"
             android:id="@+id/all_time_dist_title"
             android:text="@string/dist"
+            android:gravity="center_vertical"
+            android:textSize="17sp"
             app:layout_constraintLeft_toLeftOf="@+id/all_time_time_title"
             app:layout_constraintTop_toBottomOf="@+id/all_time_time_title"/>
         <TextView
             android:layout_height="50dp"
-            android:layout_width="185dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/all_time_dist_val"
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/all_time_dist_title"
@@ -195,11 +223,14 @@
             android:layout_height="50dp"
             android:id="@+id/best_walks_title"
             android:text="@string/best_walks"
+            android:gravity="center_vertical"
+            android:textSize="17sp"
             app:layout_constraintLeft_toLeftOf="@+id/all_time_dist_title"
             app:layout_constraintTop_toBottomOf="@+id/all_time_dist_title"/>
         <TextView
             android:layout_height="50dp"
-            android:layout_width="185dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/best_walks_val"
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/best_walks_title"
@@ -209,11 +240,14 @@
             android:layout_height="50dp"
             android:id="@+id/best_time_title"
             android:text="@string/best_time"
+            android:gravity="center_vertical"
+            android:textSize="17sp"
             app:layout_constraintLeft_toLeftOf="@+id/best_walks_title"
             app:layout_constraintTop_toBottomOf="@+id/best_walks_title"/>
         <TextView
             android:layout_height="50dp"
-            android:layout_width="185dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/best_time_val"
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/best_time_title"
@@ -223,11 +257,14 @@
             android:layout_height="50dp"
             android:id="@+id/best_time_wk_title"
             android:text="@string/best_time_wk"
+            android:gravity="center_vertical"
+            android:textSize="17sp"
             app:layout_constraintLeft_toLeftOf="@+id/best_time_title"
             app:layout_constraintTop_toBottomOf="@+id/best_time_title"/>
         <TextView
             android:layout_height="50dp"
-            android:layout_width="185dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/best_time_wk_val"
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/best_time_wk_title"
@@ -237,11 +274,14 @@
             android:layout_height="50dp"
             android:id="@+id/best_dist_title"
             android:text="@string/best_dist"
+            android:gravity="center_vertical"
+            android:textSize="17sp"
             app:layout_constraintLeft_toLeftOf="@+id/best_time_wk_title"
             app:layout_constraintTop_toBottomOf="@+id/best_time_wk_title"/>
         <TextView
             android:layout_height="50dp"
-            android:layout_width="185dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/best_dist_val"
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/best_dist_title"
@@ -251,11 +291,14 @@
             android:layout_height="50dp"
             android:id="@+id/best_dist_wk_title"
             android:text="@string/best_dist_wk"
+            android:gravity="center_vertical"
+            android:textSize="17sp"
             app:layout_constraintLeft_toLeftOf="@+id/best_dist_title"
             app:layout_constraintTop_toBottomOf="@+id/best_dist_title"/>
         <TextView
             android:layout_height="50dp"
-            android:layout_width="185dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/best_dist_wk_val"
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/best_dist_wk_title"
@@ -265,11 +308,14 @@
             android:layout_height="50dp"
             android:id="@+id/best_streak_title"
             android:text="@string/best_streak"
+            android:gravity="center_vertical"
+            android:textSize="17sp"
             app:layout_constraintLeft_toLeftOf="@+id/best_dist_wk_title"
             app:layout_constraintTop_toBottomOf="@+id/best_dist_wk_title"/>
         <TextView
             android:layout_height="50dp"
-            android:layout_width="185dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/best_streak_val"
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/best_streak_title"
@@ -279,11 +325,14 @@
             android:layout_height="50dp"
             android:id="@+id/ave_time_walk"
             android:text="@string/ave_time_walk"
+            android:gravity="center_vertical"
+            android:textSize="17sp"
             app:layout_constraintLeft_toLeftOf="@+id/best_streak_title"
             app:layout_constraintTop_toBottomOf="@+id/best_streak_title"/>
         <TextView
             android:layout_height="50dp"
-            android:layout_width="185dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/ave_time_walk_val"
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/ave_time_walk"
@@ -293,11 +342,14 @@
             android:layout_height="50dp"
             android:id="@+id/ave_dist_walk"
             android:text="@string/ave_dist_walk"
+            android:gravity="center_vertical"
+            android:textSize="17sp"
             app:layout_constraintLeft_toLeftOf="@+id/ave_time_walk"
             app:layout_constraintTop_toBottomOf="@+id/ave_time_walk"/>
         <TextView
             android:layout_height="50dp"
-            android:layout_width="185dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/ave_dist_walk_val"
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/ave_dist_walk"
@@ -307,11 +359,14 @@
             android:layout_height="50dp"
             android:id="@+id/ave_walk_day"
             android:text="@string/ave_walk_day"
+            android:gravity="center_vertical"
+            android:textSize="17sp"
             app:layout_constraintLeft_toLeftOf="@+id/ave_dist_walk"
             app:layout_constraintTop_toBottomOf="@+id/ave_dist_walk"/>
         <TextView
             android:layout_height="50dp"
-            android:layout_width="185dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/ave_walk_day_value"
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/ave_walk_day"
@@ -321,11 +376,14 @@
             android:layout_height="50dp"
             android:id="@+id/ave_time_day"
             android:text="@string/ave_time_day"
+            android:gravity="center_vertical"
+            android:textSize="17sp"
             app:layout_constraintLeft_toLeftOf="@+id/ave_walk_day"
             app:layout_constraintTop_toBottomOf="@+id/ave_walk_day"/>
         <TextView
             android:layout_height="50dp"
-            android:layout_width="185dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/ave_time_day_value"
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/ave_time_day"
@@ -335,11 +393,14 @@
             android:layout_height="50dp"
             android:id="@+id/ave_dist_day"
             android:text="@string/ave_dist_day"
+            android:gravity="center_vertical"
+            android:textSize="17sp"
             app:layout_constraintLeft_toLeftOf="@+id/ave_time_day"
             app:layout_constraintTop_toBottomOf="@+id/ave_time_day"/>
         <TextView
             android:layout_height="50dp"
-            android:layout_width="185dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/ave_dist_day_value"
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/ave_dist_day"
@@ -349,11 +410,14 @@
             android:layout_height="50dp"
             android:id="@+id/ave_mph"
             android:text="@string/ave_mph"
+            android:gravity="center_vertical"
+            android:textSize="17sp"
             app:layout_constraintLeft_toLeftOf="@+id/ave_dist_day"
             app:layout_constraintTop_toBottomOf="@+id/ave_dist_day"/>
         <TextView
             android:layout_height="50dp"
-            android:layout_width="185dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/ave_mph_value"
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/ave_mph"
@@ -362,55 +426,3 @@
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
-<!--
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.cgehredo.walkingthedog.MainActivity"
-    tools:showIn="@layout/activity_main">
-
-    <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:id="@+id/top_grid">
-        <ImageView
-            android:id="@+id/dog_picture"
-            android:scaleType="centerCrop"
-            android:adjustViewBounds="false"
-            android:layout_gravity="top|start"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/mv_dog_name"
-            android:layout_gravity="top|end"
-            />
-    </GridLayout>
-    <GridLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/top_grid"
-        >
-        <TextView
-            android:id="@+id/tv_streak"
-            android:layout_gravity="start|top"
-            android:text="@string/streak"
-            android:layout_row="1"/>
-        <TextView
-            android:id="@+id/tv_steak_num"
-            android:layout_gravity="start|top"
-            android:layout_row="2"
-            android:layout_rowWeight=".8"
-            android:text="15"
-            android:textSize="40sp"
-            />
-    </GridLayout>
-</RelativeLayout>
--->

@@ -39,14 +39,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         setSupportActionBar(toolbar);
         shrdPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         shrdPrefs.registerOnSharedPreferenceChangeListener(this);
-
-        //REMOVE THESE LINES THEY ARE FOR TESTING ONLY!!!!!
-        //SharedPreferences.Editor edit = shrdPrefs.edit();
-        //long i = -1;
-        ///edit.putLong(getString(R.string.default_dog),i);
-        //edit.commit();
-        // TODO: REMOVE THESE WHEN DONE TESTING!!
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,14 +100,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     public void setUpScreen(){
         String where = PetContract.WalkTheDog._ID + "=?";
         String[] whereArgs = new String[] {String.valueOf(defaultId)};
-        String[] columns = new String[]{PetContract.WalkTheDog.DOG_NAME,
-                PetContract.WalkTheDog.TIME_GOAL,
-                PetContract.WalkTheDog.WALKS_GOAL,
-                PetContract.WalkTheDog.DIST_GOAL};
 
         Cursor cursor = dbRead.query(
                 PetContract.WalkTheDog.TABLE_NAME,
-                columns,
+                null,
                 where,
                 whereArgs,
                 null,
@@ -190,16 +178,22 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         tv = (TextView) findViewById(R.id.best_dist_wk_val);
         tv.setText(Long.toString(wBestDist));
         tv = (TextView) findViewById(R.id.ave_time_walk_val);
-        tv.setText(Long.toString(totTimes/totWalks));
+        if (totWalks != 0) tv.setText(Long.toString(totTimes/totWalks));
+        else tv.setText("0");
         tv = (TextView) findViewById(R.id.ave_dist_walk_val);
-        tv.setText(Long.toString(totDist/totWalks));
+        if (totWalks !=0) tv.setText(Long.toString(totDist/totWalks));
+        else tv.setText("0");
         tv = (TextView) findViewById(R.id.ave_walk_day_value);
-        tv.setText(Long.toString(totWalks/totDays));
+        if (totDays !=0) tv.setText(Long.toString(totWalks/totDays));
+        else tv.setText("0");
         tv = (TextView) findViewById(R.id.ave_time_day_value);
-        tv.setText(Long.toString(totTimes/totDays));
+        if (totDays!=0) tv.setText(Long.toString(totTimes/totDays));
+        else tv.setText("0");
         tv = (TextView) findViewById(R.id.ave_dist_day_value);
-        tv.setText(Long.toString(totDist/totDays));
+        if (totDays != 0) tv.setText(Long.toString(totDist/totDays));
+        else tv.setText("0");
         tv = (TextView) findViewById(R.id.ave_mph_value);
-        tv.setText(Long.toString(totDist/(totTimes/60)));
+        if (totTimes !=0) tv.setText(Long.toString(totDist/(totTimes/60)));
+        else tv.setText("0");
     }
 }

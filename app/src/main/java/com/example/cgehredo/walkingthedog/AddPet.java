@@ -66,7 +66,7 @@ public class AddPet extends AppCompatActivity {
                 petWalks.getText().length() == 0 ||
                 petTime.getText().length() == 0 ||
                 petDist.getText().length() == 0){
-            Toast.makeText(AddPet.this,getResources().getString(R.string.missing_data),Toast.LENGTH_SHORT);
+            Toast.makeText(AddPet.this,getResources().getString(R.string.missing_data),Toast.LENGTH_SHORT).show();
             return;
         }
         int pWalk = 3;
