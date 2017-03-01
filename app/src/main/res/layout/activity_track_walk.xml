@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_track_walk"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.cgehredo.walkingthedog.TrackWalk">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="66dp"
+        android:layout_marginStart="66dp"
+        android:layout_marginTop="100dp"
+        android:id="@+id/sv_select_dogs">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <Chronometer
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteY="126dp"
+            tools:layout_editor_absoluteX="51dp"
+            android:id="@+id/chronometer4" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteY="85dp"
+            tools:layout_editor_absoluteX="23dp"
+            android:id="@+id/cur_time_title" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteY="82dp"
+            tools:layout_editor_absoluteX="200dp"
+            android:id="@+id/cur_dist_title" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteY="120dp"
+            tools:layout_editor_absoluteX="192dp"
+            android:id="@+id/distance_display" />
+
+        <Spinner
+            android:layout_width="50dp"
+            android:layout_height="48dp"
+            tools:layout_editor_absoluteY="200dp"
+            tools:layout_editor_absoluteX="0dp"
+            android:id="@+id/dogs_on_walk" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="337dp"
+            android:layout_height="34dp"
+            tools:layout_editor_absoluteY="263dp"
+            tools:layout_editor_absoluteX="0dp"
+            android:id="@+id/dogs_goals" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="59dp"
+            android:layout_height="51dp"
+            tools:layout_editor_absoluteY="298dp"
+            tools:layout_editor_absoluteX="0dp"
+            android:id="@+id/walks_rem_title" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="79dp"
+            android:layout_height="55dp"
+            tools:layout_editor_absoluteY="294dp"
+            tools:layout_editor_absoluteX="28dp"
+            android:id="@+id/walks_rem_val" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="82dp"
+            android:layout_height="68dp"
+            tools:layout_editor_absoluteY="287dp"
+            tools:layout_editor_absoluteX="110dp"
+            android:id="@+id/time_rem_title" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteY="298dp"
+            tools:layout_editor_absoluteX="165dp"
+            android:id="@+id/time_rem_val" />
+
+        <Button
+            android:text="Button"
+            android:layout_width="97dp"
+            android:layout_height="58dp"
+            tools:layout_editor_absoluteY="187dp"
+            tools:layout_editor_absoluteX="209dp"
+            android:id="@+id/edit_dog_walk" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteY="296dp"
+            tools:layout_editor_absoluteX="200dp"
+            android:id="@+id/dist_rem_title" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteY="299dp"
+            tools:layout_editor_absoluteX="250dp"
+            android:id="@+id/dist_rem_value" />
+    </android.support.constraint.ConstraintLayout>
+</RelativeLayout>

@@ -54,7 +54,6 @@ public class AddPet extends AppCompatActivity {
         addButton = (Button) findViewById(R.id.add_button);
         deleteButton = (Button) findViewById(R.id.delete_button);
         header = (TextView) findViewById(R.id.add_pet_title);
-
         //Set up DB Helper
         DbHelp = new DbHelper(this);
         dbWrite = DbHelp.getWritableDatabase();
@@ -176,7 +175,8 @@ public class AddPet extends AppCompatActivity {
         SharedPreferences shrdPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = shrdPrefs.edit();
         if (cursor.getCount() == 0){
-            editor.putLong(getString(R.string.default_dog), -1);
+            long i = -1;
+            editor.putLong(getString(R.string.default_dog), i);
             editor.putString(getString(R.string.default_walks_dog), null);
             editor.commit();
         }

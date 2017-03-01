@@ -18,10 +18,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddPet"
+        <activity
+            android:name=".AddPet"
             android:parentActivityName=".MainActivity">
+
             <!-- TODO add meta data -->
         </activity>
+        <activity android:name=".TrackWalk"></activity>
     </application>
 
 </manifest>

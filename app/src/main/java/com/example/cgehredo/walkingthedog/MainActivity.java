@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private SQLiteDatabase dbWrite;
     private SharedPreferences shrdPrefs;
     private long defaultId;
+    private long noDog = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,14 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         setSupportActionBar(toolbar);
         shrdPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         shrdPrefs.registerOnSharedPreferenceChangeListener(this);
+
+        //REMOVE THESE LINES THEY ARE FOR TESTING ONLY!!!!!
+        //SharedPreferences.Editor edit = shrdPrefs.edit();
+        //long i = -1;
+        ///edit.putLong(getString(R.string.default_dog),i);
+        //edit.commit();
+        // TODO: REMOVE THESE WHEN DONE TESTING!!
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,10 +60,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @Override
     protected void onStart() {
         super.onStart();
-        defaultId = shrdPrefs.getLong(getString(R.string.default_dog), -1);
-        if (defaultId == -1){
+        defaultId = shrdPrefs.getLong(getString(R.string.default_dog), noDog);
+        if (defaultId == noDog){
             Intent intent = new Intent(this, AddPet.class);
-            intent.putExtra(getString(R.string.pet_id), -1);
+            intent.putExtra(getString(R.string.pet_id), noDog);
             startActivity(intent);
         } else{
             setUpScreen();
@@ -85,7 +94,16 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-
+        if(s.equals(getString(R.string.default_dog))){
+            defaultId = shrdPrefs.getLong(getString(R.string.default_dog), noDog);
+            if (defaultId == noDog){
+                Intent intent = new Intent(this, AddPet.class);
+                intent.putExtra(getString(R.string.pet_id), noDog);
+                startActivity(intent);
+            } else{
+                setUpScreen();
+            }
+        }
     }
     public void setUpScreen(){
         String where = PetContract.WalkTheDog._ID + "=?";
@@ -151,5 +169,37 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             ImageView iv = (ImageView) findViewById(R.id.dist_star);
             iv.setImageResource(R.drawable.btn_star_big_off);
         }
+        tv = (TextView) findViewById(R.id.cur_streak);
+        tv.setText(Long.toString(streak));
+        tv = (TextView) findViewById(R.id.best_streak_val);
+        tv.setText(Long.toString(bestStreak));
+        tv = (TextView) findViewById(R.id.all_time_walks_val);
+        tv.setText(Long.toString(totWalks));
+        tv = (TextView) findViewById(R.id.all_time_time_val);
+        tv.setText(Long.toString(totTimes));
+        tv = (TextView) findViewById(R.id.all_time_dist_val);
+        tv.setText(Long.toString(totDist));
+        tv = (TextView) findViewById(R.id.best_walks_val);
+        tv.setText(Long.toString(bestWalks));
+        tv = (TextView) findViewById(R.id.best_time_val);
+        tv.setText(Long.toString(dBestTime));
+        tv = (TextView) findViewById(R.id.best_time_wk_val);
+        tv.setText(Long.toString(wBestTime));
+        tv = (TextView) findViewById(R.id.best_dist_val);
+        tv.setText(Long.toString(dBestDist));
+        tv = (TextView) findViewById(R.id.best_dist_wk_val);
+        tv.setText(Long.toString(wBestDist));
+        tv = (TextView) findViewById(R.id.ave_time_walk_val);
+        tv.setText(Long.toString(totTimes/totWalks));
+        tv = (TextView) findViewById(R.id.ave_dist_walk_val);
+        tv.setText(Long.toString(totDist/totWalks));
+        tv = (TextView) findViewById(R.id.ave_walk_day_value);
+        tv.setText(Long.toString(totWalks/totDays));
+        tv = (TextView) findViewById(R.id.ave_time_day_value);
+        tv.setText(Long.toString(totTimes/totDays));
+        tv = (TextView) findViewById(R.id.ave_dist_day_value);
+        tv.setText(Long.toString(totDist/totDays));
+        tv = (TextView) findViewById(R.id.ave_mph_value);
+        tv.setText(Long.toString(totDist/(totTimes/60)));
     }
 }
