@@ -33,8 +33,7 @@ public class ViewDogs extends AppCompatActivity implements DogAdapter.DogAdapter
     @Override
     protected void onStart() {
         super.onStart();
-        String[] columns = new String[]{PetContract.WalkTheDog.DOG_NAME,
-                PetContract.WalkTheDog._ID};
+        String[] columns = new String[]{PetContract.WalkTheDog.DOG_NAME};
         Cursor cursor = dbRead.query(
                 PetContract.WalkTheDog.TABLE_NAME,
                 columns,

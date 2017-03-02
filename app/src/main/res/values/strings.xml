@@ -44,5 +44,14 @@
     <string name="ave_time_day">Average Time per Day</string>
     <string name="ave_dist_day">Average Miles per Day</string>
     <string name="ave_mph">Average Miles per Hour</string>
+    
+    <!--Track Walk Strings-->
+    <string name="tw_walk_time">Walk Time</string>
+    <string name="tw_walk_distance">Walk Distance</string>
+    <string name="tw_dog_goals">Dog Goal Progress</string>
+    <string name="dog">Dog</string>
+    <string name="tw_walks_left">Walks Left</string>
+    <string name="tw_time_left">Time Left</string>
+    <string name="tw_dist_left">Distance Left</string>
 
 </resources>
