@@ -4,6 +4,8 @@
     <string name="pet_id" translatable="false">addUpdate</string>
     <string name="default_dog" translatable="false">defDog</string>
     <string name="default_walks_dog" translatable="false">defWlkDg</string>
+    <string name="add_dog_item">Add a Dog</string>
+    <string name="view_dogs_item">View/Edit Dogs</string>
 
     <!--Add Pet Strings-->
     <string name="add_pet_title">Please Add A Dog!</string>
@@ -14,10 +16,13 @@
     <string name="time_text">Time in Minutes</string>
     <string name="dist_text">Distance in Miles</string>
     <string name="add_button_text">Add</string>
+    <string name="update_button_text">Update</string>
     <string name="missing_data">Missing Data</string>
     <string name="delete_dog">Take</string>
     <string name="delete_dog_fail">Couldn\'t take</string>
     <string name="farm">to the farm.</string>
+    <string name="def_dog">Make this your default dog?</string>
+    <string name="auto_walk">Automatically include this dog on new walks?</string>
 
     <!--Main Activity Strings-->
     <string name="main_pet_name">\'s Progress</string>

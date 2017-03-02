@@ -78,8 +78,15 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.add_dog_item) {
+            Intent intent = new Intent(this, AddPet.class);
+            intent.putExtra(getString(R.string.pet_id), noDog);
+            startActivity(intent);
+        }
+        else if (id == R.id.view_dogs_item)
+        {
+            Intent intent = new Intent(this, ViewDogs.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -196,5 +203,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         tv = (TextView) findViewById(R.id.ave_mph_value);
         if (totTimes !=0) tv.setText(Long.toString(totDist/(totTimes/60)));
         else tv.setText("0");
+        cursor.close();
     }
 }

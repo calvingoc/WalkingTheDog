@@ -67,6 +67,18 @@
         android:layout_weight="0.08"
         android:inputType="number"/>
 
+    <CheckBox
+        android:text="@string/def_dog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/default_dog" />
+
+    <CheckBox
+        android:text="@string/auto_walk"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/autoOnWalk" />
+
     <Button
         android:id="@+id/add_button"
         android:layout_width="match_parent"

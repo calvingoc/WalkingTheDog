@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +32,8 @@ public class AddPet extends AppCompatActivity {
     private EditText petWalks;
     private EditText petTime;
     private EditText petDist;
+    private CheckBox defDog;
+    private CheckBox autoWalk;
     //views to update
     private Button addButton;
     private Button deleteButton;
@@ -54,6 +57,8 @@ public class AddPet extends AppCompatActivity {
         addButton = (Button) findViewById(R.id.add_button);
         deleteButton = (Button) findViewById(R.id.delete_button);
         header = (TextView) findViewById(R.id.add_pet_title);
+        defDog = (CheckBox) findViewById(R.id.default_dog);
+        autoWalk = (CheckBox) findViewById(R.id.autoOnWalk);
         //Set up DB Helper
         DbHelp = new DbHelper(this);
         dbWrite = DbHelp.getWritableDatabase();
@@ -83,7 +88,6 @@ public class AddPet extends AppCompatActivity {
         else updateDog(petID, petName.getText().toString(), pWalk, pTime, pDist);
         updateSharedPrefs(false);
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(getString(R.string.pet_id), petID);
         startActivity(intent);
         finish();
     }
@@ -149,15 +153,24 @@ public class AddPet extends AppCompatActivity {
             cursor.moveToFirst();
             header.setText(getString(R.string.update_pet_title));
             petNameString = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.DOG_NAME));
-            petWalks.setText(cursor.getInt(cursor.getColumnIndex(PetContract.WalkTheDog.WALKS_GOAL)));
-            petDist.setText(cursor.getInt(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL)));
+            petWalks.setText(Integer.toString(cursor.getInt(cursor.getColumnIndex(PetContract.WalkTheDog.WALKS_GOAL))));
+            petDist.setText(Integer.toString(cursor.getInt(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL))));
             petName.setText(petNameString);
-            petTime.setText(cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL)));
+            petTime.setText(Integer.toString(cursor.getInt(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL))));
             deleteButton.setEnabled(true);
             deleteButton.setVisibility(View.VISIBLE);
             deleteButton.setText(getString(R.string.delete_dog) + " " + petNameString + " "
             + getString(R.string.farm));
-            addButton.setText(getString(R.string.add_button_text));
+            addButton.setText(getString(R.string.update_button_text));
+            SharedPreferences shrdPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+            long prefDogID = shrdPrefs.getLong(getString(R.string.default_dog), -1);
+            if (prefDogID==petID) defDog.setChecked(true);
+            else defDog.setChecked(false);
+            String autoWalkDogs = shrdPrefs.getString(getString(R.string.default_walks_dog),null);
+            String[] autoDogs = autoWalkDogs.split(" ");
+            for (String s : autoDogs){
+                if (s.equals(Long.toString(petID))) autoWalk.setChecked(true);
+            }
             cursor.close();
         }
     }
@@ -180,12 +193,34 @@ public class AddPet extends AppCompatActivity {
             editor.putString(getString(R.string.default_walks_dog), null);
             editor.commit();
         }
-        if (cursor.getCount() == 1){
+        else if (cursor.getCount() == 1){
             cursor.moveToFirst();
             long tempPetID = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID));
             editor.putLong(getString(R.string.default_dog), tempPetID);
-            editor.putString(getString(R.string.default_walks_dog), Long.toString(tempPetID) + " ");
+            editor.putString(getString(R.string.default_walks_dog)," " + Long.toString(tempPetID));
             editor.commit();
+        } else {
+            if (defDog.isChecked() && !deleted) {
+                editor.putLong(getString(R.string.default_dog), petID).commit();
+            }
+            if (autoWalk.isChecked() && !deleted) {
+                String tempDogWalks = shrdPrefs.getString(getString(R.string.default_walks_dog),null);
+                String[] autoDogs = tempDogWalks.split(" ");
+                Boolean found = false;
+                for (String s : autoDogs) {
+                    if (s.equals(Long.toString(petID))) found = true;
+                }
+                tempDogWalks = tempDogWalks + " " +Long.toString(petID);
+                if  (!found)
+                editor.putString(getString(R.string.default_walks_dog), tempDogWalks).commit();
+            } else {
+                String dogWalks = shrdPrefs.getString(getString(R.string.default_walks_dog),null);
+                if (dogWalks.contains(" " + Long.toString(petID))) {
+                    dogWalks = dogWalks.replace(" " + Long.toString(petID), "");
+                    editor.putString(getString(R.string.default_walks_dog), dogWalks);
+                    editor.commit();
+                }
+            }
         }
         if (deleted && cursor.getCount()!= 0){
             if (shrdPrefs.getLong(getString(R.string.default_dog), -1) == petID){
@@ -194,13 +229,12 @@ public class AddPet extends AppCompatActivity {
                 editor.commit();
             }
             String dogWalks = shrdPrefs.getString(getString(R.string.default_walks_dog),null);
-            if(!dogWalks.equals(null) && dogWalks.contains(Long.toString(petID))){
-                dogWalks = dogWalks.replace(Long.toString(petID) + " ", null);
+            if(!dogWalks.equals(null) && dogWalks.contains(" " + Long.toString(petID))){
+                dogWalks = dogWalks.replace(" " + Long.toString(petID), "");
                 editor.putString(getString(R.string.default_walks_dog), dogWalks);
                 editor.commit();
             }
         }
-
-
+        cursor.close();
     }
 }

@@ -3,8 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.cgehredo.walkingthedog.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/add_dog_item"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/add_dog_item"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/view_dogs_item"
+        android:title="@string/view_dogs_item"
+        app:showAsAction="never"/>
 </menu>

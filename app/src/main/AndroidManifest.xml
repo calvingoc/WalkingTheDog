@@ -24,7 +24,11 @@
 
             <!-- TODO add meta data -->
         </activity>
-        <activity android:name=".TrackWalk"></activity>
+        <activity
+            android:name=".ViewDogs"
+            android:parentActivityName=".MainActivity">
+        </activity>
+        <activity android:name=".TrackWalk" />
     </application>
 
 </manifest>
