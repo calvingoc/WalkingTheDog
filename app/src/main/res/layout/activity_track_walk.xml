@@ -120,6 +120,7 @@
 
         <fragment
             android:name="com.google.android.gms.maps.MapFragment"
+            android:id="@+id/map_fragment"
             android:layout_height="0dp"
             android:layout_width="0dp"
             app:layout_constraintLeft_toRightOf="@+id/cur_time_title"

@@ -214,7 +214,7 @@ public class AddPet extends AppCompatActivity {
                 if  (!found)
                 editor.putString(getString(R.string.default_walks_dog), tempDogWalks).commit();
             } else {
-                String dogWalks = shrdPrefs.getString(getString(R.string.default_walks_dog),null);
+                String dogWalks = shrdPrefs.getString(getString(R.string.default_walks_dog),"");
                 if (dogWalks.contains(" " + Long.toString(petID))) {
                     dogWalks = dogWalks.replace(" " + Long.toString(petID), "");
                     editor.putString(getString(R.string.default_walks_dog), dogWalks);

@@ -4,6 +4,9 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,12 +14,21 @@ import android.support.v7.widget.RecyclerView;
 
 import com.example.cgehredo.walkingthedog.data.DbHelper;
 import com.example.cgehredo.walkingthedog.data.PetContract;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapterOnClickHandler {
+import static android.R.attr.fragment;
+
+public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapterOnClickHandler, OnMapReadyCallback {
     private DbHelper DbHelp;
     private SQLiteDatabase dbRead;
     private RecyclerView rvDogList;
     private DogAdapter dogAdapter;
+    private MapFragment mapFrag;
+    private GoogleApiClient apiC;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +41,14 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         rvDogList.setHasFixedSize(true);
         dogAdapter = new DogAdapter(this);
         rvDogList.setAdapter(dogAdapter);
+        android.app.FragmentManager fragMan = getFragmentManager();
+        mapFrag = (MapFragment) fragMan.findFragmentById(R.id.map_fragment);
+        mapFrag.getMapAsync(this);
+        if (apiC == null){
+            apiC = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).
+                    addOnConnectionFailedListener(this).addApi(LocationService.API).build();
+        }
+
     }
 
     @Override
@@ -66,5 +86,11 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
             dogAdapter.setDogsList(dogIDs, dogNames);
             cursor.close();
         }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        googleMap.addMarker(new MarkerOptions().position())
+
     }
 }
