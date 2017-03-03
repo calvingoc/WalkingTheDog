@@ -82,7 +82,7 @@ public class DogAdapter extends RecyclerView.Adapter<DogAdapter.DogAdapterViewHo
             math = mGoalWalks[position] - mCurWalks[position];
             if (math < 0) math = (long) 0;
             holder.dogWalksView.setText(Long.toString(math));
-            math = mGoalDist[position] - mGoalDist[position];
+            math = mGoalDist[position] - mCurDist[position];
             if (math < 0) math = (long) 0;
             holder.dogDistView.setText(Long.toString(math));
 

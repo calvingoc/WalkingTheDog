@@ -1,12 +1,15 @@
 package com.example.cgehredo.walkingthedog;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 /**
  * Created by cgehredo on 3/2/2017.
@@ -29,21 +32,30 @@ public class DogOnWalkAdapter extends RecyclerView.Adapter<DogOnWalkAdapter.DogO
     }
 
     public class DogOnWalkAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public final CheckBox dogNameCheckBox;
         public final ImageView dogPicImageView;
+        public final TextView dogIDholder;
+        public final TextView dogName;
+        public final View background;
 
         public DogOnWalkAdapterViewHolder(View view){
             super(view);
-            dogNameCheckBox = (CheckBox) view.findViewById(R.id.dog_on_walk_checkbox);
             dogPicImageView = (ImageView) view.findViewById(R.id.dog_on_walk_image);
+            dogIDholder = (TextView) view.findViewById(R.id.petid_holder);
+            dogName = (TextView) view.findViewById(R.id.dog_on_walk_rv_name) ;
+            background = view.findViewById(R.id.dogs_on_walk_background);
             view.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-            Long clickedDogID = dogsList[getAdapterPosition()];
-            CheckBox dogNameCB = (CheckBox) view.findViewById(R.id.dog_on_walk_checkbox);
-            dogNameCB.setChecked(!dogNameCB.isChecked());
+            Log.d("dogsonwalk", "Clicked");
+            TextView dogIDTV = (TextView) view.findViewById(R.id.petid_holder);
+            Long clickedDogID = Long.parseLong(dogIDTV.getText().toString());
+            TextView dogName = (TextView) view.findViewById(R.id.dog_on_walk_rv_name);
+            if (view.getBackground()== dogIDTV.getBackground()){
+                view.setBackgroundColor(view.getResources().getColor(R.color.colorAccent));
+            }else view.setBackgroundColor(view.getResources().getColor(R.color.colorPrimary));
+            Log.d("onClick", "made it here " + Long.toString(clickedDogID));
             mClickHandler.onClick(clickedDogID);
 
         }
@@ -62,11 +74,12 @@ public class DogOnWalkAdapter extends RecyclerView.Adapter<DogOnWalkAdapter.DogO
     @Override
     public void onBindViewHolder(DogOnWalkAdapterViewHolder holder, int position) {
         String dogName = dogsListNames[position];
-        holder.dogNameCheckBox.setText(dogName);
-        holder.dogNameCheckBox.setChecked(false);
+        Long dogID = dogsList[position];
+        holder.dogIDholder.setText(Long.toString(dogID));
+        holder.dogName.setText(dogName);
         String id = Long.toString(dogsList[position]);
         for (String s : dogsOnWalk){
-            if (s.equals(id)) holder.dogNameCheckBox.setChecked(true);
+            if (s.equals(id)) holder.background.setBackgroundColor(R.color.colorPrimaryDark);
         }
     }
 

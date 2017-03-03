@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Chronometer;
 
 import com.example.cgehredo.walkingthedog.data.DbHelper;
@@ -44,7 +45,9 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
     private Long[] dogIDs;
     private String[] dogNames;
     private String[] dogIDsOnWalk;
-    p
+    private String dogsOnWalkString;
+    private String tempDogString;
+    private SharedPreferences shrdPrefs;
 
 
 
@@ -53,18 +56,15 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_walk);
-        Log.d(TAG, "set up view");
-
-        //Setting up DB
-        DbHelp = new DbHelper(this);
-        dbRead = DbHelp.getReadableDatabase();
-        Log.d(TAG, "set up db");
 
         //Setting up Chronometer
         timer = (Chronometer) findViewById(R.id.cur_time_val);
         timer.setBase(SystemClock.elapsedRealtime());
         timer.start();
 
+        //find what dogs should be defaulted in.
+        shrdPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        dogsOnWalkString = shrdPrefs.getString(getString(R.string.default_walks_dog), null);
         //Setting up RecyclerView
         rvDogList = (RecyclerView) findViewById(R.id.dogWalkRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
@@ -72,7 +72,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         rvDogList.setHasFixedSize(true);
         dogAdapter = new DogAdapter(this);
         rvDogList.setAdapter(dogAdapter);
-        Log.d(TAG, "set up rec");
+
 
         //Setting up the GPS fragment with api client
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().
@@ -96,6 +96,11 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
     protected void onStart() {
         apiC.connect();
         super.onStart();
+
+        //Setting up DB
+        DbHelp = new DbHelper(this);
+        dbRead = DbHelp.getReadableDatabase();
+
         //Grabing the default dogs to include on a walk
         String[] columns = new String[]{PetContract.WalkTheDog.DOG_NAME,
                 PetContract.WalkTheDog._ID,
@@ -104,16 +109,17 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 PetContract.WalkTheDog.TIME_GOAL,
                 PetContract.WalkTheDog.CUR_DIST,
                 PetContract.WalkTheDog.CUR_TIME,
-                PetContract.WalkTheDog.CUR_WALKS};
-        String where = PetContract.WalkTheDog._ID + "=?";
-        SharedPreferences shrdPrefs = PreferenceManager.getDefaultSharedPreferences(this);
-        String dogsOnWalk = shrdPrefs.getString(getString(R.string.default_walks_dog), null);
-        if (!dogsOnWalk.equals(null)) {
-            dogIDsOnWalk = dogsOnWalk.split(" ");
-            for (int x = 1; x > dogIDsOnWalk.length; x++)
-            {
-                where = where + " AND " + PetContract.WalkTheDog._ID + "=?";
-            }
+                PetContract.WalkTheDog.CUR_WALKS,
+                PetContract.WalkTheDog.DIST_GOAL};
+        tempDogString = shrdPrefs.getString(getString(R.string.dogs_on_walk), null);
+        Log.d("dogsonwalk", "1 temp " + tempDogString +" dogsonwalk "  + dogsOnWalkString);
+        if (tempDogString != null) dogsOnWalkString = tempDogString;
+        Log.d("dogsonwalk", "2 temp " + tempDogString +" dogsonwalk "  + dogsOnWalkString);
+        shrdPrefs.edit().putString(getString(R.string.dogs_on_walk), null).commit();
+        if (!dogsOnWalkString.equals(null)) {
+            dogIDsOnWalk = dogsOnWalkString.split(" ");
+            String where = PetContract.WalkTheDog._ID + " IN ("
+                    + makePlaceholders( dogIDsOnWalk.length) + ")";
             Cursor cursor = dbRead.query(
                     PetContract.WalkTheDog.TABLE_NAME,
                     columns,
@@ -146,6 +152,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
             dogAdapter.setDogsList(dogIDs, dogNames, curWalks, curTime, curDist,
                     goalWalks, goalTime, goalDist);
             cursor.close();
+            dbRead.close();
         }
     }
 
@@ -176,16 +183,21 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
     }
     //disconnect the api
 
-    public void editDogsOnList(){
-        Intent intent = new Intent(this, EditDogsOnWalk.class);
-        String ids = null;
-        for (Long l : dogIDs){
-            ids = ids + " " + Long.toString(l);
-        }
-        intent.putExtra(getString(R.string.dogs_on_walk), ids);
+    public void editDogsOnList(View view){
+        Intent intent = new Intent(view.getContext(), EditDogsOnWalk.class);
+        intent.putExtra(getString(R.string.dogs_on_walk), dogsOnWalkString);
+        Log.d("dogsonwalk", dogsOnWalkString);
         startActivity(intent);
     }
-
+    //makes the correct amount of ?s for the sql query
+    private String makePlaceholders(int len){
+        StringBuilder sb = new StringBuilder(len*2 -1);
+        sb.append("?");
+        for (int i = 1; i < len; i++){
+            sb.append(",?");
+        }
+        return sb.toString();
+    }
 
 
     @Override

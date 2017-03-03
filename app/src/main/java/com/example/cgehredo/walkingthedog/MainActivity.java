@@ -215,4 +215,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         else tv.setText("0");
         cursor.close();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dbRead.close();
+    }
 }

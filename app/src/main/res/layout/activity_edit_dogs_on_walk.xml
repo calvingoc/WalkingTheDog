@@ -7,9 +7,24 @@
     tools:context="com.example.cgehredo.walkingthedog.EditDogsOnWalk">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview_dogs_on_walk"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="0dp"
+        android:layout_height="470dp"
+        tools:layout_editor_absoluteY="8dp"
+        tools:layout_editor_absoluteX="8dp">
 
     </android.support.v7.widget.RecyclerView>
+    <Button
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:text="@string/update_button_text"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
+        android:onClick="updateDogs"
+        android:background="@color/colorPrimary"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerview_dogs_on_walk"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        />
 
 </android.support.constraint.ConstraintLayout>

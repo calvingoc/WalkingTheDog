@@ -237,4 +237,10 @@ public class AddPet extends AppCompatActivity {
         }
         cursor.close();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dbWrite.close();
+    }
 }

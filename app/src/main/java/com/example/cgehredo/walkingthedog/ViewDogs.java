@@ -69,4 +69,10 @@ public class ViewDogs extends AppCompatActivity implements DogAdapter.DogAdapter
         intent.putExtra(getString(R.string.pet_id), petID);
         startActivity(intent);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dbRead.close();
+    }
 }
