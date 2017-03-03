@@ -1,13 +1,17 @@
 package com.example.cgehredo.walkingthedog;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -24,7 +28,6 @@ import static java.lang.Long.getLong;
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private DbHelper DbHelp;
     private SQLiteDatabase dbRead;
-    private SQLiteDatabase dbWrite;
     private SharedPreferences shrdPrefs;
     private long defaultId;
     private long noDog = -1;
@@ -43,9 +46,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(MainActivity.this, TrackWalk.class);
+                startActivity(intent);
             }
         });
     }
@@ -53,12 +55,20 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @Override
     protected void onStart() {
         super.onStart();
+        //check for permissions
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
         defaultId = shrdPrefs.getLong(getString(R.string.default_dog), noDog);
+        //make user add dog if no dogs in DB
         if (defaultId == noDog){
             Intent intent = new Intent(this, AddPet.class);
             intent.putExtra(getString(R.string.pet_id), noDog);
             startActivity(intent);
         } else{
+            //set up screen to show current dog stats
             setUpScreen();
         }
     }

@@ -16,12 +16,17 @@ public class ViewDogs extends AppCompatActivity implements DogAdapter.DogAdapter
     private SQLiteDatabase dbRead;
     private RecyclerView rvDogList;
     private DogAdapter dogAdapter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_dogs);
+        //set up DB
         DbHelp = new DbHelper(this);
         dbRead = DbHelp.getReadableDatabase();
+
+        //set up Recycler View
         rvDogList = (RecyclerView) findViewById(R.id.recyclerview_dogs);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
         rvDogList.setLayoutManager(layoutManager);
@@ -33,7 +38,8 @@ public class ViewDogs extends AppCompatActivity implements DogAdapter.DogAdapter
     @Override
     protected void onStart() {
         super.onStart();
-        String[] columns = new String[]{PetContract.WalkTheDog.DOG_NAME};
+        String[] columns = new String[]{PetContract.WalkTheDog.DOG_NAME,
+                PetContract.WalkTheDog._ID};
         Cursor cursor = dbRead.query(
                 PetContract.WalkTheDog.TABLE_NAME,
                 columns,
@@ -52,7 +58,7 @@ public class ViewDogs extends AppCompatActivity implements DogAdapter.DogAdapter
             dogNames[i] = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.DOG_NAME));
             i++;
         }
-        dogAdapter.setDogsList(dogIDs, dogNames);
+        dogAdapter.setDogsList(dogIDs, dogNames, null, null, null, null, null, null);
         cursor.close();
     }
 

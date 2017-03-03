@@ -6,6 +6,7 @@
     <string name="default_walks_dog" translatable="false">defWlkDg</string>
     <string name="add_dog_item">Add a Dog</string>
     <string name="view_dogs_item">View/Edit Dogs</string>
+    <string name="api">AIzaSyAVLjqx2Jjm2H9mrVz8UmW92sGJc9cKry4</string>
 
     <!--Add Pet Strings-->
     <string name="add_pet_title">Please Add A Dog!</string>
