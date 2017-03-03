@@ -7,6 +7,7 @@
     <string name="add_dog_item">Add a Dog</string>
     <string name="view_dogs_item">View/Edit Dogs</string>
     <string name="api">AIzaSyAVLjqx2Jjm2H9mrVz8UmW92sGJc9cKry4</string>
+    <string name="dogs_on_walk">dgsOnWlk</string>
 
     <!--Add Pet Strings-->
     <string name="add_pet_title">Please Add A Dog!</string>
@@ -45,7 +46,7 @@
     <string name="ave_time_day">Average Time per Day</string>
     <string name="ave_dist_day">Average Miles per Day</string>
     <string name="ave_mph">Average Miles per Hour</string>
-    
+
     <!--Track Walk Strings-->
     <string name="tw_walk_time">Walk Time</string>
     <string name="tw_walk_distance">Walk Distance</string>

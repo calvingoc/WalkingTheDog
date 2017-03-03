@@ -1,6 +1,5 @@
 package com.example.cgehredo.walkingthedog;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -11,32 +10,36 @@ import android.support.v7.widget.RecyclerView;
 import com.example.cgehredo.walkingthedog.data.DbHelper;
 import com.example.cgehredo.walkingthedog.data.PetContract;
 
-public class ViewDogs extends AppCompatActivity implements DogAdapter.DogAdapterOnClickHandler {
+public class EditDogsOnWalk extends AppCompatActivity implements DogOnWalkAdapter.DogOnWalkAdapterOnClickHandler {
     private DbHelper DbHelp;
     private SQLiteDatabase dbRead;
     private RecyclerView rvDogList;
-    private DogAdapter dogAdapter;
-
+    private DogOnWalkAdapter dogAdapter;
+    private String dogsOnWalk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_dogs);
+        setContentView(R.layout.activity_edit_dogs_on_walk);
+
         //set up DB
         DbHelp = new DbHelper(this);
         dbRead = DbHelp.getReadableDatabase();
 
-        //set up Recycler View
-        rvDogList = (RecyclerView) findViewById(R.id.recyclerview_dogs);
+        dogsOnWalk =  getIntent().getStringExtra(getString(R.string.dogs_on_walk));
+
+        //set up recycler view
+        rvDogList = (RecyclerView) findViewById(R.id.recyclerview_dogs_on_walk);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
         rvDogList.setLayoutManager(layoutManager);
         rvDogList.setHasFixedSize(true);
-        dogAdapter = new DogAdapter(this);
+        dogAdapter = new DogOnWalkAdapter(this);
         rvDogList.setAdapter(dogAdapter);
     }
 
     @Override
     protected void onStart() {
+        super.onStart();
         super.onStart();
         String[] columns = new String[]{PetContract.WalkTheDog.DOG_NAME,
                 PetContract.WalkTheDog._ID};
@@ -58,15 +61,15 @@ public class ViewDogs extends AppCompatActivity implements DogAdapter.DogAdapter
             dogNames[i] = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.DOG_NAME));
             i++;
         }
-        dogAdapter.setDogsList(dogIDs, dogNames, null, null, null, null, null, null);
+        String [] dogIdsOnWalk = dogsOnWalk.split(" ");
+        dogAdapter.setDogsOnWalk(dogIDs, dogNames, dogIdsOnWalk);
         cursor.close();
     }
 
-
     @Override
     public void onClick(Long petID) {
-        Intent intent = new Intent(this, AddPet.class);
-        intent.putExtra(getString(R.string.pet_id), petID);
-        startActivity(intent);
+        if (dogsOnWalk.contains(" " + Long.toString(petID))) {
+            dogsOnWalk.replace(" " + Long.toString(petID), "");
+        } else dogsOnWalk = dogsOnWalk + " " + Long.toString(petID);
     }
 }
