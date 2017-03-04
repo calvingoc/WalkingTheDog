@@ -1,6 +1,7 @@
 package com.example.cgehredo.walkingthedog;
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -18,16 +19,19 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Chronometer;
+import android.widget.TextView;
 
 import com.example.cgehredo.walkingthedog.data.DbHelper;
 import com.example.cgehredo.walkingthedog.data.PetContract;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -48,6 +52,9 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
     private String dogsOnWalkString;
     private String tempDogString;
     private SharedPreferences shrdPrefs;
+    private float distance = 0;
+    private TextView distanceDisplay;
+    private GoogleMap map;
 
 
 
@@ -60,11 +67,38 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         //Setting up Chronometer
         timer = (Chronometer) findViewById(R.id.cur_time_val);
         timer.setBase(SystemClock.elapsedRealtime());
+        timer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+            @Override
+            public void onChronometerTick(Chronometer chronometer) {
+                long ElapsedTime = SystemClock.elapsedRealtime() - timer.getBase();
+                Location currentLocation = null;
+                if (ElapsedTime % 5000 < 1000){
+                    if (ContextCompat.checkSelfPermission(TrackWalk.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        currentLocation = LocationServices.FusedLocationApi.getLastLocation(apiC);
+                    }
+                    if (currentLocation != null){
+                        distance = distance + currentLocation.distanceTo(mLastLocation);
+                        distanceDisplay.setText(Float.toString(distance));
+                        mLastLocation = currentLocation;
+                        map.addMarker(new MarkerOptions()
+                                .position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude())));
+                        map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(mLastLocation.getLatitude(),
+                                mLastLocation.getLongitude())));
+                        map.animateCamera(CameraUpdateFactory.zoomTo( 17.0f ));
+                    }
+                }
+            }
+        });
         timer.start();
 
         //find what dogs should be defaulted in.
         shrdPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         dogsOnWalkString = shrdPrefs.getString(getString(R.string.default_walks_dog), null);
+
+        //find TextView
+
+        distanceDisplay = (TextView) findViewById(R.id.distance_display);
         //Setting up RecyclerView
         rvDogList = (RecyclerView) findViewById(R.id.dogWalkRecyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false);
@@ -75,13 +109,13 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
 
 
         //Setting up the GPS fragment with api client
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().
-                findFragmentById(R.id.map_fragment);
-        mapFragment.getMapAsync(this);
         if (apiC == null){
             apiC = new GoogleApiClient.Builder(this).addConnectionCallbacks(TrackWalk.this).
                     addOnConnectionFailedListener(this).addApi(LocationServices.API).build();
         }
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().
+                findFragmentById(R.id.map_fragment);
+        mapFragment.getMapAsync(this);
         Log.d(TAG, "set up gps");
 
     }
@@ -112,9 +146,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 PetContract.WalkTheDog.CUR_WALKS,
                 PetContract.WalkTheDog.DIST_GOAL};
         tempDogString = shrdPrefs.getString(getString(R.string.dogs_on_walk), null);
-        Log.d("dogsonwalk", "1 temp " + tempDogString +" dogsonwalk "  + dogsOnWalkString);
         if (tempDogString != null) dogsOnWalkString = tempDogString;
-        Log.d("dogsonwalk", "2 temp " + tempDogString +" dogsonwalk "  + dogsOnWalkString);
         shrdPrefs.edit().putString(getString(R.string.dogs_on_walk), null).commit();
         if (!dogsOnWalkString.equals(null)) {
             dogIDsOnWalk = dogsOnWalkString.split(" ");
@@ -158,10 +190,13 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        googleMap.addMarker(new MarkerOptions()
-                .position(new LatLng(mLastLocation.getLatitude(),mLastLocation.getLongitude())));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(mLastLocation.getLatitude(),
-                mLastLocation.getLongitude())));
+        map = googleMap;
+        if (mLastLocation != null) {
+            googleMap.addMarker(new MarkerOptions()
+                    .position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude())));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(mLastLocation.getLatitude(),
+                    mLastLocation.getLongitude())));
+        }
     }
     //gets last know location
     @Override
@@ -197,6 +232,67 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
             sb.append(",?");
         }
         return sb.toString();
+    }
+
+    public void endWalk(View view) {
+        long ElapsedTime = SystemClock.elapsedRealtime() - timer.getBase();
+        Boolean alreadyHitStreak;
+        timer.stop();
+        dbRead = DbHelp.getWritableDatabase();
+        String[] columns = new String[]{PetContract.WalkTheDog.STREAK,
+                PetContract.WalkTheDog._ID,
+                PetContract.WalkTheDog.TIME_GOAL,
+                PetContract.WalkTheDog.WALKS_GOAL,
+                PetContract.WalkTheDog.TIME_GOAL,
+                PetContract.WalkTheDog.CUR_DIST,
+                PetContract.WalkTheDog.CUR_TIME,
+                PetContract.WalkTheDog.CUR_WALKS,
+                PetContract.WalkTheDog.DIST_GOAL};
+        if (!dogsOnWalkString.equals(null)) {
+            dogIDsOnWalk = dogsOnWalkString.split(" ");
+            String where = PetContract.WalkTheDog._ID + " IN ("
+                    + makePlaceholders(dogIDsOnWalk.length) + ")";
+            Cursor cursor = dbRead.query(
+                    PetContract.WalkTheDog.TABLE_NAME,
+                    columns,
+                    where,
+                    dogIDsOnWalk,
+                    null,
+                    null,
+                    null
+            );
+            while (cursor.moveToNext()) {
+                Long petID = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID));
+                Long Streak = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.STREAK));
+                Long curWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_WALKS));
+                Long curTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
+                Long curDist = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
+                Long goalWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.WALKS_GOAL));
+                Long goalTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL));
+                Long goalDist = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
+                if (curWalks < goalWalks || curTime < goalTime || curDist < goalDist){
+                    alreadyHitStreak = false;
+                } else alreadyHitStreak = true;
+                curWalks = curWalks +1;
+                curTime = curTime + (ElapsedTime/60000);
+                curDist = (long) (curDist + distance);
+                if (curWalks > goalWalks && curTime > goalTime && curDist > goalDist && !alreadyHitStreak){
+                    Streak = Streak + 1;
+                }
+                ContentValues cv = new ContentValues();
+                cv.put(PetContract.WalkTheDog.CUR_WALKS, curWalks);
+                cv.put(PetContract.WalkTheDog.CUR_TIME, curTime);
+                cv.put(PetContract.WalkTheDog.STREAK, Streak);
+                cv.put(PetContract.WalkTheDog.CUR_DIST, curDist);
+                String whereVal = PetContract.WalkTheDog._ID+"=?";
+                String[] whereArgs = new String[] {String.valueOf(petID)};
+                dbRead.update(PetContract.WalkTheDog.TABLE_NAME, cv, whereVal, whereArgs);
+            }
+            cursor.close();
+        }
+        dbRead.close();
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 
 
