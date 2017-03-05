@@ -7,7 +7,7 @@
     tools:context="online.cagocapps.walkingthedog.EditDogsOnWalk">
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview_dogs_on_walk"
-        android:layout_width="368dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout_editor_absoluteY="0dp"
         tools:layout_editor_absoluteX="8dp">

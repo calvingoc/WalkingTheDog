@@ -135,9 +135,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         String petName = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.DOG_NAME));
         Long timeGoal = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL));
         Long walkGoal = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.WALKS_GOAL));
-        Long distGoal = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
+        float distGoal = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
         Long curTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
-        Long curDist = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
+        float curDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
         Long curWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_WALKS));
         Long streak = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.STREAK));
         Long bestStreak = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_STREAK));
@@ -147,8 +147,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         Long totDays = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_DAYS));
         Long wBestTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME));
         Long dBestTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME_DAY));
-        Long wBestDist = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_DIST));
-        Long dBestDist = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_DIST_DAY));
+        float wBestDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_DIST));
+        float dBestDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_DIST_DAY));
         Long bestWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_WALKS));
         TextView tv = (TextView) findViewById(R.id.dog_name);
         tv.setText(petName + getString(R.string.main_pet_name));
@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             iv.setImageResource(R.drawable.btn_star_big_off);
         }
         tv = (TextView) findViewById(R.id.cur_dist);
-        tv.setText(Long.toString(curDist) + " / " + Long.toString(distGoal));
+        tv.setText(Float.toString(curDist) + " / " + Float.toString(distGoal));
         if (curDist >= distGoal){
             ImageView iv = (ImageView) findViewById(R.id.dist_star);
             iv.setImageResource(R.drawable.btn_star_big_on);
@@ -196,9 +196,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         tv = (TextView) findViewById(R.id.best_time_wk_val);
         tv.setText(Long.toString(wBestTime));
         tv = (TextView) findViewById(R.id.best_dist_val);
-        tv.setText(Long.toString(dBestDist));
+        tv.setText(Float.toString(dBestDist));
         tv = (TextView) findViewById(R.id.best_dist_wk_val);
-        tv.setText(Long.toString(wBestDist));
+        tv.setText(Float.toString(wBestDist));
         tv = (TextView) findViewById(R.id.ave_time_walk_val);
         if (totWalks != 0) tv.setText(Long.toString(totTimes/totWalks));
         else tv.setText("0");

@@ -20,10 +20,11 @@ public class DogAdapter extends RecyclerView.Adapter<DogAdapter.DogAdapterViewHo
     private String[] dogsListNames;
     private Long[] mCurWalks;
     private Long[] mCurTime;
-    private Long[] mCurDist;
+    private Float[] mCurDist;
     private Long[] mGoalWalks;
     private Long[] mGoalTime;
-    private Long[] mGoalDist;
+    private Float[] mGoalDist;
+
 
     private final DogAdapterOnClickHandler mClickHandler;
 
@@ -82,9 +83,9 @@ public class DogAdapter extends RecyclerView.Adapter<DogAdapter.DogAdapterViewHo
             math = mGoalWalks[position] - mCurWalks[position];
             if (math < 0) math = (long) 0;
             holder.dogWalksView.setText(Long.toString(math));
-            math = mGoalDist[position] - mCurDist[position];
-            if (math < 0) math = (long) 0;
-            holder.dogDistView.setText(Long.toString(math));
+            float distMath = mGoalDist[position] - mCurDist[position];
+            if (distMath < 0) distMath = (float) 0;
+            holder.dogDistView.setText(Float.toString(distMath));
 
         }
     }
@@ -97,8 +98,8 @@ public class DogAdapter extends RecyclerView.Adapter<DogAdapter.DogAdapterViewHo
 
     //moves values into local variables.
     public  void setDogsList(Long[] dogsListID, String[] dogsListName,
-                             Long[] curWalks, Long[] curTime, Long[] curDist,
-                             Long[] goalWalks, Long[] goalTime, Long[] goalDist)
+                             Long[] curWalks, Long[] curTime, Float[] curDist,
+                             Long[] goalWalks, Long[] goalTime, Float[] goalDist)
     {
         dogsList = dogsListID;
         dogsListNames = dogsListName;

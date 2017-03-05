@@ -115,6 +115,8 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         apiC.connect();
         super.onResume();
 
+        dogAdapter.notifyDataSetChanged();
+
         //Setting up DB
         DbHelp = new DbHelper(this);
         dbRead = DbHelp.getReadableDatabase();
@@ -150,19 +152,19 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
             dogNames = new String[cursor.getCount()];
             Long[] curWalks = new Long[cursor.getCount()];
             Long[] curTime = new Long[cursor.getCount()];
-            Long[] curDist = new Long[cursor.getCount()];
+            Float[] curDist = new Float[cursor.getCount()];
             Long[] goalWalks = new Long[cursor.getCount()];
             Long[] goalTime = new Long[cursor.getCount()];
-            Long[] goalDist = new Long[cursor.getCount()];
+            Float[] goalDist = new Float[cursor.getCount()];
             while (cursor.moveToNext()) {
                 dogIDs[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID));
                 dogNames[i] = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.DOG_NAME));
                 curWalks[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_WALKS));
                 curTime[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
-                curDist[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
+                curDist[i] = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
                 goalWalks[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.WALKS_GOAL));
                 goalTime[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL));
-                goalDist[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
+                goalDist[i] = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
                 i++;
             }
             dogAdapter.setDogsList(dogIDs, dogNames, curWalks, curTime, curDist,
@@ -251,16 +253,16 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 Long Streak = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.STREAK));
                 Long curWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_WALKS));
                 Long curTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
-                Long curDist = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
+                Float curDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
                 Long goalWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.WALKS_GOAL));
                 Long goalTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL));
-                Long goalDist = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
+                Float goalDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
                 if (curWalks < goalWalks || curTime < goalTime || curDist < goalDist){
                     alreadyHitStreak = false;
                 } else alreadyHitStreak = true;
                 curWalks = curWalks +1;
                 curTime = curTime + (ElapsedTime/60000);
-                curDist = (long) (curDist + distance);
+                curDist =  (curDist + distance);
                 if (curWalks > goalWalks && curTime > goalTime && curDist > goalDist && !alreadyHitStreak){
                     Streak = Streak + 1;
                 }
@@ -296,7 +298,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 location.getLongitude())));
         map.animateCamera(CameraUpdateFactory.zoomTo( 17.0f ));
 
-        distance =  distance + (location.distanceTo(mLastLocation)/1609);
+        if (location != null && mLastLocation != null) distance =  distance + (location.distanceTo(mLastLocation)/1609);
         String distanceString = String.format("%.2f", distance);
         distanceDisplay.setText(distanceString);
         mLastLocation = location;
