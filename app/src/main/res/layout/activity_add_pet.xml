@@ -4,7 +4,7 @@
     android:id="@+id/activity_add_pet"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.cgehredo.walkingthedog.AddPet"
+    tools:context="online.cagocapps.walkingthedog.AddPet"
     android:orientation="vertical"
     android:weightSum="1">
 

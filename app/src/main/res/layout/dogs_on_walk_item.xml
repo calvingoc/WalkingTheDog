@@ -14,8 +14,7 @@
         android:visibility="invisible"
         android:enabled="false"
         android:textSize="0sp"
-        android:id="@+id/petid_holder"
-        android:background="@color/colorPrimary"/>
+        android:id="@+id/petid_holder"/>
 
     <ImageView
         android:id="@+id/dog_on_walk_image"
@@ -48,7 +47,6 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="0dp"
         android:layout_marginTop="0dp"
-        android:text="TextView"
         android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/view2"
         app:layout_constraintHorizontal_bias="0.0"

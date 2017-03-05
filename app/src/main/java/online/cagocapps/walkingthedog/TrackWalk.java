@@ -25,6 +25,8 @@ import online.cagocapps.walkingthedog.data.DbHelper;
 import online.cagocapps.walkingthedog.data.PetContract;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -37,7 +39,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 //Class sets up the Tracking walk screen and lays the basework for timing the walk, tracking the walk with GPS and getting distance.
 public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapterOnClickHandler,
-        OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+        OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,LocationListener {
     private DbHelper DbHelp;
     private SQLiteDatabase dbRead;
     private RecyclerView rvDogList;
@@ -55,6 +57,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
     private float distance = 0;
     private TextView distanceDisplay;
     private GoogleMap map;
+    private LocationRequest locationRequest;
 
 
 
@@ -67,29 +70,6 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         //Setting up Chronometer
         timer = (Chronometer) findViewById(R.id.cur_time_val);
         timer.setBase(SystemClock.elapsedRealtime());
-        timer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
-            @Override
-            public void onChronometerTick(Chronometer chronometer) {
-                long ElapsedTime = SystemClock.elapsedRealtime() - timer.getBase();
-                Location currentLocation = null;
-                if (ElapsedTime % 5000 < 1000){
-                    if (ContextCompat.checkSelfPermission(TrackWalk.this, Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        currentLocation = LocationServices.FusedLocationApi.getLastLocation(apiC);
-                    }
-                    if (currentLocation != null){
-                        distance = distance + currentLocation.distanceTo(mLastLocation);
-                        distanceDisplay.setText(Float.toString(distance));
-                        mLastLocation = currentLocation;
-                        map.addMarker(new MarkerOptions()
-                                .position(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude())));
-                        map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(mLastLocation.getLatitude(),
-                                mLastLocation.getLongitude())));
-                        map.animateCamera(CameraUpdateFactory.zoomTo( 17.0f ));
-                    }
-                }
-            }
-        });
         timer.start();
 
         //find what dogs should be defaulted in.
@@ -116,7 +96,8 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().
                 findFragmentById(R.id.map_fragment);
         mapFragment.getMapAsync(this);
-        Log.d(TAG, "set up gps");
+        locationRequest = LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).
+                setInterval(5000).setFastestInterval(1000);
 
     }
 
@@ -127,9 +108,9 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
 
 
     @Override
-    protected void onStart() {
+    protected void onResume() {
         apiC.connect();
-        super.onStart();
+        super.onResume();
 
         //Setting up DB
         DbHelp = new DbHelper(this);
@@ -204,6 +185,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(apiC);
+            LocationServices.FusedLocationApi.requestLocationUpdates(apiC, locationRequest, this);
         }
     }
     //not currently used
@@ -302,4 +284,16 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         super.onStop();
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        map.addMarker(new MarkerOptions()
+                .position(new LatLng(location.getLatitude(), location.getLongitude())));
+        map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),
+                location.getLongitude())));
+        map.animateCamera(CameraUpdateFactory.zoomTo( 17.0f ));
+
+        distance =  distance + (location.distanceTo(mLastLocation)/1609);
+        distanceDisplay.setText(Float.toString(distance));
+        mLastLocation = location;
+    }
 }

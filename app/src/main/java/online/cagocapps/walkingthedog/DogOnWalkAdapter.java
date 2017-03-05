@@ -37,6 +37,7 @@ public class DogOnWalkAdapter extends RecyclerView.Adapter<DogOnWalkAdapter.DogO
         public final TextView dogName;
         public final View background;
 
+
         public DogOnWalkAdapterViewHolder(View view){
             super(view);
             dogPicImageView = (ImageView) view.findViewById(R.id.dog_on_walk_image);
@@ -48,14 +49,15 @@ public class DogOnWalkAdapter extends RecyclerView.Adapter<DogOnWalkAdapter.DogO
 
         @Override
         public void onClick(View view) {
-            Log.d("dogsonwalk", "Clicked");
             TextView dogIDTV = (TextView) view.findViewById(R.id.petid_holder);
             Long clickedDogID = Long.parseLong(dogIDTV.getText().toString());
-            TextView dogName = (TextView) view.findViewById(R.id.dog_on_walk_rv_name);
-            if (view.getBackground()== dogIDTV.getBackground()){
-                view.setBackgroundColor(view.getResources().getColor(R.color.colorAccent));
-            }else view.setBackgroundColor(view.getResources().getColor(R.color.colorPrimary));
-            Log.d("onClick", "made it here " + Long.toString(clickedDogID));
+            if (dogIDTV.isEnabled()){
+                view.setBackgroundColor(Color.parseColor("#FF4081"));
+                dogIDTV.setEnabled(false);
+            }else{
+                view.setBackgroundColor(Color.parseColor("#303F9F"));
+                dogIDTV.setEnabled(true);
+            }
             mClickHandler.onClick(clickedDogID);
 
         }
@@ -76,10 +78,14 @@ public class DogOnWalkAdapter extends RecyclerView.Adapter<DogOnWalkAdapter.DogO
         String dogName = dogsListNames[position];
         Long dogID = dogsList[position];
         holder.dogIDholder.setText(Long.toString(dogID));
+        holder.dogIDholder.setEnabled(false);
         holder.dogName.setText(dogName);
         String id = Long.toString(dogsList[position]);
         for (String s : dogsOnWalk){
-            if (s.equals(id)) holder.background.setBackgroundColor(R.color.colorPrimaryDark);
+            if (s.equals(id)) {
+                holder.background.setBackgroundColor(Color.parseColor("#303F9F"));
+                holder.dogIDholder.setEnabled(true);
+            }
         }
     }
 
