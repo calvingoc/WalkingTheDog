@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import online.cagocapps.walkingthedog.data.DbBitmapUtility;
 import online.cagocapps.walkingthedog.data.DbHelper;
 import online.cagocapps.walkingthedog.data.PetContract;
 
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private SharedPreferences shrdPrefs;
     private long defaultId;
     private long noDog = -1;
+    private static final  int ID_DOGUPDATE_LOADER = 44;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 startActivity(intent);
             }
         });
+
+        DogUpdateUtil.initialize(this);
     }
 
     @Override
@@ -63,9 +67,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
         defaultId = shrdPrefs.getLong(getString(R.string.default_dog), noDog);
-        Log.d("dogID", "Before" + Long.toString(defaultId));
         defaultId = getIntent().getLongExtra(getResources().getString(R.string.pet_id), defaultId);
-        Log.d("dogID", "After" + Long.toString(defaultId));
+
         //make user add dog if no dogs in DB
         if (defaultId == noDog){
             Intent intent = new Intent(this, AddPet.class);
@@ -131,92 +134,100 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 null,
                 null,
                 null);
-        cursor.moveToFirst();
-        String petName = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.DOG_NAME));
-        Long timeGoal = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL));
-        Long walkGoal = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.WALKS_GOAL));
-        float distGoal = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
-        Long curTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
-        float curDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
-        Long curWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_WALKS));
-        Long streak = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.STREAK));
-        Long bestStreak = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_STREAK));
-        Long totWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_WALKS));
-        Long totTimes = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_TIME));
-        Long totDist = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_DIST));
-        Long totDays = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_DAYS));
-        Long wBestTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME));
-        Long dBestTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME_DAY));
-        float wBestDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_DIST));
-        float dBestDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_DIST_DAY));
-        Long bestWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_WALKS));
-        TextView tv = (TextView) findViewById(R.id.dog_name);
-        tv.setText(petName + getString(R.string.main_pet_name));
-        tv = (TextView) findViewById(R.id.cur_walks);
-        tv.setText(Long.toString(curWalks) + " / " + Long.toString(walkGoal));
-        if (curWalks >= walkGoal){
-            ImageView iv = (ImageView) findViewById(R.id.walks_star);
-            iv.setImageResource(R.drawable.btn_star_big_on);
-        } else {
-            ImageView iv = (ImageView) findViewById(R.id.walks_star);
-            iv.setImageResource(R.drawable.btn_star_big_off);
+        if (cursor.moveToFirst()) {
+            String petName = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.DOG_NAME));
+            Long timeGoal = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL));
+            Long walkGoal = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.WALKS_GOAL));
+            float distGoal = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
+            Long curTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
+            float curDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
+            Long curWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_WALKS));
+            Long streak = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.STREAK));
+            Long bestStreak = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_STREAK));
+            Long totWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_WALKS));
+            Long totTimes = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_TIME));
+            float totDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_DIST));
+            Long totDays = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_DAYS));
+            Long wBestTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME));
+            Long dBestTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME_DAY));
+            float wBestDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_DIST));
+            float dBestDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_DIST_DAY));
+            Long bestWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_WALKS));
+            byte[] image = cursor.getBlob(cursor.getColumnIndex(PetContract.WalkTheDog.PROFILE_PIC));
+            ImageView profilepic = (ImageView) findViewById(R.id.dogPic);
+            if (image != null) profilepic.setImageBitmap(DbBitmapUtility.getImage(image));
+            TextView tv = (TextView) findViewById(R.id.dog_name);
+            tv.setText(petName + getString(R.string.main_pet_name));
+            tv = (TextView) findViewById(R.id.cur_walks);
+            tv.setText(Long.toString(curWalks) + " / " + Long.toString(walkGoal));
+            if (curWalks >= walkGoal) {
+                ImageView iv = (ImageView) findViewById(R.id.walks_star);
+                iv.setImageResource(R.drawable.btn_star_big_on);
+            } else {
+                ImageView iv = (ImageView) findViewById(R.id.walks_star);
+                iv.setImageResource(R.drawable.btn_star_big_off);
+            }
+            tv = (TextView) findViewById(R.id.cur_time);
+            tv.setText(Long.toString(curTime) + " / " + Long.toString(timeGoal));
+            if (curTime >= timeGoal) {
+                ImageView iv = (ImageView) findViewById(R.id.time_star);
+                iv.setImageResource(R.drawable.btn_star_big_on);
+            } else {
+                ImageView iv = (ImageView) findViewById(R.id.time_star);
+                iv.setImageResource(R.drawable.btn_star_big_off);
+            }
+            tv = (TextView) findViewById(R.id.cur_dist);
+            tv.setText(String.format("%.2f", curDist) + " / " + Float.toString(distGoal));
+            if (curDist >= distGoal) {
+                ImageView iv = (ImageView) findViewById(R.id.dist_star);
+                iv.setImageResource(R.drawable.btn_star_big_on);
+            } else {
+                ImageView iv = (ImageView) findViewById(R.id.dist_star);
+                iv.setImageResource(R.drawable.btn_star_big_off);
+            }
+            tv = (TextView) findViewById(R.id.cur_streak);
+            tv.setText(Long.toString(streak));
+            tv = (TextView) findViewById(R.id.best_streak_val);
+            tv.setText(Long.toString(bestStreak));
+            tv = (TextView) findViewById(R.id.all_time_walks_val);
+            tv.setText(Long.toString(totWalks));
+            tv = (TextView) findViewById(R.id.all_time_time_val);
+            tv.setText(Long.toString(totTimes));
+            tv = (TextView) findViewById(R.id.all_time_dist_val);
+            tv.setText(String.format("%.2f", totDist));
+            tv = (TextView) findViewById(R.id.best_walks_val);
+            tv.setText(Long.toString(bestWalks));
+            tv = (TextView) findViewById(R.id.best_time_val);
+            tv.setText(Long.toString(dBestTime));
+            tv = (TextView) findViewById(R.id.best_time_wk_val);
+            tv.setText(Long.toString(wBestTime));
+            tv = (TextView) findViewById(R.id.best_dist_val);
+            tv.setText(String.format("%.2f", dBestDist));
+            tv = (TextView) findViewById(R.id.best_dist_wk_val);
+            tv.setText(String.format("%.2f", wBestDist));
+            tv = (TextView) findViewById(R.id.ave_time_walk_val);
+            if (totWalks != 0) tv.setText(Long.toString(totTimes / totWalks));
+            else tv.setText("0");
+            tv = (TextView) findViewById(R.id.ave_dist_walk_val);
+            if (totWalks != 0) tv.setText(String.format("%.2f", (totDist / totWalks)));
+            else tv.setText("0");
+            tv = (TextView) findViewById(R.id.ave_walk_day_value);
+            if (totDays != 0) tv.setText(Long.toString(totWalks / totDays));
+            else tv.setText("0");
+            tv = (TextView) findViewById(R.id.ave_time_day_value);
+            if (totDays != 0) tv.setText(Long.toString(totTimes / totDays));
+            else tv.setText("0");
+            tv = (TextView) findViewById(R.id.ave_dist_day_value);
+            if (totDays != 0) tv.setText(String.format("%.2f", (totDist / totDays)));
+            else tv.setText("0");
+            tv = (TextView) findViewById(R.id.ave_mph_value);
+            if (totTimes != 0) tv.setText(String.format("%.2f", (totDist / (totTimes / 60))));
+            else tv.setText("0");
+        }else {
+            shrdPrefs.edit().putString(getString(R.string.default_walks_dog),null)
+                    .putLong(getString(R.string.default_dog), -1).commit();
+            onStart();
         }
-        tv = (TextView) findViewById(R.id.cur_time);
-        tv.setText(Long.toString(curTime) + " / " + Long.toString(timeGoal));
-        if (curTime >= timeGoal){
-            ImageView iv = (ImageView) findViewById(R.id.time_star);
-            iv.setImageResource(R.drawable.btn_star_big_on);
-        } else {
-            ImageView iv = (ImageView) findViewById(R.id.time_star);
-            iv.setImageResource(R.drawable.btn_star_big_off);
-        }
-        tv = (TextView) findViewById(R.id.cur_dist);
-        tv.setText(Float.toString(curDist) + " / " + Float.toString(distGoal));
-        if (curDist >= distGoal){
-            ImageView iv = (ImageView) findViewById(R.id.dist_star);
-            iv.setImageResource(R.drawable.btn_star_big_on);
-        } else {
-            ImageView iv = (ImageView) findViewById(R.id.dist_star);
-            iv.setImageResource(R.drawable.btn_star_big_off);
-        }
-        tv = (TextView) findViewById(R.id.cur_streak);
-        tv.setText(Long.toString(streak));
-        tv = (TextView) findViewById(R.id.best_streak_val);
-        tv.setText(Long.toString(bestStreak));
-        tv = (TextView) findViewById(R.id.all_time_walks_val);
-        tv.setText(Long.toString(totWalks));
-        tv = (TextView) findViewById(R.id.all_time_time_val);
-        tv.setText(Long.toString(totTimes));
-        tv = (TextView) findViewById(R.id.all_time_dist_val);
-        tv.setText(Long.toString(totDist));
-        tv = (TextView) findViewById(R.id.best_walks_val);
-        tv.setText(Long.toString(bestWalks));
-        tv = (TextView) findViewById(R.id.best_time_val);
-        tv.setText(Long.toString(dBestTime));
-        tv = (TextView) findViewById(R.id.best_time_wk_val);
-        tv.setText(Long.toString(wBestTime));
-        tv = (TextView) findViewById(R.id.best_dist_val);
-        tv.setText(Float.toString(dBestDist));
-        tv = (TextView) findViewById(R.id.best_dist_wk_val);
-        tv.setText(Float.toString(wBestDist));
-        tv = (TextView) findViewById(R.id.ave_time_walk_val);
-        if (totWalks != 0) tv.setText(Long.toString(totTimes/totWalks));
-        else tv.setText("0");
-        tv = (TextView) findViewById(R.id.ave_dist_walk_val);
-        if (totWalks !=0) tv.setText(Long.toString(totDist/totWalks));
-        else tv.setText("0");
-        tv = (TextView) findViewById(R.id.ave_walk_day_value);
-        if (totDays !=0) tv.setText(Long.toString(totWalks/totDays));
-        else tv.setText("0");
-        tv = (TextView) findViewById(R.id.ave_time_day_value);
-        if (totDays!=0) tv.setText(Long.toString(totTimes/totDays));
-        else tv.setText("0");
-        tv = (TextView) findViewById(R.id.ave_dist_day_value);
-        if (totDays != 0) tv.setText(Long.toString(totDist/totDays));
-        else tv.setText("0");
-        tv = (TextView) findViewById(R.id.ave_mph_value);
-        if (totTimes !=0) tv.setText(Long.toString(totDist/(totTimes/60)));
-        else tv.setText("0");
         cursor.close();
     }
 

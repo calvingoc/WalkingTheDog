@@ -13,7 +13,7 @@ import online.cagocapps.walkingthedog.MainActivity;
 
 public class DbHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "walkTheDog.db";
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 4;
 
     public DbHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -41,6 +41,8 @@ public class DbHelper extends SQLiteOpenHelper {
                         PetContract.WalkTheDog.BEST_TIME_DAY + " INTEGER DEFAULT 0, " +
                         PetContract.WalkTheDog.BEST_DIST_DAY + " INTEGER DEFAULT 0, " +
                         PetContract.WalkTheDog.BEST_WALKS + " INTEGER DEFAULT 0, " +
+                        PetContract.WalkTheDog.LAST_DAY_SYNCED + " INTEGER DEFAULT 0, " +
+                        PetContract.WalkTheDog.PROFILE_PIC + " BLOB, " +
                         PetContract.WalkTheDog.BEST_DIST + " INTEGER DEFAULT 0" +
                         ");";
 

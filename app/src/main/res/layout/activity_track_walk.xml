@@ -19,50 +19,48 @@
 
         <Chronometer
             android:id="@+id/cur_time_val"
-            android:layout_width="0dp"
-            android:layout_height="150dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="0dp"
             android:gravity="center"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="@+id/cur_time_title"
-            app:layout_constraintTop_toBottomOf="@+id/cur_dist_title" />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toRightOf="@+id/map_fragment"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cur_time_title" />
 
         <TextView
             android:id="@+id/cur_time_title"
-            android:layout_width="75dp"
+            android:layout_width="100dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:gravity="center"
             android:text="@string/tw_walk_time"
             android:textSize="30sp"
-            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/map_fragment"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/cur_dist_title"
-            android:layout_width="0dp"
+            android:layout_width="100dp"
             android:layout_height="50dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
             android:gravity="center"
             android:text="@string/tw_walk_distance"
             android:textSize="30sp"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/cur_time_title" />
+            app:layout_constraintTop_toBottomOf="@+id/cur_time_val"
+            app:layout_constraintLeft_toLeftOf="@+id/cur_time_val" />
 
         <TextView
             android:id="@+id/distance_display"
-            android:layout_width="0dp"
-            android:layout_height="150dp"
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="0dp"
             android:gravity="center"
-            app:layout_constraintBottom_toBottomOf="@+id/cur_time_val"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintLeft_toLeftOf="@+id/cur_dist_title"
-            app:layout_constraintRight_toRightOf="@+id/cur_dist_title"
-            app:layout_constraintTop_toBottomOf="@+id/cur_dist_title" />
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintLeft_toRightOf="@+id/map_fragment"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cur_dist_title" />
 
         <TextView
             android:id="@+id/dogs_goals"
@@ -136,7 +134,7 @@
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
             app:layout_constraintBottom_toTopOf="@+id/dogs_goals"
-            app:layout_constraintLeft_toRightOf="@+id/cur_time_title"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/cur_dist_title"
             app:layout_constraintTop_toTopOf="parent" />
 

@@ -1,6 +1,7 @@
 package online.cagocapps.walkingthedog;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ public class DogAdapter extends RecyclerView.Adapter<DogAdapter.DogAdapterViewHo
     private Long[] mGoalWalks;
     private Long[] mGoalTime;
     private Float[] mGoalDist;
+    private Bitmap[] mImages;
 
 
     private final DogAdapterOnClickHandler mClickHandler;
@@ -86,6 +88,7 @@ public class DogAdapter extends RecyclerView.Adapter<DogAdapter.DogAdapterViewHo
             float distMath = mGoalDist[position] - mCurDist[position];
             if (distMath < 0) distMath = (float) 0;
             holder.dogDistView.setText(Float.toString(distMath));
+            holder.dogPic.setImageBitmap(mImages[position]);
 
         }
     }
@@ -99,7 +102,7 @@ public class DogAdapter extends RecyclerView.Adapter<DogAdapter.DogAdapterViewHo
     //moves values into local variables.
     public  void setDogsList(Long[] dogsListID, String[] dogsListName,
                              Long[] curWalks, Long[] curTime, Float[] curDist,
-                             Long[] goalWalks, Long[] goalTime, Float[] goalDist)
+                             Long[] goalWalks, Long[] goalTime, Float[] goalDist, Bitmap[] images)
     {
         dogsList = dogsListID;
         dogsListNames = dogsListName;
@@ -109,6 +112,7 @@ public class DogAdapter extends RecyclerView.Adapter<DogAdapter.DogAdapterViewHo
         mGoalWalks = goalWalks;
         mGoalTime = goalTime;
         mGoalDist = goalDist;
+        mImages = images;
     }
 
 }

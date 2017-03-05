@@ -1,6 +1,7 @@
 package online.cagocapps.walkingthedog;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,6 +21,7 @@ public class DogOnWalkAdapter extends RecyclerView.Adapter<DogOnWalkAdapter.DogO
     private Long[] dogsList;
     private String[] dogsListNames;
     private String[] dogsOnWalk;
+    private Bitmap[] mImages;
 
     private final DogOnWalkAdapterOnClickHandler mClickHandler;
 
@@ -87,6 +89,7 @@ public class DogOnWalkAdapter extends RecyclerView.Adapter<DogOnWalkAdapter.DogO
                 holder.dogIDholder.setEnabled(true);
             }
         }
+        holder.dogPicImageView.setImageBitmap(mImages[position]);
     }
 
     @Override
@@ -95,7 +98,8 @@ public class DogOnWalkAdapter extends RecyclerView.Adapter<DogOnWalkAdapter.DogO
         return dogsList.length;
     }
 
-    public void setDogsOnWalk(Long[] dogIDs, String[] dogNames, String[] dogIDsOnWalk){
+    public void setDogsOnWalk(Long[] dogIDs, String[] dogNames, String[] dogIDsOnWalk, Bitmap[] images){
+        mImages = images;
         dogsList = dogIDs;
         dogsListNames = dogNames;
         dogsOnWalk = dogIDsOnWalk;

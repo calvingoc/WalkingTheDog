@@ -30,6 +30,8 @@ public class PetContract {
         public static final String BEST_DIST_DAY = "bestDistDay";
         public static final String BEST_WALKS = "bestWalks";
         public static final String BEST_STREAK = "bestStreak";
+        public static final String LAST_DAY_SYNCED = "lastDaySynced";
+        public static final String PROFILE_PIC = "profilePic";
     }
 
 

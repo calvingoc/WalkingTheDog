@@ -25,6 +25,7 @@
     <string name="farm">to the farm</string>
     <string name="def_dog">Make this your default dog?</string>
     <string name="auto_walk">Automatically include this dog on new walks?</string>
+    <string name="add_profile_picture">Take Profile Picture</string>
 
     <!--Main Activity Strings-->
     <string name="main_pet_name">\'s Progress</string>

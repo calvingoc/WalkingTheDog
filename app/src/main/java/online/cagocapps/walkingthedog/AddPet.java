@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,9 +16,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import online.cagocapps.walkingthedog.data.DbBitmapUtility;
 import online.cagocapps.walkingthedog.data.DbHelper;
 import online.cagocapps.walkingthedog.data.PetContract;
 
@@ -39,6 +43,12 @@ public class AddPet extends AppCompatActivity {
     private Button deleteButton;
     private TextView header;
     private long petID;
+    private ImageView profilePicture;
+
+    static final int REQUEST_IMAGE_CAPTURE = 12312;
+    private byte[] profilePicByte;
+
+
 
 
 
@@ -59,6 +69,7 @@ public class AddPet extends AppCompatActivity {
         header = (TextView) findViewById(R.id.add_pet_title);
         defDog = (CheckBox) findViewById(R.id.default_dog);
         autoWalk = (CheckBox) findViewById(R.id.autoOnWalk);
+        profilePicture = (ImageView) findViewById(R.id.profile_picture);
         //Set up DB Helper
         DbHelp = new DbHelper(this);
         dbWrite = DbHelp.getWritableDatabase();
@@ -99,6 +110,8 @@ public class AddPet extends AppCompatActivity {
         cv.put(PetContract.WalkTheDog.WALKS_GOAL, walk);
         cv.put(PetContract.WalkTheDog.TIME_GOAL, time);
         cv.put(PetContract.WalkTheDog.DIST_GOAL, dist);
+        if (profilePicByte != null ) cv.put(PetContract.WalkTheDog.PROFILE_PIC, profilePicByte);
+        cv.put(PetContract.WalkTheDog.LAST_DAY_SYNCED, System.currentTimeMillis());
         return dbWrite.insert(PetContract.WalkTheDog.TABLE_NAME, null, cv);
     }
     //update a passed in dog
@@ -108,6 +121,7 @@ public class AddPet extends AppCompatActivity {
         cv.put(PetContract.WalkTheDog.WALKS_GOAL, walk);
         cv.put(PetContract.WalkTheDog.TIME_GOAL, time);
         cv.put(PetContract.WalkTheDog.DIST_GOAL, dist);
+        if (profilePicByte != null ) cv.put(PetContract.WalkTheDog.PROFILE_PIC, profilePicByte);
         String where = PetContract.WalkTheDog._ID+"=?";
         String[] whereArgs = new String[] {String.valueOf(petID)};
         dbWrite.update(PetContract.WalkTheDog.TABLE_NAME, cv, where, whereArgs);
@@ -236,6 +250,23 @@ public class AddPet extends AppCompatActivity {
             }
         }
         cursor.close();
+    }
+
+    public void takeProfilePicture(View view){
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null){
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && requestCode == RESULT_OK){
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            profilePicture.setImageBitmap(imageBitmap);
+            profilePicByte = DbBitmapUtility.getBytes(imageBitmap);
+        }
     }
 
     @Override

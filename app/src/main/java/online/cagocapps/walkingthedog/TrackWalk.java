@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.icu.text.DecimalFormat;
 import android.location.Location;
 import android.os.SystemClock;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.widget.Chronometer;
 import android.widget.TextView;
 
+import online.cagocapps.walkingthedog.data.DbBitmapUtility;
 import online.cagocapps.walkingthedog.data.DbHelper;
 import online.cagocapps.walkingthedog.data.PetContract;
 import com.google.android.gms.common.ConnectionResult;
@@ -130,7 +132,8 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 PetContract.WalkTheDog.CUR_DIST,
                 PetContract.WalkTheDog.CUR_TIME,
                 PetContract.WalkTheDog.CUR_WALKS,
-                PetContract.WalkTheDog.DIST_GOAL};
+                PetContract.WalkTheDog.DIST_GOAL,
+                PetContract.WalkTheDog.PROFILE_PIC};
         tempDogString = shrdPrefs.getString(getString(R.string.dogs_on_walk), null);
         if (tempDogString != null) dogsOnWalkString = tempDogString;
         shrdPrefs.edit().putString(getString(R.string.dogs_on_walk), null).commit();
@@ -156,6 +159,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
             Long[] goalWalks = new Long[cursor.getCount()];
             Long[] goalTime = new Long[cursor.getCount()];
             Float[] goalDist = new Float[cursor.getCount()];
+            Bitmap[] images = new Bitmap[cursor.getCount()];
             while (cursor.moveToNext()) {
                 dogIDs[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID));
                 dogNames[i] = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.DOG_NAME));
@@ -165,10 +169,11 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 goalWalks[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.WALKS_GOAL));
                 goalTime[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL));
                 goalDist[i] = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
+                images[i] = DbBitmapUtility.getImage(cursor.getBlob(cursor.getColumnIndex(PetContract.WalkTheDog.PROFILE_PIC)));
                 i++;
             }
             dogAdapter.setDogsList(dogIDs, dogNames, curWalks, curTime, curDist,
-                    goalWalks, goalTime, goalDist);
+                    goalWalks, goalTime, goalDist, images);
             cursor.close();
             dbRead.close();
         }
@@ -234,7 +239,9 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 PetContract.WalkTheDog.CUR_DIST,
                 PetContract.WalkTheDog.CUR_TIME,
                 PetContract.WalkTheDog.CUR_WALKS,
-                PetContract.WalkTheDog.DIST_GOAL};
+                PetContract.WalkTheDog.DIST_GOAL,
+                PetContract.WalkTheDog.BEST_WALKS,
+                PetContract.WalkTheDog.BEST_DIST};
         if (!dogsOnWalkString.equals(null)) {
             dogIDsOnWalk = dogsOnWalkString.split(" ");
             String where = PetContract.WalkTheDog._ID + " IN ("
@@ -257,6 +264,8 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 Long goalWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.WALKS_GOAL));
                 Long goalTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL));
                 Float goalDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
+                float wBestDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_DIST));
+                Long wBestTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME));
                 if (curWalks < goalWalks || curTime < goalTime || curDist < goalDist){
                     alreadyHitStreak = false;
                 } else alreadyHitStreak = true;
@@ -266,11 +275,15 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 if (curWalks > goalWalks && curTime > goalTime && curDist > goalDist && !alreadyHitStreak){
                     Streak = Streak + 1;
                 }
+                if (wBestDist < distance) wBestDist = distance;
+                if (wBestTime < ElapsedTime/60000) wBestTime = ElapsedTime/60000;
                 ContentValues cv = new ContentValues();
                 cv.put(PetContract.WalkTheDog.CUR_WALKS, curWalks);
                 cv.put(PetContract.WalkTheDog.CUR_TIME, curTime);
                 cv.put(PetContract.WalkTheDog.STREAK, Streak);
                 cv.put(PetContract.WalkTheDog.CUR_DIST, curDist);
+                cv.put(PetContract.WalkTheDog.BEST_DIST, wBestDist);
+                cv.put(PetContract.WalkTheDog.BEST_TIME, wBestTime);
                 String whereVal = PetContract.WalkTheDog._ID+"=?";
                 String[] whereArgs = new String[] {String.valueOf(petID)};
                 dbRead.update(PetContract.WalkTheDog.TABLE_NAME, cv, whereVal, whereArgs);
