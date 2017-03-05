@@ -89,7 +89,7 @@ public class DogOnWalkAdapter extends RecyclerView.Adapter<DogOnWalkAdapter.DogO
                 holder.dogIDholder.setEnabled(true);
             }
         }
-        holder.dogPicImageView.setImageBitmap(mImages[position]);
+        if (mImages[position] != null) holder.dogPicImageView.setImageBitmap(mImages[position]);
     }
 
     @Override
