@@ -241,7 +241,8 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 PetContract.WalkTheDog.CUR_WALKS,
                 PetContract.WalkTheDog.DIST_GOAL,
                 PetContract.WalkTheDog.BEST_WALKS,
-                PetContract.WalkTheDog.BEST_DIST};
+                PetContract.WalkTheDog.BEST_DIST,
+                PetContract.WalkTheDog.BEST_TIME};
         if (!dogsOnWalkString.equals(null)) {
             dogIDsOnWalk = dogsOnWalkString.split(" ");
             String where = PetContract.WalkTheDog._ID + " IN ("

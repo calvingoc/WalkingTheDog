@@ -69,7 +69,8 @@ public class EditDogsOnWalk extends AppCompatActivity implements DogOnWalkAdapte
         {
             dogIDs[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID));
             dogNames[i] = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.DOG_NAME));
-            images [i] = DbBitmapUtility.getImage(cursor.getBlob(cursor.getColumnIndex(PetContract.WalkTheDog.PROFILE_PIC)));
+            if (cursor.getBlob(cursor.getColumnIndex(PetContract.WalkTheDog.PROFILE_PIC)) != null)
+                    images [i] = DbBitmapUtility.getImage(cursor.getBlob(cursor.getColumnIndex(PetContract.WalkTheDog.PROFILE_PIC)));
             i++;
         }
         String [] dogIdsOnWalk = dogsOnWalk.split(" ");

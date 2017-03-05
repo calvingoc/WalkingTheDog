@@ -92,7 +92,7 @@
             android:id="@+id/walks_rem_title"
             android:layout_width="50dp"
             android:layout_height="20dp"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="12dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:gravity="right"
