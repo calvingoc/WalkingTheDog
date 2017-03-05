@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -62,6 +63,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
         }
         defaultId = shrdPrefs.getLong(getString(R.string.default_dog), noDog);
+        Log.d("dogID", "Before" + Long.toString(defaultId));
+        defaultId = getIntent().getLongExtra(getResources().getString(R.string.pet_id), defaultId);
+        Log.d("dogID", "After" + Long.toString(defaultId));
         //make user add dog if no dogs in DB
         if (defaultId == noDog){
             Intent intent = new Intent(this, AddPet.class);
@@ -214,6 +218,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         if (totTimes !=0) tv.setText(Long.toString(totDist/(totTimes/60)));
         else tv.setText("0");
         cursor.close();
+    }
+
+    public void editDog(View view){
+        Intent intent = new Intent(this, AddPet.class);
+        intent.putExtra(getString(R.string.pet_id), defaultId);
+        startActivity(intent);
     }
 
     @Override

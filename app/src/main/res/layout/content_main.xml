@@ -30,7 +30,8 @@
             android:layout_width="10dp"
             android:layout_height="0dp"
             android:id="@+id/padding"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_editor_absoluteY="81dp" />
         <TextView
             android:id="@+id/dog_name"
             android:layout_width="0dp"
@@ -440,6 +441,16 @@
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/ave_mph"
             app:layout_constraintTop_toTopOf="@+id/ave_mph"/>
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:id="@+id/edit_dog"
+            android:text="@string/edit_goals_button"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ave_mph"
+            app:layout_constraintRight_toRightOf="parent"
+            android:onClick="editDog"
+            />
 
 
     </android.support.constraint.ConstraintLayout>

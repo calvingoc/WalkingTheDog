@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.text.DecimalFormat;
 import android.location.Location;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
@@ -35,6 +36,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 //Class sets up the Tracking walk screen and lays the basework for timing the walk, tracking the walk with GPS and getting distance.
@@ -58,6 +60,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
     private TextView distanceDisplay;
     private GoogleMap map;
     private LocationRequest locationRequest;
+    private Marker marker;
 
 
 
@@ -97,7 +100,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 findFragmentById(R.id.map_fragment);
         mapFragment.getMapAsync(this);
         locationRequest = LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).
-                setInterval(5000).setFastestInterval(1000);
+                setInterval(10000).setFastestInterval(1000);
 
     }
 
@@ -286,14 +289,16 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
 
     @Override
     public void onLocationChanged(Location location) {
-        map.addMarker(new MarkerOptions()
+        if (marker != null) marker.remove();
+        marker = map.addMarker(new MarkerOptions()
                 .position(new LatLng(location.getLatitude(), location.getLongitude())));
         map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),
                 location.getLongitude())));
         map.animateCamera(CameraUpdateFactory.zoomTo( 17.0f ));
 
         distance =  distance + (location.distanceTo(mLastLocation)/1609);
-        distanceDisplay.setText(Float.toString(distance));
+        String distanceString = String.format("%.2f", distance);
+        distanceDisplay.setText(distanceString);
         mLastLocation = location;
     }
 }

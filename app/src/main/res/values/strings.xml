@@ -46,6 +46,7 @@
     <string name="ave_time_day">Average Time per Day</string>
     <string name="ave_dist_day">Average Miles per Day</string>
     <string name="ave_mph">Average Miles per Hour</string>
+    <string name="edit_goals_button">Edit Goals</string>
 
     <!--Track Walk Strings-->
     <string name="tw_walk_time">Time</string>

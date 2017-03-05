@@ -65,9 +65,10 @@ public class ViewDogs extends AppCompatActivity implements DogAdapter.DogAdapter
 
     @Override
     public void onClick(Long petID) {
-        Intent intent = new Intent(this, AddPet.class);
-        intent.putExtra(getString(R.string.pet_id), petID);
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(getResources().getString(R.string.pet_id), petID);
         startActivity(intent);
+        finish();
     }
 
     @Override

@@ -95,7 +95,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="150dp"
         android:background="#8B0000"
         android:onClick="deleteDog"
         android:text="@string/delete_dog"
