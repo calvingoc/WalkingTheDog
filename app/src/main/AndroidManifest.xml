@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="online.cagocapps.walkingthedog">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-feature android:name="android.hardware.Camera"
         android:required="false"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:allowBackup="true"
@@ -45,12 +47,12 @@
             android:launchMode="singleTask"/>
         <activity android:name=".EditDogsOnWalk"
             android:launchMode="singleTask"></activity>
-        <service android:name=".UpdateDogFirebaseJobService"
-            android:exported="false">
+        <receiver android:name=".DogUpdateReceiver"
+            android:enabled="false">
             <intent-filter>
-                <action android:name="com.firebase.jobdispacher.ACTION_EXECUTE"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"></action>
             </intent-filter>
-        </service>
+        </receiver>
     </application>
 
 </manifest>
