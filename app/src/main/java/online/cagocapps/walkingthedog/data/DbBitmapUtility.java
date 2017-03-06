@@ -18,6 +18,7 @@ public class DbBitmapUtility {
     }
 
     public static Bitmap getImage(byte[] image){
-        return BitmapFactory.decodeByteArray(image, 0, image.length);
+        if (image != null) return BitmapFactory.decodeByteArray(image, 0, image.length);
+        else return null;
     }
 }

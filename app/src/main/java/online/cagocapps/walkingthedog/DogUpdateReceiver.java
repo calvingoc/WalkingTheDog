@@ -34,7 +34,8 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                     PetContract.WalkTheDog.BEST_DIST_DAY,
                     PetContract.WalkTheDog.BEST_TIME_DAY,
                     PetContract.WalkTheDog.BEST_WALKS,
-                    PetContract.WalkTheDog.LAST_DAY_SYNCED
+                    PetContract.WalkTheDog.LAST_DAY_SYNCED,
+                    PetContract.WalkTheDog.BEST_STREAK
             };
             Cursor cursor = dbWrite.query(
                     PetContract.WalkTheDog.TABLE_NAME,

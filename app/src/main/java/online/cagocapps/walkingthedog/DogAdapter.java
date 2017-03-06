@@ -87,7 +87,7 @@ public class DogAdapter extends RecyclerView.Adapter<DogAdapter.DogAdapterViewHo
             holder.dogWalksView.setText(Long.toString(math));
             float distMath = mGoalDist[position] - mCurDist[position];
             if (distMath < 0) distMath = (float) 0;
-            holder.dogDistView.setText(Float.toString(distMath));
+            holder.dogDistView.setText(String.format("%.2f", distMath));
             if (mImages[position]!= null) holder.dogPic.setImageBitmap(mImages[position]);
 
         }

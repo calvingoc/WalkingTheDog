@@ -306,11 +306,11 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         finish();
     }
 
-
     @Override
-    protected void onStop() {
+    protected void onDestroy() {
+        super.onDestroy();
+        LocationServices.FusedLocationApi.removeLocationUpdates(apiC, this);
         apiC.disconnect();
-        super.onStop();
     }
 
     @Override
