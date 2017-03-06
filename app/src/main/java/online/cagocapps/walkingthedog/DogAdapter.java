@@ -52,7 +52,7 @@ public class DogAdapter extends RecyclerView.Adapter<DogAdapter.DogAdapterViewHo
             dogWalksView = (TextView) view.findViewById(R.id.dog_walks_rv);
             dogDistView = (TextView) view.findViewById(R.id.dog_dist_tv);
             dogTimeView = (TextView) view.findViewById(R.id.dog_time_rv);
-            dogPic = (ImageView) view.findViewById(R.id.dogPic);
+            dogPic = (ImageView) view.findViewById(R.id.dog_list_image);
             view.setOnClickListener(this);
         }
 
@@ -88,7 +88,7 @@ public class DogAdapter extends RecyclerView.Adapter<DogAdapter.DogAdapterViewHo
             float distMath = mGoalDist[position] - mCurDist[position];
             if (distMath < 0) distMath = (float) 0;
             holder.dogDistView.setText(Float.toString(distMath));
-            if (mImages[position] != null) holder.dogPic.setImageBitmap(mImages[position]);
+            if (mImages[position]!= null) holder.dogPic.setImageBitmap(mImages[position]);
 
         }
     }

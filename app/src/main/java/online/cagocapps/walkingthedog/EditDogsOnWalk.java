@@ -74,7 +74,7 @@ public class EditDogsOnWalk extends AppCompatActivity implements DogOnWalkAdapte
             i++;
         }
         String [] dogIdsOnWalk = dogsOnWalk.split(" ");
-        dogAdapter.setDogsOnWalk(dogIDs, dogNames, dogIdsOnWalk,images);
+        dogAdapter.setDogsOnWalk(dogIDs, dogNames, dogIdsOnWalk, images);
         cursor.close();
     }
 

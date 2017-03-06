@@ -179,7 +179,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 goalWalks[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.WALKS_GOAL));
                 goalTime[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL));
                 goalDist[i] = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
-                if (images[i] != null) images[i] = DbBitmapUtility.getImage(cursor.getBlob(cursor.getColumnIndex(PetContract.WalkTheDog.PROFILE_PIC)));
+                images[i] = DbBitmapUtility.getImage(cursor.getBlob(cursor.getColumnIndex(PetContract.WalkTheDog.PROFILE_PIC)));
                 i++;
             }
             dogAdapter.setDogsList(dogIDs, dogNames, curWalks, curTime, curDist,

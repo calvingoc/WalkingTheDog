@@ -60,7 +60,7 @@ public class ViewDogs extends AppCompatActivity implements DogAdapter.DogAdapter
         {
             dogIDs[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID));
             dogNames[i] = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.DOG_NAME));
-            if (images[i] !=null ) images[i] = DbBitmapUtility.getImage(cursor.getBlob(cursor.getColumnIndex(PetContract.WalkTheDog.PROFILE_PIC)));
+            images[i] = DbBitmapUtility.getImage(cursor.getBlob(cursor.getColumnIndex(PetContract.WalkTheDog.PROFILE_PIC)));
             i++;
         }
         dogAdapter.setDogsList(dogIDs, dogNames, null, null, null, null, null, null, images);
