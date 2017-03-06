@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     tools:context="online.cagocapps.walkingthedog.TrackWalk">
 
     <android.support.constraint.ConstraintLayout
@@ -154,7 +155,7 @@
         android:id="@+id/button_edit_dogs_on_walk"
         android:layout_width="200dp"
         android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/track_walk_adview"
         android:layout_alignParentLeft="true"
         android:text="@string/change_dogs_on_walk"
         android:background="@color/colorPrimary"
@@ -164,11 +165,22 @@
         android:id="@+id/end_dog_walk"
         android:layout_width="200dp"
         android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/track_walk_adview"
         android:layout_alignParentRight="true"
         android:text="@string/end_walk_button"
         android:background="#8B0000"
         android:onClick="endWalk" />
+
+    <com.google.android.gms.ads.AdView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/track_walk_adview"
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="@string/track_walk_ad_banner"
+        >
+
+    </com.google.android.gms.ads.AdView>
 
 
 </RelativeLayout>

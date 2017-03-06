@@ -26,6 +26,9 @@ import android.widget.TextView;
 import online.cagocapps.walkingthedog.data.DbBitmapUtility;
 import online.cagocapps.walkingthedog.data.DbHelper;
 import online.cagocapps.walkingthedog.data.PetContract;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -63,6 +66,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
     private GoogleMap map;
     private LocationRequest locationRequest;
     private Marker marker;
+    private AdView mAdView;
 
 
 
@@ -81,7 +85,13 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         shrdPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         dogsOnWalkString = shrdPrefs.getString(getString(R.string.default_walks_dog), null);
 
-        //find TextView
+        //set up ads
+        mAdView = (AdView) findViewById(R.id.track_walk_adview);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("76717E7B15FCA5425DF294B119AA246A")
+                .build();
+        mAdView.loadAd(adRequest);
 
         distanceDisplay = (TextView) findViewById(R.id.distance_display);
         //Setting up RecyclerView

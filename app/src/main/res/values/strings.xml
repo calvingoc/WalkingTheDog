@@ -61,4 +61,9 @@
     <string name="end_walk_button">End walk</string>
     <string name="change_dogs_on_walk">Change dogs</string>
 
+
+    <!-- Ads -->
+    <string name="main_activity_ad_banner" translatable="false">ca-app-pub-9578879157437430/3257869302</string>
+    <string name="adMob_app_id" translatable="false">ca-app-pub-9578879157437430~1781136107</string>
+    <string name="track_walk_ad_banner" translatable="false">ca-app-pub-9578879157437430/7688068903</string>
 </resources>

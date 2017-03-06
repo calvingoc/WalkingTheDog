@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "799067845456",
+    "firebase_url": "https://walking-the-dog.firebaseio.com",
+    "project_id": "walking-the-dog",
+    "storage_bucket": "walking-the-dog.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799067845456:android:5cf20b6e0791660e",
+        "android_client_info": {
+          "package_name": "online.cagocapps.walkingthedog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "799067845456-78adfftah8s868hhekjjtt8hof3ukkq4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "online.cagocapps.walkingthedog",
+            "certificate_hash": "79a05cbf2f60859f45e1e0bdedc0ebe06bc8b8bb"
+          }
+        },
+        {
+          "client_id": "799067845456-2p2eid6lb0ctstmr0dn9pfc4ltiepr3s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDr3TzYkFKpBB_4B0uoLXJptPpvnTI92Gw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "799067845456-2p2eid6lb0ctstmr0dn9pfc4ltiepr3s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

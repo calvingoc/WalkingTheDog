@@ -21,6 +21,10 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import online.cagocapps.walkingthedog.data.DbBitmapUtility;
 import online.cagocapps.walkingthedog.data.DbHelper;
 import online.cagocapps.walkingthedog.data.PetContract;
@@ -33,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private SharedPreferences shrdPrefs;
     private long defaultId;
     private long noDog = -1;
-    private static final  int ID_DOGUPDATE_LOADER = 44;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,13 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         DbHelp = new DbHelper(this);
         dbRead = DbHelp.getReadableDatabase();
         setContentView(R.layout.activity_main);
+        MobileAds.initialize(getApplicationContext(), getString(R.string.adMob_app_id));
+        mAdView = (AdView) findViewById(R.id.main_activity_adview);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("76717E7B15FCA5425DF294B119AA246A")
+                .build();
+        mAdView.loadAd(adRequest);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         shrdPrefs = PreferenceManager.getDefaultSharedPreferences(this);
