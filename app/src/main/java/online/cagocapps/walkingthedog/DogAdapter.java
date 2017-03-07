@@ -3,6 +3,7 @@ package online.cagocapps.walkingthedog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,6 +79,8 @@ public class DogAdapter extends RecyclerView.Adapter<DogAdapter.DogAdapterViewHo
     public void onBindViewHolder(DogAdapterViewHolder holder, int position) {
         String dogName = dogsListNames[position];
         holder.dogTextView.setText(dogName);
+        if (mImages[position]!= null){
+            holder.dogPic.setImageBitmap(mImages[position]);
         if (mCurWalks != null){
             Long math = mGoalTime[position] - mCurTime[position];
             if (math < 0) math = (long) 0;
@@ -88,7 +91,7 @@ public class DogAdapter extends RecyclerView.Adapter<DogAdapter.DogAdapterViewHo
             float distMath = mGoalDist[position] - mCurDist[position];
             if (distMath < 0) distMath = (float) 0;
             holder.dogDistView.setText(String.format("%.2f", distMath));
-            if (mImages[position]!= null) holder.dogPic.setImageBitmap(mImages[position]);
+            }
 
         }
     }

@@ -112,7 +112,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 findFragmentById(R.id.map_fragment);
         mapFragment.getMapAsync(this);
         locationRequest = LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY).
-                setInterval(10000).setFastestInterval(1000);
+                setInterval(10000).setFastestInterval(1000).setMaxWaitTime(15000);
 
     }
 

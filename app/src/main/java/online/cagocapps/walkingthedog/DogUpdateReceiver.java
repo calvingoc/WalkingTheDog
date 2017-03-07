@@ -50,24 +50,24 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                 Long lastDaySynced = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.LAST_DAY_SYNCED));
                 Date lastDaySync = new Date(lastDaySynced);
                 Date curDate = new Date(System.currentTimeMillis());
-                if (!curDate.equals(lastDaySync)) {
+                if (curDate.getDate()!=(lastDaySync.getDate())) {
 
                     Long petID = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID));
-                    Long curTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
+                    float curTime = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
                     float curDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
-                    Long curWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_WALKS));
-                    Long streak = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.STREAK));
-                    Long bestStreak = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_STREAK));
-                    Long totWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_WALKS));
-                    Long totTimes = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_TIME));
+                    float curWalks = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_WALKS));
+                    float streak = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.STREAK));
+                    float bestStreak = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_STREAK));
+                    float totWalks = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_WALKS));
+                    float totTimes = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_TIME));
                     float totDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_DIST));
-                    Long totDays = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_DAYS));
-                    Long dBestTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME_DAY));
+                    float totDays = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_DAYS));
+                    float dBestTime = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME_DAY));
                     float dBestDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_DIST_DAY));
-                    Long bestWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_WALKS));
+                    float bestWalks = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_WALKS));
                     Long curDateMillis = System.currentTimeMillis();
 
-                    totDays = totDays++;
+                    totDays = totDays + 1;
                     totWalks = totWalks + curWalks;
                     totTimes = totTimes + curTime;
                     totDist = totDist + curDist;

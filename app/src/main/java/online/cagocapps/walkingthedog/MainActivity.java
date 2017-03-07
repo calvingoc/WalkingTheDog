@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -167,20 +168,20 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             Long timeGoal = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL));
             Long walkGoal = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.WALKS_GOAL));
             float distGoal = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
-            Long curTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
+            float curTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
             float curDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
             Long curWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_WALKS));
             Long streak = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.STREAK));
             Long bestStreak = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_STREAK));
-            Long totWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_WALKS));
-            Long totTimes = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_TIME));
+            float totWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_WALKS));
+            float totTimes = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_TIME));
             float totDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_DIST));
-            Long totDays = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_DAYS));
-            Long wBestTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME));
-            Long dBestTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME_DAY));
+            float totDays = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_DAYS));
+            float wBestTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME));
+            float dBestTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME_DAY));
             float wBestDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_DIST));
             float dBestDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_DIST_DAY));
-            Long bestWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_WALKS));
+            float bestWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_WALKS));
             byte[] image = cursor.getBlob(cursor.getColumnIndex(PetContract.WalkTheDog.PROFILE_PIC));
             ImageView profilepic = (ImageView) findViewById(R.id.dogPic);
             if (image != null) profilepic.setImageBitmap(DbBitmapUtility.getImage(image));
@@ -196,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 iv.setImageResource(R.drawable.btn_star_big_off);
             }
             tv = (TextView) findViewById(R.id.cur_time);
-            tv.setText(Long.toString(curTime) + " / " + Long.toString(timeGoal));
+            tv.setText(String.format("%.2f", curTime) + " / " + Long.toString(timeGoal));
             if (curTime >= timeGoal) {
                 ImageView iv = (ImageView) findViewById(R.id.time_star);
                 iv.setImageResource(R.drawable.btn_star_big_on);
@@ -218,39 +219,46 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             tv = (TextView) findViewById(R.id.best_streak_val);
             tv.setText(Long.toString(bestStreak));
             tv = (TextView) findViewById(R.id.all_time_walks_val);
-            tv.setText(Long.toString(totWalks));
+            tv.setText(String.format("%.0f", totWalks));
             tv = (TextView) findViewById(R.id.all_time_time_val);
-            tv.setText(Long.toString(totTimes));
+            tv.setText(String.format("%.2f", totTimes));
             tv = (TextView) findViewById(R.id.all_time_dist_val);
             tv.setText(String.format("%.2f", totDist));
             tv = (TextView) findViewById(R.id.best_walks_val);
-            tv.setText(Long.toString(bestWalks));
+            tv.setText(String.format("%.0f", bestWalks));
             tv = (TextView) findViewById(R.id.best_time_val);
-            tv.setText(Long.toString(dBestTime));
+            tv.setText(String.format("%.2f", dBestTime));
             tv = (TextView) findViewById(R.id.best_time_wk_val);
-            tv.setText(Long.toString(wBestTime));
+            tv.setText(String.format("%.2f", wBestTime));
             tv = (TextView) findViewById(R.id.best_dist_val);
             tv.setText(String.format("%.2f", dBestDist));
             tv = (TextView) findViewById(R.id.best_dist_wk_val);
             tv.setText(String.format("%.2f", wBestDist));
             tv = (TextView) findViewById(R.id.ave_time_walk_val);
-            if (totWalks != 0) tv.setText(Long.toString(totTimes / totWalks));
+            if (totWalks != 0) tv.setText(String.format("%.2f", totTimes / totWalks));
             else tv.setText("0");
             tv = (TextView) findViewById(R.id.ave_dist_walk_val);
-            if (totWalks != 0) tv.setText(String.format("%.2f", (totDist / totWalks)));
+            if (totWalks != 0.0) tv.setText(String.format("%.2f", (totDist / totWalks)));
             else tv.setText("0");
             tv = (TextView) findViewById(R.id.ave_walk_day_value);
-            if (totDays != 0) tv.setText(Long.toString(totWalks / totDays));
+            if (totDays != 0.0) tv.setText(String.format("%.2f", totWalks / totDays));
             else tv.setText("0");
             tv = (TextView) findViewById(R.id.ave_time_day_value);
-            if (totDays != 0) tv.setText(Long.toString(totTimes / totDays));
+            if (totDays != 0.0) tv.setText(String.format("%.2f", totTimes / totDays));
             else tv.setText("0");
             tv = (TextView) findViewById(R.id.ave_dist_day_value);
-            if (totDays != 0) tv.setText(String.format("%.2f", (totDist / totDays)));
+            if (totDays != 0.0) tv.setText(String.format("%.2f", (totDist / totDays)));
             else tv.setText("0");
             tv = (TextView) findViewById(R.id.ave_mph_value);
-            if (totTimes != 0) tv.setText(String.format("%.2f", (totDist / (totTimes / 60))));
-            else tv.setText("0");
+            float math;
+            float time = (float) totTimes;
+            if (totTimes != 0) {
+                math = (totDist / (time / 60));
+                if (math < .01) math = 0;
+            }
+            else math = 0;
+            Log.d("mainactivity", Float.toString(math));
+            tv.setText(String.format("%.2f", math));
         }else {
             shrdPrefs.edit().putString(getString(R.string.default_walks_dog),null)
                     .putLong(getString(R.string.default_dog), -1).commit();
@@ -268,6 +276,5 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        dbRead.close();
     }
 }

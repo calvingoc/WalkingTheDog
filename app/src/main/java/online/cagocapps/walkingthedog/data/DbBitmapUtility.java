@@ -2,6 +2,7 @@ package online.cagocapps.walkingthedog.data;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 
@@ -18,7 +19,9 @@ public class DbBitmapUtility {
     }
 
     public static Bitmap getImage(byte[] image){
-        if (image != null) return BitmapFactory.decodeByteArray(image, 0, image.length);
+        if (image != null) {
+            return BitmapFactory.decodeByteArray(image, 0, image.length);
+        }
         else return null;
     }
 }

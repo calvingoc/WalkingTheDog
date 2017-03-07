@@ -154,7 +154,8 @@ public class AddPet extends AppCompatActivity {
             String[] columns = new String[]{PetContract.WalkTheDog.DOG_NAME,
                     PetContract.WalkTheDog.TIME_GOAL,
                     PetContract.WalkTheDog.WALKS_GOAL,
-                    PetContract.WalkTheDog.DIST_GOAL};
+                    PetContract.WalkTheDog.DIST_GOAL,
+                    PetContract.WalkTheDog.PROFILE_PIC};
 
             Cursor cursor = dbWrite.query(
                     PetContract.WalkTheDog.TABLE_NAME,
@@ -171,6 +172,10 @@ public class AddPet extends AppCompatActivity {
             petDist.setText(Integer.toString(cursor.getInt(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL))));
             petName.setText(petNameString);
             petTime.setText(Integer.toString(cursor.getInt(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL))));
+            profilePicture
+                    .setImageBitmap(DbBitmapUtility.getImage(
+                            cursor.getBlob(cursor.getColumnIndex(PetContract.WalkTheDog.PROFILE_PIC))
+                    ));
             deleteButton.setEnabled(true);
             deleteButton.setVisibility(View.VISIBLE);
             deleteButton.setText(getString(R.string.delete_dog) + " " + petNameString + " "

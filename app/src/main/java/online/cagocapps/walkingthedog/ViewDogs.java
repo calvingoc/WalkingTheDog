@@ -38,8 +38,8 @@ public class ViewDogs extends AppCompatActivity implements DogAdapter.DogAdapter
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         String[] columns = new String[]{PetContract.WalkTheDog.DOG_NAME,
                 PetContract.WalkTheDog._ID,
                 PetContract.WalkTheDog.PROFILE_PIC};
@@ -60,7 +60,8 @@ public class ViewDogs extends AppCompatActivity implements DogAdapter.DogAdapter
         {
             dogIDs[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID));
             dogNames[i] = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.DOG_NAME));
-            images[i] = DbBitmapUtility.getImage(cursor.getBlob(cursor.getColumnIndex(PetContract.WalkTheDog.PROFILE_PIC)));
+            Bitmap bitmap = DbBitmapUtility.getImage(cursor.getBlob(cursor.getColumnIndex(PetContract.WalkTheDog.PROFILE_PIC)));
+            images[i] = bitmap;
             i++;
         }
         dogAdapter.setDogsList(dogIDs, dogNames, null, null, null, null, null, null, images);
