@@ -67,6 +67,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
     private LocationRequest locationRequest;
     private Marker marker;
     private AdView mAdView;
+    private int locationDelay = 0;
 
 
 
@@ -164,20 +165,20 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
             dogIDs = new Long[cursor.getCount()];
             dogNames = new String[cursor.getCount()];
             Long[] curWalks = new Long[cursor.getCount()];
-            Long[] curTime = new Long[cursor.getCount()];
+            double[] curTime = new double[cursor.getCount()];
             Float[] curDist = new Float[cursor.getCount()];
             Long[] goalWalks = new Long[cursor.getCount()];
-            Long[] goalTime = new Long[cursor.getCount()];
+            double[] goalTime = new double[cursor.getCount()];
             Float[] goalDist = new Float[cursor.getCount()];
             Bitmap[] images = new Bitmap[cursor.getCount()];
             while (cursor.moveToNext()) {
                 dogIDs[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID));
                 dogNames[i] = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.DOG_NAME));
                 curWalks[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_WALKS));
-                curTime[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
+                curTime[i] = cursor.getDouble(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
                 curDist[i] = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
                 goalWalks[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.WALKS_GOAL));
-                goalTime[i] = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL));
+                goalTime[i] = cursor.getDouble(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL));
                 goalDist[i] = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
                 images[i] = DbBitmapUtility.getImage(cursor.getBlob(cursor.getColumnIndex(PetContract.WalkTheDog.PROFILE_PIC)));
                 i++;
@@ -238,6 +239,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
 
     public void endWalk(View view) {
         long ElapsedTime = SystemClock.elapsedRealtime() - timer.getBase();
+        double elaspedTimeFloat =  ElapsedTime / 60000.0;
         Boolean alreadyHitStreak;
         timer.stop();
         dbRead = DbHelp.getWritableDatabase();
@@ -270,24 +272,24 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 Long petID = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID));
                 Long Streak = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.STREAK));
                 Long curWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_WALKS));
-                Long curTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
-                Float curDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
+                double curTime = cursor.getDouble(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
+                float curDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
                 Long goalWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.WALKS_GOAL));
-                Long goalTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL));
-                Float goalDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
+                double goalTime = cursor.getDouble(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL));
+                float goalDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
                 float wBestDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_DIST));
-                Long wBestTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME));
+                double wBestTime = cursor.getDouble(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME));
                 if (curWalks < goalWalks || curTime < goalTime || curDist < goalDist){
                     alreadyHitStreak = false;
                 } else alreadyHitStreak = true;
                 curWalks = curWalks +1;
-                curTime = curTime + (ElapsedTime/60000);
+                curTime = curTime + (elaspedTimeFloat);
                 curDist =  (curDist + distance);
                 if (curWalks > goalWalks && curTime > goalTime && curDist > goalDist && !alreadyHitStreak){
                     Streak = Streak + 1;
                 }
                 if (wBestDist < distance) wBestDist = distance;
-                if (wBestTime < ElapsedTime/60000) wBestTime = ElapsedTime/60000;
+                if (wBestTime < elaspedTimeFloat) wBestTime = elaspedTimeFloat;
                 ContentValues cv = new ContentValues();
                 cv.put(PetContract.WalkTheDog.CUR_WALKS, curWalks);
                 cv.put(PetContract.WalkTheDog.CUR_TIME, curTime);
@@ -315,16 +317,20 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
 
     @Override
     public void onLocationChanged(Location location) {
-        if (marker != null) marker.remove();
-        marker = map.addMarker(new MarkerOptions()
-                .position(new LatLng(location.getLatitude(), location.getLongitude())));
-        map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),
-                location.getLongitude())));
-        map.animateCamera(CameraUpdateFactory.zoomTo( 17.0f ));
+        if (locationDelay != 0) {
+            if (marker != null) marker.remove();
+            marker = map.addMarker(new MarkerOptions()
+                    .position(new LatLng(location.getLatitude(), location.getLongitude())));
+            map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(location.getLatitude(),
+                    location.getLongitude())));
+            map.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
 
-        if (location != null && mLastLocation != null) distance =  distance + (location.distanceTo(mLastLocation)/1609);
-        String distanceString = String.format("%.2f", distance);
-        distanceDisplay.setText(distanceString);
-        mLastLocation = location;
+            if (location != null && mLastLocation != null)
+                distance = distance + (location.distanceTo(mLastLocation) / 1609);
+            String distanceString = String.format("%.2f", distance);
+            distanceDisplay.setText(distanceString);
+            mLastLocation = location;
+        }
+        locationDelay++;
     }
 }

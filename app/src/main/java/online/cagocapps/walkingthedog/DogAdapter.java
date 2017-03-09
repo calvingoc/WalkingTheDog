@@ -21,10 +21,10 @@ public class DogAdapter extends RecyclerView.Adapter<DogAdapter.DogAdapterViewHo
     private Long[] dogsList;
     private String[] dogsListNames;
     private Long[] mCurWalks;
-    private Long[] mCurTime;
+    private double[] mCurTime;
     private Float[] mCurDist;
     private Long[] mGoalWalks;
-    private Long[] mGoalTime;
+    private double[] mGoalTime;
     private Float[] mGoalDist;
     private Bitmap[] mImages;
 
@@ -79,20 +79,19 @@ public class DogAdapter extends RecyclerView.Adapter<DogAdapter.DogAdapterViewHo
     public void onBindViewHolder(DogAdapterViewHolder holder, int position) {
         String dogName = dogsListNames[position];
         holder.dogTextView.setText(dogName);
-        if (mImages[position]!= null){
+        if (mImages[position]!= null) {
             holder.dogPic.setImageBitmap(mImages[position]);
+        }
         if (mCurWalks != null){
-            Long math = mGoalTime[position] - mCurTime[position];
-            if (math < 0) math = (long) 0;
-            holder.dogTimeView.setText(Long.toString(math));
-            math = mGoalWalks[position] - mCurWalks[position];
-            if (math < 0) math = (long) 0;
-            holder.dogWalksView.setText(Long.toString(math));
+            double math = mGoalTime[position] - mCurTime[position];
+            if (math < 0) math = 0;
+            holder.dogTimeView.setText(String.format("%.2f", math));
+            long walkMath = mGoalWalks[position] - mCurWalks[position];
+            if (walkMath < 0) walkMath = (long) 0;
+            holder.dogWalksView.setText(Long.toString(walkMath));
             float distMath = mGoalDist[position] - mCurDist[position];
             if (distMath < 0) distMath = (float) 0;
             holder.dogDistView.setText(String.format("%.2f", distMath));
-            }
-
         }
     }
 
@@ -104,8 +103,8 @@ public class DogAdapter extends RecyclerView.Adapter<DogAdapter.DogAdapterViewHo
 
     //moves values into local variables.
     public  void setDogsList(Long[] dogsListID, String[] dogsListName,
-                             Long[] curWalks, Long[] curTime, Float[] curDist,
-                             Long[] goalWalks, Long[] goalTime, Float[] goalDist, Bitmap[] images)
+                             Long[] curWalks, double[] curTime, Float[] curDist,
+                             Long[] goalWalks, double[] goalTime, Float[] goalDist, Bitmap[] images)
     {
         dogsList = dogsListID;
         dogsListNames = dogsListName;
