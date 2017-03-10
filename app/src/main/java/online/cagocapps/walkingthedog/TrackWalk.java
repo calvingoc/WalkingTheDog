@@ -47,14 +47,25 @@ import com.google.android.gms.maps.model.MarkerOptions;
 //Class sets up the Tracking walk screen and lays the basework for timing the walk, tracking the walk with GPS and getting distance.
 public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapterOnClickHandler,
         OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,LocationListener {
+    // set up database variables
     private DbHelper DbHelp;
     private SQLiteDatabase dbRead;
+
+    //view variables
+    private AdView mAdView;
     private RecyclerView rvDogList;
+    private TextView distanceDisplay;
+    private Chronometer timer;
     private DogAdapter dogAdapter;
+
+    //map and tracking varibles
     private GoogleApiClient apiC;
     private Location mLastLocation;
-    private static final String TAG = "TrackWalk";
-    private Chronometer timer;
+    private GoogleMap map;
+    private LocationRequest locationRequest;
+    private Marker marker;
+
+   //display variables
     private Long[] dogIDs;
     private String[] dogNames;
     private String[] dogIDsOnWalk;
@@ -62,11 +73,6 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
     private String tempDogString;
     private SharedPreferences shrdPrefs;
     private float distance = 0;
-    private TextView distanceDisplay;
-    private GoogleMap map;
-    private LocationRequest locationRequest;
-    private Marker marker;
-    private AdView mAdView;
 
 
 
@@ -115,13 +121,19 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 setInterval(10000).setFastestInterval(1000).setMaxWaitTime(15000);
 
     }
-
+/*
+* onClick
+* do nothing if dogs are clicked in recycler view
+* */
     @Override
     public void onClick(Long petID) {
         return;
     }
 
-
+/*
+* onResume
+* sets up dog list to reflect dogs on the walk
+* */
     @Override
     protected void onResume() {
         apiC.connect();
@@ -133,7 +145,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         DbHelp = new DbHelper(this);
         dbRead = DbHelp.getReadableDatabase();
 
-        //Grabing the default dogs to include on a walk
+        //Grabbing the  dogs to include on a walk
         String[] columns = new String[]{PetContract.WalkTheDog.DOG_NAME,
                 PetContract.WalkTheDog._ID,
                 PetContract.WalkTheDog.TIME_GOAL,
@@ -150,7 +162,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         if (!dogsOnWalkString.equals(null)) {
             dogIDsOnWalk = dogsOnWalkString.split(" ");
             String where = PetContract.WalkTheDog._ID + " IN ("
-                    + makePlaceholders( dogIDsOnWalk.length) + ")";
+                    + makePlaceholders( dogIDsOnWalk.length) + ")"; // use makePlaceholders to generate the query correctly
             Cursor cursor = dbRead.query(
                     PetContract.WalkTheDog.TABLE_NAME,
                     columns,
@@ -160,7 +172,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                     null,
                     null
             );
-            int i = 0;
+            int i = 0;// set query results in local arrays.
             dogIDs = new Long[cursor.getCount()];
             dogNames = new String[cursor.getCount()];
             Long[] curWalks = new Long[cursor.getCount()];
@@ -181,14 +193,18 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 goalDist[i] = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
                 images[i] = DbBitmapUtility.getImage(cursor.getBlob(cursor.getColumnIndex(PetContract.WalkTheDog.PROFILE_PIC)));
                 i++;
-            }
+            }// pass arrays to the dogAdapter class which populates the recycler view.
             dogAdapter.setDogsList(dogIDs, dogNames, curWalks, curTime, curDist,
                     goalWalks, goalTime, goalDist, images);
             cursor.close();
             dbRead.close();
         }
     }
-
+/*
+* onMapReady
+* if gps has been connected and we have a known location will zoom the map fragment to our current location
+* and set a marker there.
+* */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
@@ -199,7 +215,12 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                     mLastLocation.getLongitude())));
         }
     }
-    //gets last know location
+
+    /*
+    * onConnected
+    * when GPS connection is confirmed and permission has been granted finds the users last known location
+    * and requests location updates.
+    * */
     @Override
     public void onConnected(Bundle bundle) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -218,15 +239,22 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         return;
     }
-    //disconnect the api
-
+    /*
+    * editDogsOnList
+    * function called when clicking the edit dogs on walk button
+    * starts the edit dogs on walk activity
+    * */
     public void editDogsOnList(View view){
         Intent intent = new Intent(view.getContext(), EditDogsOnWalk.class);
         intent.putExtra(getString(R.string.dogs_on_walk), dogsOnWalkString);
-        Log.d("dogsonwalk", dogsOnWalkString);
         startActivity(intent);
     }
-    //makes the correct amount of ?s for the sql query
+
+
+    /*
+    * makePlaceholders
+    * private helper routine to format strings correctly for SQL queries based of search criteria.
+    * */
     private String makePlaceholders(int len){
         StringBuilder sb = new StringBuilder(len*2 -1);
         sb.append("?");
@@ -236,6 +264,11 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         return sb.toString();
     }
 
+    /*
+    * endWalk
+    * function called when hitting end walk button
+    * saves current walk stats to data base for all dogs on walk and returns user to main activity
+    * */
     public void endWalk(View view) {
         long ElapsedTime = SystemClock.elapsedRealtime() - timer.getBase();
         Boolean alreadyHitStreak;
@@ -278,7 +311,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 float wBestDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_DIST));
                 Long wBestTime = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME));
                 if (curWalks < goalWalks || curTime < goalTime || curDist < goalDist){
-                    alreadyHitStreak = false;
+                    alreadyHitStreak = false; // prevent increasing streak twice in a day
                 } else alreadyHitStreak = true;
                 curWalks = curWalks +1;
                 curTime = curTime + (ElapsedTime/60000);
@@ -306,6 +339,10 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         finish();
     }
 
+    /*
+    * onDestroy
+    * remove location updates when leaving this activity.
+    * */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -313,6 +350,10 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         apiC.disconnect();
     }
 
+    /*
+    * onLoactionChanged
+    * updates map and calculates distance traveled on getting a new location.
+    * */
     @Override
     public void onLocationChanged(Location location) {
         if (marker != null) marker.remove();

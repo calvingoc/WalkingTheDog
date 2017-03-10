@@ -12,14 +12,24 @@ import android.support.v7.widget.RecyclerView;
 import online.cagocapps.walkingthedog.data.DbBitmapUtility;
 import online.cagocapps.walkingthedog.data.DbHelper;
 import online.cagocapps.walkingthedog.data.PetContract;
-
+/*
+* ViewDogs
+* class that displays a list of dogs and allows user to select one to look at
+* */
 public class ViewDogs extends AppCompatActivity implements DogAdapter.DogAdapterOnClickHandler {
+    //db vars
     private DbHelper DbHelp;
     private SQLiteDatabase dbRead;
+
+    //recycler view vars
     private RecyclerView rvDogList;
     private DogAdapter dogAdapter;
 
 
+    /*
+    * onCreate
+    * opens database and starts recycler view
+    * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +47,10 @@ public class ViewDogs extends AppCompatActivity implements DogAdapter.DogAdapter
         rvDogList.setAdapter(dogAdapter);
     }
 
+    /*
+    * onResume
+    * queries database and passes info the recycler view.
+    * */
     @Override
     protected void onResume() {
         super.onResume();
@@ -68,7 +82,10 @@ public class ViewDogs extends AppCompatActivity implements DogAdapter.DogAdapter
         cursor.close();
     }
 
-
+    /*
+    * onClick
+    * returns user to main activity to view selected dog.
+    * */
     @Override
     public void onClick(Long petID) {
         Intent intent = new Intent(this, MainActivity.class);
@@ -77,6 +94,10 @@ public class ViewDogs extends AppCompatActivity implements DogAdapter.DogAdapter
         finish();
     }
 
+    /*
+    * onDestroy
+    * closes database
+    * */
     @Override
     protected void onDestroy() {
         super.onDestroy();
