@@ -16,14 +16,24 @@ import android.widget.Toast;
 import online.cagocapps.walkingthedog.data.DbBitmapUtility;
 import online.cagocapps.walkingthedog.data.DbHelper;
 import online.cagocapps.walkingthedog.data.PetContract;
-
+/*
+* EditDogsOnWalk
+* class to update what dogs are on your walk
+* */
 public class EditDogsOnWalk extends AppCompatActivity implements DogOnWalkAdapter.DogOnWalkAdapterOnClickHandler {
+    //db vars
     private DbHelper DbHelp;
     private SQLiteDatabase dbRead;
+    //recycler view vars
     private RecyclerView rvDogList;
     private DogOnWalkAdapter dogAdapter;
+    // dogs curently on walk
     private String dogsOnWalk;
 
+    /*
+    * onCreate
+    * sets up the recycler view, opens the database and stores what dogs are currently on the walk
+    * */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +43,7 @@ public class EditDogsOnWalk extends AppCompatActivity implements DogOnWalkAdapte
         DbHelp = new DbHelper(this);
         dbRead = DbHelp.getReadableDatabase();
 
+        //finds dogs currently on walk
         dogsOnWalk =  getIntent().getStringExtra(getString(R.string.dogs_on_walk));
 
         //set up recycler view
@@ -44,6 +55,12 @@ public class EditDogsOnWalk extends AppCompatActivity implements DogOnWalkAdapte
         rvDogList.setAdapter(dogAdapter);
     }
 
+
+
+    /*
+    * onStart
+    * queries the database for all dogs and passes info to the recycler view adapter
+    * */
     @Override
     protected void onStart() {
         super.onStart();
@@ -77,15 +94,20 @@ public class EditDogsOnWalk extends AppCompatActivity implements DogOnWalkAdapte
         cursor.close();
     }
 
+    /*
+    * onClick
+    * updates the dog on walk string when a dog is clicked.
+    * */
     @Override
     public void onClick(Long petID) {
-        Log.d("dogsonwalk","PetID " + Long.toString(petID) + " dogs list " + dogsOnWalk);
         if (dogsOnWalk.contains(" " + Long.toString(petID))) {
             dogsOnWalk = dogsOnWalk.replace(" " + Long.toString(petID), "");
         } else dogsOnWalk = dogsOnWalk + " " + Long.toString(petID);
-        Log.d("dogsonwalk","PetID " + Long.toString(petID) + " dogs list " + dogsOnWalk);
     }
-
+    /*
+    * updateDogs - called by update dogs button
+    * if at least one dog is on the walk returns user to track walk activity with update list of dogs
+    * */
     public void updateDogs(View view){
         Log.d("dogsonwalk", "dogsonwalk " + dogsOnWalk);
         if (dogsOnWalk.length() <=1){
@@ -99,6 +121,10 @@ public class EditDogsOnWalk extends AppCompatActivity implements DogOnWalkAdapte
         finish();
     }
 
+    /*
+    * onDestroy
+    * closes database
+    * */
     @Override
     protected void onDestroy() {
         super.onDestroy();

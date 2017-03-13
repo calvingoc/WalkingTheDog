@@ -14,13 +14,25 @@ import online.cagocapps.walkingthedog.data.PetContract;
 
 /**
  * Created by cgehredo on 3/6/2017.
+ * Alarm routine that refreshes the database for a new day.
+ * Sets current day stats to zero
+ * includes previous day's stats in life itme stats.
+ *
  */
 
 public class DogUpdateReceiver extends BroadcastReceiver {
+
+   /*
+   * onReceive
+   * when alarm is triggered refresh the database.
+   * */
     @Override
     public void onReceive(Context context, Intent intent) {
+            //open database
             DbHelper DbHelp = new DbHelper(context);
             SQLiteDatabase dbWrite = DbHelp.getWritableDatabase();
+
+            //set up query
             String[] columns = new String[]{
                     PetContract.WalkTheDog._ID,
                     PetContract.WalkTheDog.CUR_TIME,
@@ -46,12 +58,13 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                     null,
                     null
             );
-            while (cursor.moveToNext()) {
+            while (cursor.moveToNext()) { // move through database to update every dog
                 Long lastDaySynced = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.LAST_DAY_SYNCED));
                 Date lastDaySync = new Date(lastDaySynced);
                 Date curDate = new Date(System.currentTimeMillis());
-                if (curDate.getDate()!=(lastDaySync.getDate())) {
+                if (curDate.getDate()!=(lastDaySync.getDate())) { //ensure refresh is only done once a day
 
+                    // set local variables to do calculations
                     Long petID = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID));
                     float curTime = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
                     float curDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
@@ -67,15 +80,20 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                     float bestWalks = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_WALKS));
                     Long curDateMillis = System.currentTimeMillis();
 
+                    //increase lifetime stats
                     totDays = totDays + 1;
                     totWalks = totWalks + curWalks;
                     totTimes = totTimes + curTime;
                     totDist = totDist + curDist;
+
+                    //evaluate if records need to be updated
                     if (streak > bestStreak) bestStreak = streak;
                     if (dBestDist < curDist) dBestDist = curDist;
                     if (dBestTime < curTime) dBestTime = curTime;
                     if (bestWalks < curWalks) bestWalks = curWalks;
 
+
+                    // update dog with new values
                     ContentValues cv = new ContentValues();
                     cv.put(PetContract.WalkTheDog.TOTAL_DAYS, totDays);
                     cv.put(PetContract.WalkTheDog.TOTAL_TIME, totTimes);

@@ -7,18 +7,27 @@ import android.database.sqlite.SQLiteOpenHelper;
 import online.cagocapps.walkingthedog.MainActivity;
 
 /**
- * Creates
+ * Creates the database if needed otherwise opens a connection to the database
  * Created by cgehredo on 2/20/2017.
  */
 
 public class DbHelper extends SQLiteOpenHelper {
+    // sets database name and version
     public static final String DATABASE_NAME = "walkTheDog.db";
     public static final int DATABASE_VERSION = 4;
 
+    /*
+    * generic constructor
+    * */
     public DbHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+
+    /*
+    * onCreate
+    * sets up Walking the Dog table
+    * */
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         final String SQL_CREATE_WALKTHEDOG_TABLE =
@@ -49,6 +58,10 @@ public class DbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQL_CREATE_WALKTHEDOG_TABLE);
     }
 
+    /*
+    * onUprade
+    * simply delete the old table and start fresh when updating db.
+    * */
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + PetContract.WalkTheDog.TABLE_NAME);

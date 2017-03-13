@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 /**
  * Created by cgehredo on 3/2/2017.
+ * recycler view class for selecting dogs on walk
  */
 
 public class DogOnWalkAdapter extends RecyclerView.Adapter<DogOnWalkAdapter.DogOnWalkAdapterViewHolder>{
@@ -23,23 +24,40 @@ public class DogOnWalkAdapter extends RecyclerView.Adapter<DogOnWalkAdapter.DogO
     private String[] dogsOnWalk;
     private Bitmap[] mImages;
 
+    // set up click handler var
     private final DogOnWalkAdapterOnClickHandler mClickHandler;
 
+    /*
+    * DogAOnWalkdapterOnClickHandler
+    * link onClick to parent class
+    * */
     public interface DogOnWalkAdapterOnClickHandler{
         void onClick(Long petID);
     }
 
+    /*
+    * DogOnWalkAdapter
+    * localize clickHandler
+    * */
     public DogOnWalkAdapter(DogOnWalkAdapterOnClickHandler clickHandler){
         mClickHandler = clickHandler;
     }
 
+    /*
+    * DogOnWalkAdapterViewHolder
+    * Class to populate recycler view items;
+    * */
     public class DogOnWalkAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        // variables for each view
         public final ImageView dogPicImageView;
         public final TextView dogIDholder;
         public final TextView dogName;
         public final View background;
 
-
+        /*
+        * DogOnWalkAdapterViewHolder
+        * links views to local variables
+        * */
         public DogOnWalkAdapterViewHolder(View view){
             super(view);
             dogPicImageView = (ImageView) view.findViewById(R.id.dog_on_walk_image);
@@ -49,6 +67,11 @@ public class DogOnWalkAdapter extends RecyclerView.Adapter<DogOnWalkAdapter.DogO
             view.setOnClickListener(this);
         }
 
+        /*
+        * onClick
+        * pass variables specific to item clicked to click handler parent class
+        * Also changes color to reflect if the dog is on a walk
+        * */
         @Override
         public void onClick(View view) {
             TextView dogIDTV = (TextView) view.findViewById(R.id.petid_holder);
@@ -66,6 +89,10 @@ public class DogOnWalkAdapter extends RecyclerView.Adapter<DogOnWalkAdapter.DogO
 
     }
 
+    /*
+    * onCreateViewHolder
+    * inflates items with dog_list_item
+    * */
     @Override
     public DogOnWalkAdapterViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
@@ -75,6 +102,10 @@ public class DogOnWalkAdapter extends RecyclerView.Adapter<DogOnWalkAdapter.DogO
         return new DogOnWalkAdapterViewHolder(view);
     }
 
+    /*
+    * onBindViewHolder
+    * populates views with dog specific info
+    * */
     @Override
     public void onBindViewHolder(DogOnWalkAdapterViewHolder holder, int position) {
         String dogName = dogsListNames[position];
@@ -92,12 +123,20 @@ public class DogOnWalkAdapter extends RecyclerView.Adapter<DogOnWalkAdapter.DogO
         if (mImages[position] != null) holder.dogPicImageView.setImageBitmap(mImages[position]);
     }
 
+    /*
+    * getItemCount
+    * gets item count... duh
+    * */
     @Override
     public int getItemCount() {
         if (null == dogsList) return 0;
         return dogsList.length;
     }
 
+    /*
+   * setDogsonWalk
+   * sets local variables with information needed to populate the recyclerview.
+   * */
     public void setDogsOnWalk(Long[] dogIDs, String[] dogNames, String[] dogIDsOnWalk, Bitmap[] images){
         mImages = images;
         dogsList = dogIDs;

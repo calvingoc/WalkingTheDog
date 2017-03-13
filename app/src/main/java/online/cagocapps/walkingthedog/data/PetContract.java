@@ -3,7 +3,7 @@ package online.cagocapps.walkingthedog.data;
 import android.provider.BaseColumns;
 
 /**
- * Contract for the walkig the dog app table.
+ * Contract for the walking the dog app table.
  * Holds Name, walking time goal, current walk time, goal number of walks, current number of walks
  * number of days goals have been met.
  * Created by cgehredo on 2/20/2017.
