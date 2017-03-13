@@ -224,6 +224,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
     public void editDogsOnList(View view){
         Intent intent = new Intent(view.getContext(), EditDogsOnWalk.class);
         intent.putExtra(getString(R.string.dogs_on_walk), dogsOnWalkString);
+
         startActivity(intent);
     }
     //makes the correct amount of ?s for the sql query
