@@ -34,7 +34,6 @@ public class EditDogsOnWalk extends AppCompatActivity implements DogOnWalkAdapte
         dbRead = DbHelp.getReadableDatabase();
 
         dogsOnWalk =  getIntent().getStringExtra(getString(R.string.dogs_on_walk));
-        Log.d("dogsonwalk", dogsOnWalk);
 
         //set up recycler view
         rvDogList = (RecyclerView) findViewById(R.id.recyclerview_dogs_on_walk);

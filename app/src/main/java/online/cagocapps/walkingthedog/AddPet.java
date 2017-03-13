@@ -186,9 +186,11 @@ public class AddPet extends AppCompatActivity {
             if (prefDogID==petID) defDog.setChecked(true);
             else defDog.setChecked(false);
             String autoWalkDogs = shrdPrefs.getString(getString(R.string.default_walks_dog),null);
-            String[] autoDogs = autoWalkDogs.split(" ");
-            for (String s : autoDogs){
-                if (s.equals(Long.toString(petID))) autoWalk.setChecked(true);
+            if (autoWalkDogs != null){
+                String[] autoDogs = autoWalkDogs.split(" ");
+                for (String s : autoDogs){
+                    if (s.equals(Long.toString(petID))) autoWalk.setChecked(true);
+                }
             }
             cursor.close();
         }
@@ -236,6 +238,9 @@ public class AddPet extends AppCompatActivity {
                 String dogWalks = shrdPrefs.getString(getString(R.string.default_walks_dog),"");
                 if (dogWalks.contains(" " + Long.toString(petID))) {
                     dogWalks = dogWalks.replace(" " + Long.toString(petID), "");
+                    if (dogWalks == ""){
+                        dogWalks = (" " + Long.toString(cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID))));
+                    }
                     editor.putString(getString(R.string.default_walks_dog), dogWalks);
                     editor.commit();
                 }
@@ -244,12 +249,19 @@ public class AddPet extends AppCompatActivity {
         if (deleted && cursor.getCount()!= 0){
             if (shrdPrefs.getLong(getString(R.string.default_dog), -1) == petID){
                 cursor.moveToFirst();
-                editor.putLong(getString(R.string.default_dog), petID);
+                editor.putLong(getString(R.string.default_dog), cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID)));
                 editor.commit();
             }
             String dogWalks = shrdPrefs.getString(getString(R.string.default_walks_dog),null);
-            if(!dogWalks.equals(null) && dogWalks.contains(" " + Long.toString(petID))){
+            if(dogWalks != null && dogWalks.contains(" " + Long.toString(petID))){
                 dogWalks = dogWalks.replace(" " + Long.toString(petID), "");
+                if (dogWalks == ""){
+                    dogWalks = (" " + Long.toString(cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID))));
+                }
+                editor.putString(getString(R.string.default_walks_dog), dogWalks);
+                editor.commit();
+            } else {
+                dogWalks = (" " + Long.toString(cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID))));
                 editor.putString(getString(R.string.default_walks_dog), dogWalks);
                 editor.commit();
             }

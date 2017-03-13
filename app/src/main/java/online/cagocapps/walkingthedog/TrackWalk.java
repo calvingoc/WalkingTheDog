@@ -148,7 +148,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         tempDogString = shrdPrefs.getString(getString(R.string.dogs_on_walk), null);
         if (tempDogString != null) dogsOnWalkString = tempDogString;
         shrdPrefs.edit().putString(getString(R.string.dogs_on_walk), null).commit();
-        if (!dogsOnWalkString.equals(null)) {
+        if (dogsOnWalkString != null) {
             dogIDsOnWalk = dogsOnWalkString.split(" ");
             String where = PetContract.WalkTheDog._ID + " IN ("
                     + makePlaceholders( dogIDsOnWalk.length) + ")";
@@ -224,7 +224,6 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
     public void editDogsOnList(View view){
         Intent intent = new Intent(view.getContext(), EditDogsOnWalk.class);
         intent.putExtra(getString(R.string.dogs_on_walk), dogsOnWalkString);
-        Log.d("dogsonwalk", dogsOnWalkString);
         startActivity(intent);
     }
     //makes the correct amount of ?s for the sql query
@@ -285,7 +284,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 curWalks = curWalks +1;
                 curTime = curTime + (elaspedTimeFloat);
                 curDist =  (curDist + distance);
-                if (curWalks > goalWalks && curTime > goalTime && curDist > goalDist && !alreadyHitStreak){
+                if (curWalks >= goalWalks && curTime >= goalTime && curDist >= goalDist && !alreadyHitStreak){
                     Streak = Streak + 1;
                 }
                 if (wBestDist < distance) wBestDist = distance;
