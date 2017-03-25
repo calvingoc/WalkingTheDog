@@ -69,6 +69,9 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                     float curTime = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
                     float curDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
                     float curWalks = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_WALKS));
+                    float goalTime = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL));
+                    float goalDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
+                    float goalWalk = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.WALKS_GOAL));
                     float streak = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.STREAK));
                     float bestStreak = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_STREAK));
                     float totWalks = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_WALKS));
@@ -92,6 +95,8 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                     if (dBestTime < curTime) dBestTime = curTime;
                     if (bestWalks < curWalks) bestWalks = curWalks;
 
+                    if (goalDist <= curDist && goalTime <= curTime && goalWalk <= curWalks) streak = 0;
+
 
                     // update dog with new values
                     ContentValues cv = new ContentValues();
@@ -106,6 +111,7 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                     cv.put(PetContract.WalkTheDog.CUR_DIST, 0);
                     cv.put(PetContract.WalkTheDog.CUR_TIME, 0);
                     cv.put(PetContract.WalkTheDog.CUR_WALKS, 0);
+                    cv.put(PetContract.WalkTheDog.STREAK, streak);
                     cv.put(PetContract.WalkTheDog.LAST_DAY_SYNCED, curDateMillis);
                     String whereVal = PetContract.WalkTheDog._ID + "=?";
                     String[] whereArgs = new String[]{String.valueOf(petID)};
