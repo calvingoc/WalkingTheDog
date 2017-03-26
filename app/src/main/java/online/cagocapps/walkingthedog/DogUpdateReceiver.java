@@ -33,25 +33,9 @@ public class DogUpdateReceiver extends BroadcastReceiver {
             SQLiteDatabase dbWrite = DbHelp.getWritableDatabase();
 
             //set up query
-            String[] columns = new String[]{
-                    PetContract.WalkTheDog._ID,
-                    PetContract.WalkTheDog.CUR_TIME,
-                    PetContract.WalkTheDog.CUR_DIST,
-                    PetContract.WalkTheDog.CUR_WALKS,
-                    PetContract.WalkTheDog.STREAK,
-                    PetContract.WalkTheDog.TOTAL_WALKS,
-                    PetContract.WalkTheDog.TOTAL_TIME,
-                    PetContract.WalkTheDog.TOTAL_DAYS,
-                    PetContract.WalkTheDog.TOTAL_DIST,
-                    PetContract.WalkTheDog.BEST_DIST_DAY,
-                    PetContract.WalkTheDog.BEST_TIME_DAY,
-                    PetContract.WalkTheDog.BEST_WALKS,
-                    PetContract.WalkTheDog.LAST_DAY_SYNCED,
-                    PetContract.WalkTheDog.BEST_STREAK
-            };
             Cursor cursor = dbWrite.query(
                     PetContract.WalkTheDog.TABLE_NAME,
-                    columns,
+                    null,
                     null,
                     null,
                     null,
@@ -95,7 +79,9 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                     if (dBestTime < curTime) dBestTime = curTime;
                     if (bestWalks < curWalks) bestWalks = curWalks;
 
-                    if (goalDist <= curDist && goalTime <= curTime && goalWalk <= curWalks) streak = 0;
+                    if (goalDist > curDist || goalTime > curTime || goalWalk > curWalks) streak = 0;
+
+
 
 
                     // update dog with new values
