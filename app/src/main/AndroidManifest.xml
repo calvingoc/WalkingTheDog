@@ -45,13 +45,21 @@
             android:name=".ViewDogs"
             android:parentActivityName=".MainActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
         <activity android:name=".TrackWalk"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
         <activity android:name=".EditDogsOnWalk"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
+        <service android:name=".notifications.WalkReminderIntentService"
+            android:exported="false"/>
+        <service android:name=".notifications.WalkReminderFirebaseJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="online.cagocapps.walkingthedog.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
         <receiver android:name=".DogUpdateReceiver"
             android:enabled="false">
             <intent-filter>

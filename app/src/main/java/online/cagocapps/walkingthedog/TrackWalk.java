@@ -3,6 +3,7 @@ package online.cagocapps.walkingthedog;
 import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -26,6 +27,8 @@ import android.widget.TextView;
 import online.cagocapps.walkingthedog.data.DbBitmapUtility;
 import online.cagocapps.walkingthedog.data.DbHelper;
 import online.cagocapps.walkingthedog.data.PetContract;
+import online.cagocapps.walkingthedog.notifications.NotificationUtils;
+import online.cagocapps.walkingthedog.notifications.ReminderUtilities;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -85,6 +88,9 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         //find what dogs should be defaulted in.
         shrdPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         dogsOnWalkString = shrdPrefs.getString(getString(R.string.default_walks_dog), null);
+
+        //notifications
+        ReminderUtilities.schedulteWalkReminder(this);
 
         //set up ads
         mAdView = (AdView) findViewById(R.id.track_walk_adview);
@@ -237,6 +243,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         return sb.toString();
     }
 
+
     public void endWalk(View view) {
         long ElapsedTime = SystemClock.elapsedRealtime() - timer.getBase();
         double elaspedTimeFloat =  ElapsedTime / 60000.0;
@@ -304,6 +311,8 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
             cursor.close();
         }
         dbRead.close();
+        NotificationUtils.clearNotification(this);
+        ReminderUtilities.endWalkReminders(this);
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }

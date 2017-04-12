@@ -60,6 +60,8 @@
     <string name="tw_need_one_pet">At least one dog is needed on the walk</string>
     <string name="end_walk_button">End walk</string>
     <string name="change_dogs_on_walk">Change dogs</string>
+    <string name="notification_title">Currently on a Walk</string>
+    <string name="notification_text">Are you still walking your dog?</string>
 
 
     <!-- Ads -->
