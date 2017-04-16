@@ -326,7 +326,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
 
     @Override
     public void onLocationChanged(Location location) {
-        if (locationDelay != 0) {
+        if (locationDelay != 0 && location.distanceTo(mLastLocation) / 1609 > .25) {
             if (marker != null) marker.remove();
             marker = map.addMarker(new MarkerOptions()
                     .position(new LatLng(location.getLatitude(), location.getLongitude())));
