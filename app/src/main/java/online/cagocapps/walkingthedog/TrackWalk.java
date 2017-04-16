@@ -337,11 +337,11 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
             if (location != null && mLastLocation != null ) {
                 if (location.distanceTo(mLastLocation) / 1609.0 < .25) {
                     distance = distance + (location.distanceTo(mLastLocation) / 1609);
+                    mLastLocation = location;
                 }
             }
             String distanceString = String.format("%.2f", distance);
             distanceDisplay.setText(distanceString);
-            mLastLocation = location;
         }
         locationDelay++;
     }
