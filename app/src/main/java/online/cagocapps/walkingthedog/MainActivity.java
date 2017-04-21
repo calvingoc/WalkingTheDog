@@ -197,7 +197,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 iv.setImageResource(R.drawable.btn_star_big_off);
             }
             tv = (TextView) findViewById(R.id.cur_time);
-            tv.setText(String.format("%.2f", curTime) + " / " + Long.toString(timeGoal));
+            String Hours = (String.format("%.0f", curTime/60)+":");
+            String Minutes = ((String.format("%.0f", curTime % 60) + ":"));
+            String Seconds = (String.format("%.0f", ((((curTime) * 100) % 100)* .6)));
+            if (Minutes.length()==2) Minutes = "0" + Minutes;
+            if (Seconds.length()==1) Seconds = "0" + Seconds;
+            tv.setText(Hours+ Minutes + Seconds + " / " + Long.toString(timeGoal));
             if (curTime >= timeGoal) {
                 ImageView iv = (ImageView) findViewById(R.id.time_star);
                 iv.setImageResource(R.drawable.btn_star_big_on);
@@ -221,21 +226,43 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             tv = (TextView) findViewById(R.id.all_time_walks_val);
             tv.setText(String.format("%.0f", totWalks));
             tv = (TextView) findViewById(R.id.all_time_time_val);
-            tv.setText(String.format("%.2f", totTimes));
+            Hours = (String.format("%.0f", totTimes/60)+":");
+            Minutes = ((String.format("%.0f", totTimes % 60) + ":"));
+            Seconds = (String.format("%.0f", ((((totTimes) * 100) % 100)* .6)));
+            if (Minutes.length()==2) Minutes = "0" + Minutes;
+            if (Seconds.length()==1) Seconds = "0" + Seconds;
+            tv.setText(Hours+Minutes+Seconds);
             tv = (TextView) findViewById(R.id.all_time_dist_val);
             tv.setText(String.format("%.2f", totDist));
             tv = (TextView) findViewById(R.id.best_walks_val);
             tv.setText(String.format("%.0f", bestWalks));
             tv = (TextView) findViewById(R.id.best_time_val);
-            tv.setText(String.format("%.2f", dBestTime));
+            Hours = (String.format("%.0f", dBestTime/60)+":");
+            Minutes = ((String.format("%.0f", dBestTime % 60) + ":"));
+            Seconds = (String.format("%.0f", ((((dBestTime) * 100) % 100)* .6)));
+            if (Minutes.length()==2) Minutes = "0" + Minutes;
+            if (Seconds.length()==1) Seconds = "0" + Seconds;
+            tv.setText(Hours+Minutes+Seconds);
             tv = (TextView) findViewById(R.id.best_time_wk_val);
-            tv.setText(String.format("%.2f", wBestTime));
+            Hours = (String.format("%.0f", wBestTime/60)+":");
+            Minutes = ((String.format("%.0f", wBestTime % 60) + ":"));
+            Seconds = (String.format("%.0f", ((((wBestTime) * 100) % 100)* .6)));
+            if (Minutes.length()==2) Minutes = "0" + Minutes;
+            if (Seconds.length()==1) Seconds = "0" + Seconds;
+            tv.setText(Hours+Minutes+Seconds);
             tv = (TextView) findViewById(R.id.best_dist_val);
             tv.setText(String.format("%.2f", dBestDist));
             tv = (TextView) findViewById(R.id.best_dist_wk_val);
             tv.setText(String.format("%.2f", wBestDist));
             tv = (TextView) findViewById(R.id.ave_time_walk_val);
-            if (totWalks != 0) tv.setText(String.format("%.2f", totTimes / totWalks));
+            if (totWalks != 0){
+                Hours = (String.format("%.0f", totTimes / totWalks/60)+":");
+                Minutes = ((String.format("%.0f", totTimes / totWalks % 60) + ":"));
+                Seconds = (String.format("%.0f", ((((totTimes / totWalks) * 100) % 100)* .6)));
+                if (Minutes.length()==2) Minutes = "0" + Minutes;
+                if (Seconds.length()==1) Seconds = "0" + Seconds;
+                tv.setText(Hours+Minutes+Seconds);
+            }
             else tv.setText("0");
             tv = (TextView) findViewById(R.id.ave_dist_walk_val);
             if (totWalks != 0.0) tv.setText(String.format("%.2f", (totDist / totWalks)));
@@ -244,7 +271,14 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             if (totDays != 0.0) tv.setText(String.format("%.2f", totWalks / totDays));
             else tv.setText("0");
             tv = (TextView) findViewById(R.id.ave_time_day_value);
-            if (totDays != 0.0) tv.setText(String.format("%.2f", totTimes / totDays));
+            if (totDays != 0.0){
+                Hours = (String.format("%.0f", totTimes / totDays/60)+":");
+                Minutes = ((String.format("%.0f", totTimes / totDays % 60) + ":"));
+                Seconds = (String.format("%.0f", ((((totTimes / totDays) * 100) % 100)* .6)));
+                if (Minutes.length()==2) Minutes = "0" + Minutes;
+                if (Seconds.length()==1) Seconds = "0" + Seconds;
+                tv.setText(Hours+Minutes+Seconds);
+            }
             else tv.setText("0");
             tv = (TextView) findViewById(R.id.ave_dist_day_value);
             if (totDays != 0.0) tv.setText(String.format("%.2f", (totDist / totDays)));

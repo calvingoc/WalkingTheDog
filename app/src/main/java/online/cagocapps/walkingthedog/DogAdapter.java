@@ -85,7 +85,12 @@ public class DogAdapter extends RecyclerView.Adapter<DogAdapter.DogAdapterViewHo
         if (mCurWalks != null){
             double math = mGoalTime[position] - mCurTime[position];
             if (math < 0) math = 0;
-            holder.dogTimeView.setText(String.format("%.2f", math));
+            String Hours = (String.format("%.0f", math/60)+":");
+            String Minutes = ((String.format("%.0f", math % 60) + ":"));
+            String Seconds = (String.format("%.0f", ((((math) * 100) % 100)* .6)));
+            if (Minutes.length()==2) Minutes = "0" + Minutes;
+            if (Seconds.length()==1) Seconds = "0" + Seconds;
+            holder.dogTimeView.setText(Hours + Minutes + Seconds);
             long walkMath = mGoalWalks[position] - mCurWalks[position];
             if (walkMath < 0) walkMath = (long) 0;
             holder.dogWalksView.setText(Long.toString(walkMath));
