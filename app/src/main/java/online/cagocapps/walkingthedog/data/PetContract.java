@@ -34,6 +34,18 @@ public class PetContract {
         public static final String PROFILE_PIC = "profilePic";
     }
 
+    public static final class Achievements implements BaseColumns{
+        public static final String TABLE_NAME = "wtdachievements";
+        public static final String ACHIEVEMENT = "achievement";
+        public static final String COMPLETED = "completed";
+        public static final String DATE = "date";
+        public static final String SEEN = "seen";
+        public static final String THRESHOLD = "threshold";
+        public static final String PROGRESS = "progress";
+        public static final String TYPE = "type";
+        public static final String UPDATE_TRACKER = "tracker";
+    }
+
 
 
 }

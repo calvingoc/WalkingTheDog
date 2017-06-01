@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.Date;
 
+import online.cagocapps.walkingthedog.data.Achievements;
 import online.cagocapps.walkingthedog.data.DbHelper;
 import online.cagocapps.walkingthedog.data.PetContract;
 
@@ -79,7 +80,10 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                     if (dBestTime < curTime) dBestTime = curTime;
                     if (bestWalks < curWalks) bestWalks = curWalks;
 
-                    if (goalDist > curDist || goalTime > curTime || goalWalk > curWalks) streak = 0;
+                    if (goalDist > curDist || goalTime > curTime || goalWalk > curWalks){
+                        streak = 0;
+                        Achievements.resetAchievements(7,dbWrite);
+                    }
 
 
 
@@ -105,6 +109,9 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                 }
             }
             cursor.close();
+        Achievements.resetAchievements(8,dbWrite);
+        Achievements.resetAchievements(9,dbWrite);
+        Achievements.resetAchievements(10,dbWrite);
             dbWrite.close();
     }
 }

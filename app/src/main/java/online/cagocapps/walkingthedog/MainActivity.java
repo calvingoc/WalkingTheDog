@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             else tv.setText("0");
             tv = (TextView) findViewById(R.id.ave_mph_value);
             double math;
-            double time = (double) totTimes;
+            double time = totTimes;
             if (totTimes != 0) {
                 math = (totDist / (time / 60));
                 if (math < .01) math = 0;

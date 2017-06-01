@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import online.cagocapps.walkingthedog.data.Achievements;
 import online.cagocapps.walkingthedog.data.DbBitmapUtility;
 import online.cagocapps.walkingthedog.data.DbHelper;
 import online.cagocapps.walkingthedog.data.PetContract;
@@ -105,6 +106,7 @@ public class AddPet extends AppCompatActivity {
 
     //Add a dog takes String pet name, int walk time, int goal time, int goal distance
     public long addNewDog(String name, int walk, int time, int dist){
+        Achievements.updateAchievements(0, 1, dbWrite);
         ContentValues cv = new ContentValues();
         cv.put(PetContract.WalkTheDog.DOG_NAME, name);
         cv.put(PetContract.WalkTheDog.WALKS_GOAL, walk);

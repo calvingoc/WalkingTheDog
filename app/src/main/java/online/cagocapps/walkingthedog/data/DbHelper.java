@@ -14,7 +14,7 @@ import online.cagocapps.walkingthedog.MainActivity;
 public class DbHelper extends SQLiteOpenHelper {
     // sets database name and version
     public static final String DATABASE_NAME = "walkTheDog.db";
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
 
     /*
     * generic constructor
@@ -54,17 +54,50 @@ public class DbHelper extends SQLiteOpenHelper {
                         PetContract.WalkTheDog.PROFILE_PIC + " BLOB, " +
                         PetContract.WalkTheDog.BEST_DIST + " INTEGER DEFAULT 0" +
                         ");";
-
+        final String SQL_CREATE_ACHIEVEMENT_TABLE =
+                "CREATE TABLE " + PetContract.Achievements.TABLE_NAME + " (" +
+                        PetContract.Achievements._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        PetContract.Achievements.ACHIEVEMENT + "STRING NOT NULL, " +
+                        PetContract.Achievements.COMPLETED + " INTEGER DEFAULT 0, " +
+                        PetContract.Achievements.DATE + " INTEGER, " +
+                        PetContract.Achievements.THRESHOLD + " INTEGER, " +
+                        PetContract.Achievements.PROGRESS + " INTEGER, " +
+                        PetContract.Achievements.TYPE + " INTEGER, " +
+                        PetContract.Achievements.UPDATE_TRACKER + " INTEGER DEFAULT 0, " +
+                        PetContract.Achievements.SEEN + " INTEGER" +
+                        ");";
         sqLiteDatabase.execSQL(SQL_CREATE_WALKTHEDOG_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_ACHIEVEMENT_TABLE);
+        Achievements.achievementSetUp(sqLiteDatabase);
+
     }
 
     /*
-    * onUprade
+    * onUpgrade
     * simply delete the old table and start fresh when updating db.
     * */
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + PetContract.WalkTheDog.TABLE_NAME);
-        onCreate(sqLiteDatabase);
+        if (oldVersion < 5){
+            final String SQL_CREATE_ACHIEVEMENT_TABLE =
+                    "CREATE TABLE " + PetContract.Achievements.TABLE_NAME + " (" +
+                            PetContract.Achievements._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                            PetContract.Achievements.ACHIEVEMENT + "STRING NOT NULL, " +
+                            PetContract.Achievements.COMPLETED + " INTEGER DEFAULT 0, " +
+                            PetContract.Achievements.DATE + " INTEGER, " +
+                            PetContract.Achievements.THRESHOLD + " INTEGER, " +
+                            PetContract.Achievements.PROGRESS + " INTEGER, " +
+                            PetContract.Achievements.TYPE + " INTEGER, " +
+                            PetContract.Achievements.UPDATE_TRACKER + " INTEGER DEFAULT 0, " +
+                            PetContract.Achievements.SEEN + " INTEGER" +
+                            ");";
+            sqLiteDatabase.execSQL(SQL_CREATE_ACHIEVEMENT_TABLE);
+            Achievements.achievementSetUp(sqLiteDatabase);
+        }
+        else {
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + PetContract.WalkTheDog.TABLE_NAME);
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + PetContract.Achievements.TABLE_NAME);
+            onCreate(sqLiteDatabase);
+        }
     }
 }

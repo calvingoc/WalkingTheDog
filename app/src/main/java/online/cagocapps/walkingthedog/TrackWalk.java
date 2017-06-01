@@ -24,6 +24,7 @@ import android.view.View;
 import android.widget.Chronometer;
 import android.widget.TextView;
 
+import online.cagocapps.walkingthedog.data.Achievements;
 import online.cagocapps.walkingthedog.data.DbBitmapUtility;
 import online.cagocapps.walkingthedog.data.DbHelper;
 import online.cagocapps.walkingthedog.data.PetContract;
@@ -71,6 +72,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
     private Marker marker;
     private AdView mAdView;
     private int locationDelay = 0;
+    private int streak;
 
 
 
@@ -277,7 +279,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
             );
             while (cursor.moveToNext()) {
                 Long petID = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID));
-                Long Streak = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.STREAK));
+                streak = cursor.getInt(cursor.getColumnIndex(PetContract.WalkTheDog.STREAK));
                 Long curWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_WALKS));
                 double curTime = cursor.getDouble(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
                 float curDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
@@ -293,14 +295,18 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 curTime = curTime + (elaspedTimeFloat);
                 curDist =  (curDist + distance);
                 if (curWalks >= goalWalks && curTime >= goalTime && curDist >= goalDist && !alreadyHitStreak){
-                    Streak = Streak + 1;
+                    streak = streak + 1;
+                    Achievements.updateAchievements(7, 1,dbRead);
+                    Achievements.updateAchievements(11, 1,dbRead);
+                    Achievements.resetAchievements(11, dbRead);
+
                 }
                 if (wBestDist < distance) wBestDist = distance;
                 if (wBestTime < elaspedTimeFloat) wBestTime = elaspedTimeFloat;
                 ContentValues cv = new ContentValues();
                 cv.put(PetContract.WalkTheDog.CUR_WALKS, curWalks);
                 cv.put(PetContract.WalkTheDog.CUR_TIME, curTime);
-                cv.put(PetContract.WalkTheDog.STREAK, Streak);
+                cv.put(PetContract.WalkTheDog.STREAK, streak);
                 cv.put(PetContract.WalkTheDog.CUR_DIST, curDist);
                 cv.put(PetContract.WalkTheDog.BEST_DIST, wBestDist);
                 cv.put(PetContract.WalkTheDog.BEST_TIME, wBestTime);
@@ -310,6 +316,18 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
             }
             cursor.close();
         }
+        Achievements.updateAchievements(1, 1, dbRead);
+        Achievements.updateAchievements(2, (int) elaspedTimeFloat, dbRead);
+        Achievements.updateAchievements(3, Math.round(distance), dbRead);
+        Achievements.updateAchievements(4, (int) elaspedTimeFloat, dbRead);
+        Achievements.updateAchievements(5, Math.round(distance), dbRead);
+        Achievements.updateAchievements(6, Math.round(distance) / ((int) elaspedTimeFloat / 60), dbRead);
+        Achievements.updateAchievements(8, (int) elaspedTimeFloat, dbRead);
+        Achievements.updateAchievements(9, Math.round(distance), dbRead);
+        Achievements.updateAchievements(10, 1, dbRead);
+        Achievements.resetAchievements(4,dbRead);
+        Achievements.resetAchievements(5,dbRead);
+        Achievements.resetAchievements(6,dbRead);
         dbRead.close();
         NotificationUtils.clearNotification(this);
         ReminderUtilities.endWalkReminders(this);
