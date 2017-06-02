@@ -7,6 +7,7 @@
     tools:layout_editor_absoluteX="-9dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorPrimary"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
@@ -55,17 +56,17 @@
             android:gravity="center" />
 
         <TextView
-            android:text="@string/td_goals"
-            android:layout_width="0dp"
-            app:layout_constraintRight_toRightOf="parent"
-            android:textSize="35sp"
-            android:gravity="center"
-            android:layout_height="50dp"
             android:id="@+id/daily_goals"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
+            android:text="@string/td_goals"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:layout_constraintTop_toBottomOf="@+id/dogPic"
+            android:textSize="35sp"
             app:layout_constraintLeft_toLeftOf="@+id/dogPic"
-            />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dogPic" />
 
         <TextView
             android:text="@string/walks"
@@ -172,16 +173,20 @@
             android:gravity="center"/>
 
         <TextView
-            android:textSize="35sp"
+            android:id="@+id/life_time_stats"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@color/colorPrimaryDark"
+            android:gravity="center"
             android:text="@string/life_time_stats"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:layout_height="50dp"
-            android:layout_width="0dp"
+            android:textSize="35sp"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            android:id="@+id/life_time_stats"
-            app:layout_constraintLeft_toLeftOf="@+id/streak_title"
             app:layout_constraintTop_toBottomOf="@+id/streak_title"
-            android:gravity="center"/>
+            android:layout_marginTop="0dp"
+            android:layout_marginLeft="0dp"
+            app:layout_constraintHorizontal_bias="0.0" />
 
         <TextView
             android:layout_height="50dp"

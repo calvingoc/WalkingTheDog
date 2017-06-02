@@ -321,7 +321,11 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         Achievements.updateAchievements(3, Math.round(distance), dbRead);
         Achievements.updateAchievements(4, (int) elaspedTimeFloat, dbRead);
         Achievements.updateAchievements(5, Math.round(distance), dbRead);
-        Achievements.updateAchievements(6, Math.round(distance) / ((int) elaspedTimeFloat / 60), dbRead);
+        int mph = 0;
+        if ((int) elaspedTimeFloat != 0){
+            mph = Math.round(distance) / ((int) elaspedTimeFloat / 60);
+        }
+        Achievements.updateAchievements(6, mph, dbRead);
         Achievements.updateAchievements(8, (int) elaspedTimeFloat, dbRead);
         Achievements.updateAchievements(9, Math.round(distance), dbRead);
         Achievements.updateAchievements(10, 1, dbRead);
