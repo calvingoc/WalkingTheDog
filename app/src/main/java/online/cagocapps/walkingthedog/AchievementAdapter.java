@@ -15,11 +15,11 @@ import android.widget.TextView;
 
 public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.AchievementAdapterViewHolder> {
     private String[] achievementsArray;
-    private int[] thresholdArray;
-    private int[] progressArray;
-    private int[] completedArray;
-    private int[] seenArray;
-    private int[] typeArray;
+    private double[] thresholdArray;
+    private double[] progressArray;
+    private double[] completedArray;
+    private double[] seenArray;
+    private double[] typeArray;
 
     public class AchievementAdapterViewHolder extends RecyclerView.ViewHolder{
         public final TextView achTitle;
@@ -31,7 +31,7 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
 
         public AchievementAdapterViewHolder(View view){
             super(view);
-            achTitle = (TextView) view.findViewById(R.id.achieve_tv_title);
+            achTitle = (TextView) view.findViewById(R.id.achievement_tv_title);
             achDesc = (TextView) view.findViewById(R.id.achievements_tv_description);
             achProg = (TextView) view.findViewById(R.id.achievements_tv_progress);
             star = (ImageView) view.findViewById(R.id.achievements_iv_star);
@@ -55,16 +55,14 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
         holder.achTitle.setText(description[0]);
         holder.achDesc.setText(description[1]);
         holder.achProg.setWidth(50);
-        String progress = String.valueOf(progressArray[position]/thresholdArray[position]) + "%";
+        String progress = String.valueOf((progressArray[position]/thresholdArray[position]) *100) + "%";
         if (completedArray[position] == 0){
             holder.star.setVisibility(View.GONE);
             holder.achProg.setVisibility(View.VISIBLE);
             holder.achProg.setText(progress);
-        }
-        else {
-            holder.star.setVisibility(View.VISIBLE);
-            holder.achProg.setVisibility(View.GONE);
-            if (typeArray[position] > 3){
+            holder.achTitle.setTextColor(holder.itemView.getResources().getColor(R.color.black));
+            holder.achItem.setBackgroundColor(holder.itemView.getResources().getColor(R.color.white));
+            if (typeArray[position] > 6){
                 if (completedArray[position] == 1) progress = progress + " - Earned 1 time.";
                 else if (completedArray[position] > 1) progress = progress + " - Earned " + completedArray[position] + " times.";
                 holder.star.setVisibility(View.GONE);
@@ -72,9 +70,37 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
                 holder.achProg.setText(progress);
                 holder.achProg.setWidth(175);
             }
+            else if (typeArray[position] > 3){
+                progress = "Earned 0 times.";
+                holder.star.setVisibility(View.GONE);
+                holder.achProg.setVisibility(View.VISIBLE);
+                holder.achProg.setText(progress);
+                holder.achProg.setWidth(175);
+            }
+        }
+        else {
+            holder.star.setVisibility(View.VISIBLE);
+            holder.achProg.setVisibility(View.GONE);
+            if (typeArray[position] > 6){
+                if (completedArray[position] == 1) progress = progress + " - Earned 1 time.";
+                else if (completedArray[position] > 1) progress = progress + " - Earned " + completedArray[position] + " times.";
+                holder.star.setVisibility(View.GONE);
+                holder.achProg.setVisibility(View.VISIBLE);
+                holder.achProg.setText(progress);
+                holder.achProg.setWidth(175);
+            }
+            else if (typeArray[position] > 3){
+                if (completedArray[position] == 1) progress = "Earned 1 time.";
+                else if (completedArray[position] > 1) progress = "Earned " + completedArray[position] + " times.";
+                else progress = "Earned 0 times.";
+                holder.star.setVisibility(View.GONE);
+                holder.achProg.setVisibility(View.VISIBLE);
+                holder.achProg.setText(progress);
+                holder.achProg.setWidth(175);
+            }
             if (seenArray[position] == 0) holder.achTitle.setTextColor(holder.itemView.getResources().getColor(R.color.colorAccent));
             else holder.achTitle.setTextColor(holder.itemView.getResources().getColor(R.color.black));
-            holder.achItem.setBackgroundColor(holder.itemView.getResources().getColor(R.color.colorPrimary));
+            holder.achItem.setBackgroundColor(holder.itemView.getResources().getColor(R.color.powderBlue));
         }
     }
 
@@ -83,8 +109,8 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
         return achievementsArray.length;
     }
 
-    public void setAchList(String[] achievements, int[] threshold, int[] progress, int[] completed,
-                           int[] seen, int[] type){
+    public void setAchList(String[] achievements, double[] threshold, double[] progress, double[] completed,
+                           double[] seen, double[] type){
         achievementsArray = achievements;
         thresholdArray = threshold;
         progressArray = progress;

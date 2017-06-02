@@ -57,7 +57,7 @@ public class DbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_ACHIEVEMENT_TABLE =
                 "CREATE TABLE " + PetContract.Achievements.TABLE_NAME + " (" +
                         PetContract.Achievements._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        PetContract.Achievements.ACHIEVEMENT + "STRING NOT NULL, " +
+                        PetContract.Achievements.ACHIEVEMENT + " STRING NOT NULL, " +
                         PetContract.Achievements.COMPLETED + " INTEGER DEFAULT 0, " +
                         PetContract.Achievements.DATE + " INTEGER, " +
                         PetContract.Achievements.THRESHOLD + " INTEGER, " +
@@ -82,7 +82,7 @@ public class DbHelper extends SQLiteOpenHelper {
             final String SQL_CREATE_ACHIEVEMENT_TABLE =
                     "CREATE TABLE " + PetContract.Achievements.TABLE_NAME + " (" +
                             PetContract.Achievements._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                            PetContract.Achievements.ACHIEVEMENT + "STRING NOT NULL, " +
+                            PetContract.Achievements.ACHIEVEMENT + " STRING NOT NULL, " +
                             PetContract.Achievements.COMPLETED + " INTEGER DEFAULT 0, " +
                             PetContract.Achievements.DATE + " INTEGER, " +
                             PetContract.Achievements.THRESHOLD + " INTEGER, " +

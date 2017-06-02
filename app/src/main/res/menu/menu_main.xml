@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.cgehredo.walkingthedog.MainActivity">
     <item
+        android:id="@+id/view_achievements"
+        android:orderInCategory="1"
+        android:title="Achievements"
+        app:showAsAction="ifRoom"/>
+    <item
         android:id="@+id/add_dog_item"
         android:orderInCategory="100"
         android:title="@string/add_dog_item"

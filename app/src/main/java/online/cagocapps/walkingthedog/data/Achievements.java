@@ -13,23 +13,24 @@ import java.util.Date;
 public class Achievements {
     public static void achievementSetUp(SQLiteDatabase db){
         ContentValues cv = new ContentValues();
+        long id;
         //Make your first dog
         cv.put(PetContract.Achievements.ACHIEVEMENT, "Potted a Puppy;Make your first dog.");
         cv.put(PetContract.Achievements.THRESHOLD, 1);
         cv.put(PetContract.Achievements.TYPE, 0);
-        db.insert(PetContract.Achievements.TABLE_NAME, null, cv);
+        id = db.insertOrThrow(PetContract.Achievements.TABLE_NAME, null, cv);
         cv.clear();
         //Make five dogs
         cv.put(PetContract.Achievements.ACHIEVEMENT, "Windowsill Lab Garden;Make five dogs.");
         cv.put(PetContract.Achievements.THRESHOLD, 5);
         cv.put(PetContract.Achievements.TYPE, 0);
-        db.insert(PetContract.Achievements.TABLE_NAME, null, cv);
+        id= db.insert(PetContract.Achievements.TABLE_NAME, null, cv);
         cv.clear();
         //Make ten dogs
         cv.put(PetContract.Achievements.ACHIEVEMENT, "Backyard Pug Plot;Make ten dogs.");
         cv.put(PetContract.Achievements.THRESHOLD, 10);
         cv.put(PetContract.Achievements.TYPE, 0);
-        db.insert(PetContract.Achievements.TABLE_NAME, null, cv);
+        id = db.insert(PetContract.Achievements.TABLE_NAME, null, cv);
         cv.clear();
         //Make one hundred dogs
         cv.put(PetContract.Achievements.ACHIEVEMENT, "Corgi Farmer;Make 100 dogs.");
@@ -368,13 +369,13 @@ public class Achievements {
         cursor.close();
     }
 
-    public static void markAsSeen(int id, SQLiteDatabase db){
+    public static void markAsSeen(SQLiteDatabase db){
         ContentValues cv = new ContentValues();
         Cursor cursor = db.query(
                 PetContract.Achievements.TABLE_NAME,
                 null,
-                PetContract.Achievements._ID + "=?",
-                new String[]{String.valueOf(id)},
+                null,
+                null,
                 null,
                 null,
                 null

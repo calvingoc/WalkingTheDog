@@ -23,6 +23,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -65,8 +67,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, TrackWalk.class);
-                startActivity(intent);
+                    Intent intent = new Intent(MainActivity.this, TrackWalk.class);
+                    startActivity(intent);
+
             }
         });
 
@@ -89,12 +92,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @Override
     protected void onStart() {
         super.onStart();
-        //check for permissions
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-        }
+
         defaultId = shrdPrefs.getLong(getString(R.string.default_dog), noDog);
         defaultId = getIntent().getLongExtra(getResources().getString(R.string.pet_id), defaultId);
 
@@ -107,6 +105,14 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             //set up screen to show current dog stats
             setUpScreen();
         }
+
+        //check for permissions
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED)
+        {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+
     }
 
     @Override
@@ -114,6 +120,29 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Cursor cursor = dbRead.query(
+                PetContract.Achievements.TABLE_NAME,
+                null,
+                PetContract.Achievements.SEEN + "=?",
+                new String[]{"0"},
+                null,
+                null,
+                null
+        );
+        if(cursor.getCount() != 0){
+            String toastText = "You have ";
+            if (cursor.getCount() == 1){
+                toastText = toastText + "1 new achievement! Good Job!";
+            }
+            else toastText = toastText + String.valueOf(cursor.getCount()) + " new achievements! Good Job!";
+            Toast toast = Toast.makeText(this, toastText, Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
 
     @Override
@@ -132,6 +161,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         else if (id == R.id.view_dogs_item)
         {
             Intent intent = new Intent(this, ViewDogs.class);
+            startActivity(intent);
+        }
+        else if (id == R.id.view_achievements){
+            Intent intent = new Intent(this, AchievementsPage.class);
             startActivity(intent);
         }
 
