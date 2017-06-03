@@ -39,12 +39,7 @@
             android:scaleType="centerCrop"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/main_activity_adview" />
-        <TextView
-            android:layout_width="10dp"
-            android:layout_height="0dp"
-            android:id="@+id/padding"
-            app:layout_constraintLeft_toLeftOf="parent"
-            tools:layout_editor_absoluteY="81dp" />
+
         <TextView
             android:id="@+id/dog_name"
             android:layout_width="0dp"
@@ -54,13 +49,13 @@
             app:layout_constraintTop_toBottomOf="@+id/main_activity_adview"
             app:layout_constraintLeft_toRightOf="@+id/dogPic"
             android:gravity="center"
-            android:background="@color/colorPrimary"/>
+            android:background="@color/powderBlue"/>
 
         <TextView
             android:id="@+id/daily_goals"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:background="@color/colorPrimaryDark"
+            android:background="@drawable/primary_border"
             android:gravity="center"
             android:text="@string/td_goals"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -71,12 +66,14 @@
 
         <TextView
             android:id="@+id/walks_title"
-            android:layout_width="150dp"
+            android:layout_width="180dp"
             android:layout_height="50dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="0dp"
             android:gravity="center_vertical"
             android:text="@string/walks"
             android:textSize="20sp"
-            app:layout_constraintLeft_toRightOf="@+id/padding"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/daily_goals" />
 
         <ImageView
@@ -102,7 +99,7 @@
 
         <TextView
             android:id="@+id/time_title"
-            android:layout_width="150dp"
+            android:layout_width="180dp"
             android:layout_height="50dp"
             android:gravity="center_vertical"
             android:text="@string/time"
@@ -133,7 +130,7 @@
 
         <TextView
             android:id="@+id/dist_title"
-            android:layout_width="150dp"
+            android:layout_width="180dp"
             android:layout_height="50dp"
             android:gravity="center_vertical"
             android:text="@string/dist"
@@ -163,18 +160,22 @@
             android:layout_marginRight="8dp" />
 
         <TextView
-            android:text="@string/streak"
-            android:layout_width="180dp"
-            android:layout_height="50dp"
-            android:textSize="30sp"
             android:id="@+id/streak_title"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:text="@string/streak"
+            android:textSize="30sp"
             app:layout_constraintLeft_toLeftOf="@+id/dist_title"
             app:layout_constraintTop_toBottomOf="@+id/dist_title"
-            android:gravity="center_vertical"/>
+            app:layout_constraintRight_toLeftOf="@+id/cur_dist"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginRight="0dp" />
 
         <TextView
             android:layout_width="0dp"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintRight_toRightOf="@id/cur_dist"
             android:layout_height="50dp"
             android:id="@+id/cur_streak"
             android:textSize="30sp"
@@ -186,7 +187,7 @@
             android:id="@+id/life_time_stats"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:background="@color/colorPrimaryDark"
+            android:background="@drawable/primary_border"
             android:gravity="center"
             android:text="@string/life_time_stats"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -213,14 +214,14 @@
             android:layout_height="50dp"
             android:layout_width="0dp"
             android:textSize="20sp"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintRight_toRightOf="@+id/cur_streak"
             android:id="@+id/all_time_walks_val"
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/all_time_walks_title"
             app:layout_constraintTop_toTopOf="@+id/all_time_walks_title"
             android:layout_marginTop="0dp"
             app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginRight="8dp" />
+            android:layout_marginRight="0dp" />
         <TextView
             android:layout_width="180dp"
             android:layout_height="50dp"
@@ -230,18 +231,7 @@
             android:textSize="17sp"
             app:layout_constraintLeft_toLeftOf="@+id/all_time_walks_title"
             app:layout_constraintTop_toBottomOf="@+id/all_time_walks_title"/>
-        <TextView
-            android:layout_height="50dp"
-            android:layout_width="0dp"
-            android:textSize="20sp"
-            app:layout_constraintRight_toRightOf="parent"
-            android:id="@+id/all_time_time_val"
-            android:gravity="center"
-            app:layout_constraintLeft_toRightOf="@+id/all_time_time_title"
-            app:layout_constraintTop_toTopOf="@+id/all_time_time_title"
-            android:layout_marginTop="0dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginRight="8dp" />
+
         <TextView
             android:layout_width="180dp"
             android:layout_height="50dp"
@@ -512,7 +502,7 @@
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/ave_mph"
             app:layout_constraintTop_toTopOf="@+id/ave_mph"
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="-1118dp"
             app:layout_constraintHorizontal_bias="0.0"
             android:layout_marginRight="0dp" />
         <Button
@@ -525,6 +515,19 @@
             app:layout_constraintRight_toRightOf="parent"
             android:onClick="editDog"
             />
+
+        <TextView
+            android:id="@+id/all_time_time_val"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="-255dp"
+            android:gravity="center"
+            android:textSize="20sp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toRightOf="@+id/all_time_time_title"
+            app:layout_constraintRight_toRightOf="@+id/all_time_walks_val"
+            app:layout_constraintTop_toTopOf="@+id/all_time_time_title" />
 
 
     </android.support.constraint.ConstraintLayout>

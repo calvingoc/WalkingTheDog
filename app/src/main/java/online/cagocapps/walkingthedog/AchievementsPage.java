@@ -43,7 +43,6 @@ public class AchievementsPage extends AppCompatActivity {
         //Setting up DB
         DbHelp = new DbHelper(this);
         dbWrite = DbHelp.getWritableDatabase();
-        Achievements.markAsSeen(dbWrite);
 
         Cursor cursor = dbWrite.query(
                 PetContract.Achievements.TABLE_NAME,
@@ -90,6 +89,7 @@ public class AchievementsPage extends AppCompatActivity {
         title.setText("Achievements " + progress +"/" + completedArray.length);
         achievementAdapter.setAchList(achievementsArray, thresholdArray, progressArray, completedArray, seenArray, typeArray);
         achievementAdapter.notifyDataSetChanged();
+        Achievements.markAsSeen(dbWrite);
     }
 
     @Override

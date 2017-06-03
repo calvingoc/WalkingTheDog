@@ -255,7 +255,7 @@ public class Achievements {
         db.insert(PetContract.Achievements.TABLE_NAME, null, cv);
         cv.clear();
         //Walk your dog for an hour and a half in a day
-        cv.put(PetContract.Achievements.ACHIEVEMENT, "Gameification, Heard of It?;Walk an hour and a half in a day.");
+        cv.put(PetContract.Achievements.ACHIEVEMENT, "Gameification, Heard of It?;Walk 1.5 hours in a day.");
         cv.put(PetContract.Achievements.THRESHOLD, 90);
         cv.put(PetContract.Achievements.TYPE, 8);
         db.insert(PetContract.Achievements.TABLE_NAME, null, cv);
@@ -316,7 +316,7 @@ public class Achievements {
         cv.clear();
     }
 
-    public static void updateAchievements(int type, int value, SQLiteDatabase db){
+    public static void updateAchievements(int type, double value, SQLiteDatabase db){
         ContentValues cv = new ContentValues();
         Cursor cursor = db.query(
                 PetContract.Achievements.TABLE_NAME,
@@ -328,9 +328,9 @@ public class Achievements {
                 null
         );
         while (cursor.moveToNext()){
-            int prog = cursor.getInt(cursor.getColumnIndex(PetContract.Achievements.PROGRESS)) + value;
+            double prog = cursor.getDouble(cursor.getColumnIndex(PetContract.Achievements.PROGRESS)) + value;
             cv.put(PetContract.Achievements.PROGRESS, prog);
-            if (prog >= cursor.getInt(cursor.getColumnIndex(PetContract.Achievements.THRESHOLD)) &&
+            if (prog >= cursor.getDouble(cursor.getColumnIndex(PetContract.Achievements.THRESHOLD)) &&
                     cursor.getInt(cursor.getColumnIndex(PetContract.Achievements.UPDATE_TRACKER)) == 0){
                 cv.put(PetContract.Achievements.COMPLETED, cursor.getInt(cursor.getColumnIndex(PetContract.Achievements.COMPLETED)) + 1);
                 cv.put(PetContract.Achievements.UPDATE_TRACKER, 1);

@@ -317,17 +317,17 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
             cursor.close();
         }
         Achievements.updateAchievements(1, 1, dbRead);
-        Achievements.updateAchievements(2, (int) elaspedTimeFloat, dbRead);
-        Achievements.updateAchievements(3, Math.round(distance), dbRead);
-        Achievements.updateAchievements(4, (int) elaspedTimeFloat, dbRead);
-        Achievements.updateAchievements(5, Math.round(distance), dbRead);
-        int mph = 0;
-        if ((int) elaspedTimeFloat != 0){
-            mph = Math.round(distance) / ((int) elaspedTimeFloat / 60);
+        Achievements.updateAchievements(2, elaspedTimeFloat, dbRead);
+        Achievements.updateAchievements(3,distance, dbRead);
+        Achievements.updateAchievements(4, elaspedTimeFloat, dbRead);
+        Achievements.updateAchievements(5, distance, dbRead);
+        double mph = 0;
+        if (elaspedTimeFloat != 0){
+            mph = Math.round(distance) / (elaspedTimeFloat / 60);
         }
         Achievements.updateAchievements(6, mph, dbRead);
-        Achievements.updateAchievements(8, (int) elaspedTimeFloat, dbRead);
-        Achievements.updateAchievements(9, Math.round(distance), dbRead);
+        Achievements.updateAchievements(8, elaspedTimeFloat, dbRead);
+        Achievements.updateAchievements(9, distance, dbRead);
         Achievements.updateAchievements(10, 1, dbRead);
         Achievements.resetAchievements(4,dbRead);
         Achievements.resetAchievements(5,dbRead);

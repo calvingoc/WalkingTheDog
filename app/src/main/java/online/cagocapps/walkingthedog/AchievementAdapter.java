@@ -55,7 +55,7 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
         holder.achTitle.setText(description[0]);
         holder.achDesc.setText(description[1]);
         holder.achProg.setWidth(50);
-        String progress = String.valueOf((progressArray[position]/thresholdArray[position]) *100) + "%";
+        String progress = String.format("%.1f", (progressArray[position]/thresholdArray[position]) *100) + "%";
         if (completedArray[position] == 0){
             holder.star.setVisibility(View.GONE);
             holder.achProg.setVisibility(View.VISIBLE);
