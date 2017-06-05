@@ -55,14 +55,16 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
         holder.achTitle.setText(description[0]);
         holder.achDesc.setText(description[1]);
         holder.achProg.setWidth(50);
-        String progress = String.format("%.1f", (progressArray[position]/thresholdArray[position]) *100) + "%";
+        double percentage = (progressArray[position]/thresholdArray[position]) * 100;
+        if (percentage > 100) percentage = 100;
+        String progress = String.format("%.1f", (percentage)) + "%";
         if (completedArray[position] == 0){
             holder.star.setVisibility(View.GONE);
             holder.achProg.setVisibility(View.VISIBLE);
             holder.achProg.setText(progress);
             holder.achTitle.setTextColor(holder.itemView.getResources().getColor(R.color.black));
             holder.achItem.setBackgroundColor(holder.itemView.getResources().getColor(R.color.white));
-            if (typeArray[position] > 6){
+            if (typeArray[position] > 6 && typeArray[position] != 11){
                 if (completedArray[position] == 1) progress = progress + " - Earned 1 time.";
                 else if (completedArray[position] > 1) progress = progress + " - Earned " + completedArray[position] + " times.";
                 holder.star.setVisibility(View.GONE);
@@ -70,7 +72,7 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
                 holder.achProg.setText(progress);
                 holder.achProg.setWidth(175);
             }
-            else if (typeArray[position] > 3){
+            else if (typeArray[position] > 3 || typeArray[position] == 11){
                 progress = "Earned 0 times.";
                 holder.star.setVisibility(View.GONE);
                 holder.achProg.setVisibility(View.VISIBLE);
@@ -81,7 +83,7 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
         else {
             holder.star.setVisibility(View.VISIBLE);
             holder.achProg.setVisibility(View.GONE);
-            if (typeArray[position] > 6){
+            if (typeArray[position] > 6 && typeArray[position] != 11){
                 if (completedArray[position] == 1) progress = progress + " - Earned 1 time.";
                 else if (completedArray[position] > 1) progress = progress + " - Earned " + completedArray[position] + " times.";
                 holder.star.setVisibility(View.GONE);
@@ -89,7 +91,7 @@ public class AchievementAdapter extends RecyclerView.Adapter<AchievementAdapter.
                 holder.achProg.setText(progress);
                 holder.achProg.setWidth(175);
             }
-            else if (typeArray[position] > 3){
+            else if (typeArray[position] > 3 || typeArray[position] == 11){
                 if (completedArray[position] == 1) progress = "Earned 1 time.";
                 else if (completedArray[position] > 1) progress = "Earned " + completedArray[position] + " times.";
                 else progress = "Earned 0 times.";

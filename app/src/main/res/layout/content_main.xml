@@ -27,7 +27,8 @@
             app:layout_constraintRight_toRightOf="parent"
             android:id="@+id/main_activity_adview"
             ads:adSize="SMART_BANNER"
-            ads:adUnitId="@string/main_activity_ad_banner">
+            ads:adUnitId="@string/main_activity_ad_banner"
+            tools:layout_editor_absoluteY="162dp">
 
         </com.google.android.gms.ads.AdView>
 
@@ -48,8 +49,18 @@
             android:layout_height="150dp"
             app:layout_constraintTop_toBottomOf="@+id/main_activity_adview"
             app:layout_constraintLeft_toRightOf="@+id/dogPic"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:gravity="center"
             android:background="@color/powderBlue"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:id="@+id/border_one"
+            android:background="@color/colorPrimary"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dog_name"/>
 
         <TextView
             android:id="@+id/daily_goals"
@@ -62,19 +73,27 @@
             android:textSize="35sp"
             app:layout_constraintLeft_toLeftOf="@+id/dogPic"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dogPic" />
+            app:layout_constraintTop_toBottomOf="@+id/border_one" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:id="@+id/border_two"
+            android:background="@color/colorPrimary"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/daily_goals"/>
 
         <TextView
             android:id="@+id/walks_title"
             android:layout_width="180dp"
             android:layout_height="50dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="0dp"
             android:gravity="center_vertical"
             android:text="@string/walks"
             android:textSize="20sp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/daily_goals" />
+            app:layout_constraintTop_toBottomOf="@+id/daily_goals"
+            android:layout_marginStart="8dp" />
 
         <ImageView
             app:srcCompat="@android:drawable/btn_star_big_on"
@@ -94,8 +113,8 @@
             android:gravity="center"
             app:layout_constraintRight_toLeftOf="@+id/walks_star"
             android:layout_marginRight="8dp"
-            android:layout_marginTop="0dp"
-            app:layout_constraintHorizontal_bias="0.0" />
+            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginEnd="8dp" />
 
         <TextView
             android:id="@+id/time_title"
@@ -116,9 +135,9 @@
             app:layout_constraintTop_toTopOf="@+id/time_title"
             android:gravity="center"
             app:layout_constraintRight_toLeftOf="@+id/time_star"
-            android:layout_marginTop="0dp"
             app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginRight="8dp" />
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp" />
 
         <ImageView
             app:srcCompat="@android:drawable/btn_star_big_on"
@@ -155,9 +174,9 @@
             app:layout_constraintTop_toTopOf="@+id/dist_title"
             android:gravity="center"
             app:layout_constraintRight_toLeftOf="@+id/dist_star"
-            android:layout_marginTop="0dp"
             app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginRight="8dp" />
+            android:layout_marginRight="8dp"
+            android:layout_marginEnd="8dp" />
 
         <TextView
             android:id="@+id/streak_title"
@@ -168,20 +187,25 @@
             android:textSize="30sp"
             app:layout_constraintLeft_toLeftOf="@+id/dist_title"
             app:layout_constraintTop_toBottomOf="@+id/dist_title"
-            app:layout_constraintRight_toLeftOf="@+id/cur_dist"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginRight="0dp" />
+            app:layout_constraintRight_toLeftOf="@+id/cur_dist" />
 
         <TextView
             android:layout_width="0dp"
-            app:layout_constraintRight_toRightOf="@id/cur_dist"
+            app:layout_constraintRight_toRightOf="@+id/cur_dist"
             android:layout_height="50dp"
             android:id="@+id/cur_streak"
             android:textSize="30sp"
             app:layout_constraintLeft_toRightOf="@+id/streak_title"
             app:layout_constraintTop_toTopOf="@+id/streak_title"
             android:gravity="center"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:id="@+id/border_three"
+            android:background="@color/colorPrimary"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cur_streak"/>
 
         <TextView
             android:id="@+id/life_time_stats"
@@ -194,10 +218,16 @@
             android:textSize="35sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/streak_title"
-            android:layout_marginTop="0dp"
-            android:layout_marginLeft="0dp"
+            app:layout_constraintTop_toBottomOf="@+id/border_three"
             app:layout_constraintHorizontal_bias="0.0" />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:id="@+id/border_four"
+            android:background="@color/colorPrimary"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/life_time_stats"/>
 
         <TextView
             android:layout_height="50dp"
@@ -207,9 +237,9 @@
             android:gravity="center_vertical"
             android:textSize="17sp"
             app:layout_constraintLeft_toLeftOf="@+id/life_time_stats"
-            app:layout_constraintTop_toBottomOf="@+id/life_time_stats"
+            app:layout_constraintTop_toBottomOf="@+id/border_four"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="0dp" />
+            android:layout_marginStart="8dp" />
         <TextView
             android:layout_height="50dp"
             android:layout_width="0dp"
@@ -219,9 +249,7 @@
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/all_time_walks_title"
             app:layout_constraintTop_toTopOf="@+id/all_time_walks_title"
-            android:layout_marginTop="0dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginRight="0dp" />
+            app:layout_constraintHorizontal_bias="0.0" />
         <TextView
             android:layout_width="180dp"
             android:layout_height="50dp"
@@ -250,9 +278,7 @@
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/all_time_dist_title"
             app:layout_constraintTop_toTopOf="@+id/all_time_dist_title"
-            android:layout_marginTop="0dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginRight="0dp" />
+            app:layout_constraintHorizontal_bias="0.0" />
         <TextView
             android:layout_width="180dp"
             android:layout_height="50dp"
@@ -271,9 +297,7 @@
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/best_walks_title"
             app:layout_constraintTop_toTopOf="@+id/best_walks_title"
-            android:layout_marginTop="-60dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginRight="0dp" />
+            app:layout_constraintHorizontal_bias="0.0" />
         <TextView
             android:layout_width="180dp"
             android:layout_height="50dp"
@@ -292,9 +316,7 @@
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/best_time_title"
             app:layout_constraintTop_toTopOf="@+id/best_time_title"
-            android:layout_marginTop="0dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginRight="0dp" />
+            app:layout_constraintHorizontal_bias="0.0" />
         <TextView
             android:layout_width="180dp"
             android:layout_height="50dp"
@@ -313,9 +335,7 @@
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/best_time_wk_title"
             app:layout_constraintTop_toTopOf="@+id/best_time_wk_title"
-            android:layout_marginTop="0dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginRight="0dp" />
+            app:layout_constraintHorizontal_bias="0.0" />
         <TextView
             android:layout_width="180dp"
             android:layout_height="50dp"
@@ -334,9 +354,7 @@
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/best_dist_title"
             app:layout_constraintTop_toTopOf="@+id/best_dist_title"
-            android:layout_marginTop="0dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginRight="0dp" />
+            app:layout_constraintHorizontal_bias="0.0" />
         <TextView
             android:layout_width="180dp"
             android:layout_height="50dp"
@@ -355,9 +373,7 @@
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/best_dist_wk_title"
             app:layout_constraintTop_toTopOf="@+id/best_dist_wk_title"
-            android:layout_marginTop="0dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginRight="0dp" />
+            app:layout_constraintHorizontal_bias="0.0" />
         <TextView
             android:layout_width="180dp"
             android:layout_height="50dp"
@@ -376,9 +392,7 @@
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/best_streak_title"
             app:layout_constraintTop_toTopOf="@+id/best_streak_title"
-            android:layout_marginTop="0dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginRight="0dp" />
+            app:layout_constraintHorizontal_bias="0.0" />
         <TextView
             android:layout_width="180dp"
             android:layout_height="50dp"
@@ -397,9 +411,7 @@
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/ave_time_walk"
             app:layout_constraintTop_toTopOf="@+id/ave_time_walk"
-            android:layout_marginTop="0dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginRight="0dp" />
+            app:layout_constraintHorizontal_bias="0.0" />
         <TextView
             android:layout_width="180dp"
             android:layout_height="50dp"
@@ -418,9 +430,7 @@
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/ave_dist_walk"
             app:layout_constraintTop_toTopOf="@+id/ave_dist_walk"
-            android:layout_marginTop="0dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginRight="0dp" />
+            app:layout_constraintHorizontal_bias="0.0" />
         <TextView
             android:layout_width="180dp"
             android:layout_height="50dp"
@@ -439,9 +449,7 @@
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/ave_walk_day"
             app:layout_constraintTop_toTopOf="@+id/ave_walk_day"
-            android:layout_marginTop="-60dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginRight="0dp" />
+            app:layout_constraintHorizontal_bias="0.0" />
         <TextView
             android:layout_width="180dp"
             android:layout_height="50dp"
@@ -460,9 +468,7 @@
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/ave_time_day"
             app:layout_constraintTop_toTopOf="@+id/ave_time_day"
-            android:layout_marginTop="0dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginRight="0dp" />
+            app:layout_constraintHorizontal_bias="0.0" />
         <TextView
             android:layout_width="180dp"
             android:layout_height="50dp"
@@ -481,9 +487,7 @@
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/ave_dist_day"
             app:layout_constraintTop_toTopOf="@+id/ave_dist_day"
-            android:layout_marginTop="0dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginRight="0dp" />
+            app:layout_constraintHorizontal_bias="0.0" />
         <TextView
             android:layout_width="180dp"
             android:layout_height="50dp"
@@ -502,9 +506,7 @@
             android:gravity="center"
             app:layout_constraintLeft_toRightOf="@+id/ave_mph"
             app:layout_constraintTop_toTopOf="@+id/ave_mph"
-            android:layout_marginTop="-1118dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginRight="0dp" />
+            app:layout_constraintHorizontal_bias="0.0" />
         <Button
             android:layout_width="0dp"
             android:layout_height="50dp"
@@ -520,8 +522,6 @@
             android:id="@+id/all_time_time_val"
             android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginTop="-255dp"
             android:gravity="center"
             android:textSize="20sp"
             app:layout_constraintHorizontal_bias="0.0"

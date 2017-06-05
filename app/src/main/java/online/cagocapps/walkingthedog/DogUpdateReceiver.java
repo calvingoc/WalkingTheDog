@@ -32,6 +32,7 @@ public class DogUpdateReceiver extends BroadcastReceiver {
             //open database
             DbHelper DbHelp = new DbHelper(context);
             SQLiteDatabase dbWrite = DbHelp.getWritableDatabase();
+        int highestStreak = 0;
 
             //set up query
             Cursor cursor = dbWrite.query(
@@ -57,8 +58,8 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                     float goalTime = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL));
                     float goalDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
                     float goalWalk = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.WALKS_GOAL));
-                    float streak = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.STREAK));
-                    float bestStreak = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_STREAK));
+                    int streak = cursor.getInt(cursor.getColumnIndex(PetContract.WalkTheDog.STREAK));
+                    int bestStreak = cursor.getInt(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_STREAK));
                     float totWalks = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_WALKS));
                     float totTimes = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_TIME));
                     float totDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.TOTAL_DIST));
@@ -82,8 +83,8 @@ public class DogUpdateReceiver extends BroadcastReceiver {
 
                     if (goalDist > curDist || goalTime > curTime || goalWalk > curWalks){
                         streak = 0;
-                        Achievements.resetAchievements(7,dbWrite);
                     }
+                    highestStreak = Math.max(highestStreak, streak);
 
 
 
@@ -106,12 +107,15 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                     String whereVal = PetContract.WalkTheDog._ID + "=?";
                     String[] whereArgs = new String[]{String.valueOf(petID)};
                     dbWrite.update(PetContract.WalkTheDog.TABLE_NAME, cv, whereVal, whereArgs);
+                    Achievements.resetAchievements(8,dbWrite);
+                    Achievements.resetAchievements(9,dbWrite);
+                    Achievements.resetAchievements(10,dbWrite);
+                    Achievements.resetAchievements(11, dbWrite);
+                    Achievements.resetAchievements(7,dbWrite);
+                    Achievements.updateAchievements(7, highestStreak, dbWrite);
                 }
             }
-            cursor.close();
-        Achievements.resetAchievements(8,dbWrite);
-        Achievements.resetAchievements(9,dbWrite);
-        Achievements.resetAchievements(10,dbWrite);
-            dbWrite.close();
+        cursor.close();
+        dbWrite.close();
     }
 }

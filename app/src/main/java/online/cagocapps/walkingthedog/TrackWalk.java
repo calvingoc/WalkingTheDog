@@ -298,7 +298,6 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                     streak = streak + 1;
                     Achievements.updateAchievements(7, 1,dbRead);
                     Achievements.updateAchievements(11, 1,dbRead);
-                    Achievements.resetAchievements(11, dbRead);
 
                 }
                 if (wBestDist < distance) wBestDist = distance;
@@ -344,6 +343,8 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         super.onDestroy();
         LocationServices.FusedLocationApi.removeLocationUpdates(apiC, this);
         apiC.disconnect();
+        NotificationUtils.clearNotification(this);
+        ReminderUtilities.endWalkReminders(this);
     }
 
     @Override
