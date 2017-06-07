@@ -3,19 +3,17 @@
     android:shape="rectangle" >
 
     <!-- View background color -->
-    <solid
-        android:color="@color/powderBlue" >
-    </solid>
-
-    <!-- View border color and width -->
-    <stroke
-        android:width="4dp"
-        android:color="@color/powderBlue" >
-    </stroke>
+    <gradient
+        android:startColor="@color/colorPrimaryDark"
+        android:centerColor="@color/colorPrimaryDark"
+        android:endColor="@color/colorPrimaryDark"
+        android:angle="270"
+        />
 
     <!-- The radius makes the corners rounded -->
     <corners
-        android:radius="2dp"   >
+        android:radius="0dp"
+        >
     </corners>
 
 </shape>

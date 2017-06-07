@@ -14,7 +14,10 @@ import android.location.Location;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -50,14 +53,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 //Class sets up the Tracking walk screen and lays the basework for timing the walk, tracking the walk with GPS and getting distance.
 public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapterOnClickHandler,
-        OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,LocationListener {
+        OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,LocationListener{
     private DbHelper DbHelp;
     private SQLiteDatabase dbRead;
     private RecyclerView rvDogList;
     private DogAdapter dogAdapter;
     private GoogleApiClient apiC;
     private Location mLastLocation;
-    private static final String TAG = "TrackWalk";
     private Chronometer timer;
     private Long[] dogIDs;
     private String[] dogNames;
@@ -73,8 +75,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
     private AdView mAdView;
     private int locationDelay = 0;
     private int streak;
-
-
+    private int locationCount = 0;
 
 
     @Override
@@ -247,6 +248,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
 
 
     public void endWalk(View view) {
+        view.setEnabled(false);
         long ElapsedTime = SystemClock.elapsedRealtime() - timer.getBase();
         double elaspedTimeFloat =  ElapsedTime / 60000.0;
         Boolean alreadyHitStreak;
@@ -296,7 +298,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 curDist =  (curDist + distance);
                 if (curWalks >= goalWalks && curTime >= goalTime && curDist >= goalDist && !alreadyHitStreak){
                     streak = streak + 1;
-                    Achievements.updateAchievements(7, 1,dbRead);
+                    Achievements.updateAchievements(7, streak,dbRead);
                     Achievements.updateAchievements(11, 1,dbRead);
 
                 }
@@ -315,15 +317,15 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
             }
             cursor.close();
         }
+        double mph = 0;
+        if (elaspedTimeFloat != 0){
+            mph = Math.round(distance) / (elaspedTimeFloat / 60);
+        }
         Achievements.updateAchievements(1, 1, dbRead);
         Achievements.updateAchievements(2, elaspedTimeFloat, dbRead);
         Achievements.updateAchievements(3,distance, dbRead);
         Achievements.updateAchievements(4, elaspedTimeFloat, dbRead);
         Achievements.updateAchievements(5, distance, dbRead);
-        double mph = 0;
-        if (elaspedTimeFloat != 0){
-            mph = Math.round(distance) / (elaspedTimeFloat / 60);
-        }
         Achievements.updateAchievements(6, mph, dbRead);
         Achievements.updateAchievements(8, elaspedTimeFloat, dbRead);
         Achievements.updateAchievements(9, distance, dbRead);
@@ -343,6 +345,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         super.onDestroy();
         LocationServices.FusedLocationApi.removeLocationUpdates(apiC, this);
         apiC.disconnect();
+        DbHelp.close();
         NotificationUtils.clearNotification(this);
         ReminderUtilities.endWalkReminders(this);
     }
@@ -361,6 +364,13 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 if (location.distanceTo(mLastLocation) / 1609.0 < .25) {
                     distance = distance + (location.distanceTo(mLastLocation) / 1609);
                     mLastLocation = location;
+                }
+                else {
+                    locationCount++;
+                    if (locationCount > 5){
+                        mLastLocation = location;
+                        locationCount = 0;
+                    }
                 }
             }
             String distanceString = String.format("%.2f", distance);

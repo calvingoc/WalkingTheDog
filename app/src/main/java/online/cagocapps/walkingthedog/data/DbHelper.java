@@ -1,5 +1,6 @@
 package online.cagocapps.walkingthedog.data;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -14,7 +15,7 @@ import online.cagocapps.walkingthedog.MainActivity;
 public class DbHelper extends SQLiteOpenHelper {
     // sets database name and version
     public static final String DATABASE_NAME = "walkTheDog.db";
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 6;
 
     /*
     * generic constructor
@@ -95,9 +96,13 @@ public class DbHelper extends SQLiteOpenHelper {
             Achievements.achievementSetUp(sqLiteDatabase);
         }
         else {
-            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + PetContract.WalkTheDog.TABLE_NAME);
-            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + PetContract.Achievements.TABLE_NAME);
-            onCreate(sqLiteDatabase);
+            ContentValues cv = new ContentValues();
+            cv.put(PetContract.Achievements.THRESHOLD, 30);
+            cv.put(PetContract.Achievements.COMPLETED, 0);
+            sqLiteDatabase.update(PetContract.Achievements.TABLE_NAME,
+                    cv,
+                    PetContract.Achievements.ACHIEVEMENT + "=?",
+                    new String[]{"Streaking;30 day streak."});
         }
     }
 }

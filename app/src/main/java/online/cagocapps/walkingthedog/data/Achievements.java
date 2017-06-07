@@ -238,7 +238,7 @@ public class Achievements {
         cv.clear();
         //30 day streak
         cv.put(PetContract.Achievements.ACHIEVEMENT, "Streaking;30 day streak.");
-        cv.put(PetContract.Achievements.THRESHOLD, 5);
+        cv.put(PetContract.Achievements.THRESHOLD, 30);
         cv.put(PetContract.Achievements.TYPE, 7);
         db.insert(PetContract.Achievements.TABLE_NAME, null, cv);
         cv.clear();
@@ -329,6 +329,9 @@ public class Achievements {
         );
         while (cursor.moveToNext()){
             double prog = cursor.getDouble(cursor.getColumnIndex(PetContract.Achievements.PROGRESS)) + value;
+            if (type == 7){
+                prog = Math.max(value, cursor.getColumnIndex(PetContract.Achievements.PROGRESS));
+            }
             cv.put(PetContract.Achievements.PROGRESS, prog);
             if (prog >= cursor.getDouble(cursor.getColumnIndex(PetContract.Achievements.THRESHOLD)) &&
                     cursor.getInt(cursor.getColumnIndex(PetContract.Achievements.UPDATE_TRACKER)) == 0){
