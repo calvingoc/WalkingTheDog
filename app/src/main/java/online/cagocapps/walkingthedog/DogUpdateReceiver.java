@@ -32,7 +32,6 @@ public class DogUpdateReceiver extends BroadcastReceiver {
             //open database
             DbHelper DbHelp = new DbHelper(context);
             SQLiteDatabase dbWrite = DbHelp.getWritableDatabase();
-        int highestStreak = 0;
 
             //set up query
             Cursor cursor = dbWrite.query(
@@ -83,8 +82,7 @@ public class DogUpdateReceiver extends BroadcastReceiver {
 
                     if (goalDist > curDist || goalTime > curTime || goalWalk > curWalks){
                         streak = 0;
-                    }
-                    highestStreak = Math.max(highestStreak, streak);
+                    };
 
 
 
@@ -112,7 +110,7 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                     Achievements.resetAchievements(10,dbWrite);
                     Achievements.resetAchievements(11, dbWrite);
                     Achievements.resetAchievements(7,dbWrite);
-                    Achievements.updateAchievements(7, highestStreak, dbWrite);
+                    Achievements.updateAchievements(7, streak, dbWrite);
                 }
             }
         cursor.close();

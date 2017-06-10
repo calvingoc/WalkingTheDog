@@ -329,7 +329,7 @@ public class Achievements {
         while (cursor.moveToNext()){
             double prog = cursor.getDouble(cursor.getColumnIndex(PetContract.Achievements.PROGRESS)) + value;
             if (type == 7){
-                prog = Math.max(value, cursor.getColumnIndex(PetContract.Achievements.PROGRESS));
+                prog = Math.max(value, cursor.getInt(cursor.getColumnIndex(PetContract.Achievements.PROGRESS)));
             }
             cv.put(PetContract.Achievements.PROGRESS, prog);
             if (prog >= cursor.getDouble(cursor.getColumnIndex(PetContract.Achievements.THRESHOLD)) &&
