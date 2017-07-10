@@ -47,6 +47,7 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                 Long lastDaySynced = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.LAST_DAY_SYNCED));
                 Date lastDaySync = new Date(lastDaySynced);
                 Date curDate = new Date(System.currentTimeMillis());
+                int maxStreak = 0;
                 if (curDate.getDate()!=(lastDaySync.getDate())) { //ensure refresh is only done once a day
 
                     // set local variables to do calculations
@@ -84,6 +85,8 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                         streak = 0;
                     };
 
+                    maxStreak = Math.max(streak, maxStreak);
+
 
 
 
@@ -109,8 +112,13 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                     Achievements.resetAchievements(9,dbWrite);
                     Achievements.resetAchievements(10,dbWrite);
                     Achievements.resetAchievements(11, dbWrite);
-                    Achievements.resetAchievements(7,dbWrite);
-                    Achievements.updateAchievements(7, streak, dbWrite);
+                    if (maxStreak == 0){
+                        Achievements.resetAchievements(7,dbWrite);
+                    }
+
+                    else {
+                        Achievements.updateAchievements(7, maxStreak, dbWrite);
+                    }
                 }
             }
         cursor.close();

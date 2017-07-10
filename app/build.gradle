@@ -7,8 +7,8 @@ android {
         applicationId "online.cagocapps.walkingthedog"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 34
-        versionName "5.1.2"
+        versionCode 36
+        versionName "5.1.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         resValue "string", "google_maps_key", (project.findProperty("GOOGLE_MAPS_API_KEY") ?: "")
     }
