@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                 toastText = toastText + "1 new achievement! Good Job!";
             }
             else toastText = toastText + String.valueOf(cursor.getCount()) + " new achievements! Good Job!";
-            Toast toast = Toast.makeText(this, toastText, Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this, toastText, Toast.LENGTH_SHORT);
             toast.show();
         }
     }

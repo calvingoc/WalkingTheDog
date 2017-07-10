@@ -32,7 +32,7 @@ public class NotificationUtils {
     public static void remindUserOnWalk(Context context){
         NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(context)
                 .setColor(ContextCompat.getColor(context, R.color.colorAccent))
-                .setSmallIcon(R.drawable.ic_pets_black_24dp)
+                .setSmallIcon(R.drawable.ic_cancel_black_24px)
                 .setLargeIcon(largeIcon(context))
                 .setContentTitle(context.getString(R.string.notification_title))
                 .setContentText(context.getString(R.string.notification_text))
@@ -57,9 +57,9 @@ public class NotificationUtils {
                 ON_WALK_PENDING_INTENT,
                 endIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Action ignoreAction = new NotificationCompat.Action(R.drawable.ic_pets_black_24dp,
+        NotificationCompat.Action ignoreAction = new NotificationCompat.Action(R.drawable.ic_cancel_black_24px,
                 "No",
-                endPendingIntent);
+                endPendingIntent); //@TODO put back old picture
         return ignoreAction;
     }
 
@@ -73,7 +73,7 @@ public class NotificationUtils {
                 PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Action ignoreAction = new NotificationCompat.Action(R.drawable.ic_cancel_black_24px,
                 "Yes, keep walking",
-                ignorePendingIntent);
+                ignorePendingIntent); //@TODO put back old picture
         return ignoreAction;
     }
 

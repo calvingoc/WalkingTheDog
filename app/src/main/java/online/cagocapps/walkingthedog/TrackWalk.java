@@ -2,6 +2,7 @@ package online.cagocapps.walkingthedog;
 
 import android.Manifest;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -84,12 +85,16 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
     private int locationCount = 0;
     public ProgressBar mProgressBar;
     public Button finalizeWalk;
+    public RecyclerView popUpRecyc;
+    public Context mContext;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_track_walk);
+
+        mContext = this;
 
         //Setting up Chronometer
         timer = (Chronometer) findViewById(R.id.cur_time_val);
@@ -263,6 +268,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         TextView timeSummary = (TextView) customView.findViewById(R.id.time_title);
         TextView distanceSummary = (TextView) customView.findViewById(R.id.distance_title);
         TextView mphSummary = (TextView) customView.findViewById(R.id.mph_title);
+        popUpRecyc = (RecyclerView) customView.findViewById(R.id.popup_acheivments_rv);
         finalizeWalk = (Button) customView.findViewById(R.id.popup_save_button);
         mProgressBar = (ProgressBar) customView.findViewById(R.id.progressBar2);
         finalizeWalk.setOnClickListener(new View.OnClickListener() {
@@ -286,6 +292,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
     }
 
     private class  UpdateDogs extends AsyncTask<String,Void,Void> {
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -387,6 +394,46 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
             mProgressBar.setEnabled(false);
             mProgressBar.setVisibility(View.INVISIBLE);
             finalizeWalk.setEnabled(true);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+            popUpRecyc.setLayoutManager(layoutManager);
+            popUpRecyc.setHasFixedSize(true);
+            AchievementAdapter achievementAdapter = new AchievementAdapter();
+            popUpRecyc.setAdapter(achievementAdapter);
+            dbRead = DbHelp.getReadableDatabase();
+
+            Cursor cursor = dbRead.query(
+                    PetContract.Achievements.TABLE_NAME,
+                    null,
+                    PetContract.Achievements.SEEN + "=?",
+                    new String[]{"0"},
+                    null,
+                    null,
+                    null
+            );
+
+            String[] achievementsArray = new String[cursor.getCount()];
+            double[] thresholdArray = new double[cursor.getCount()];
+            double[] progressArray = new double[cursor.getCount()];
+            double[] completedArray = new double[cursor.getCount()];
+            double[] seenArray = new double[cursor.getCount()];
+            double[] typeArray = new double[cursor.getCount()];
+            int i = 0;
+            while (cursor.moveToNext()){
+                achievementsArray[i] = cursor.getString(cursor.getColumnIndex(PetContract.Achievements.ACHIEVEMENT));
+                thresholdArray[i] = cursor.getDouble(cursor.getColumnIndex(PetContract.Achievements.THRESHOLD));
+                progressArray[i] = cursor.getDouble(cursor.getColumnIndex(PetContract.Achievements.PROGRESS));
+                completedArray[i] = cursor.getDouble(cursor.getColumnIndex(PetContract.Achievements.COMPLETED));
+                seenArray[i] = cursor.getDouble(cursor.getColumnIndex(PetContract.Achievements.SEEN));
+                typeArray[i] = cursor.getDouble(cursor.getColumnIndex(PetContract.Achievements.TYPE));
+                i++;
+            }
+            cursor.close();
+            achievementAdapter.setAchList(achievementsArray, thresholdArray, progressArray, completedArray, seenArray, typeArray);
+            achievementAdapter.notifyDataSetChanged();
+            dbRead.close();
+            if (achievementsArray.length == 0){
+                popUpRecyc.setBackgroundColor(getColor(R.color.powderBlue));
+            }
 
         }
     }
