@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.icu.text.DecimalFormat;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -23,8 +24,13 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import online.cagocapps.walkingthedog.data.Achievements;
@@ -76,6 +82,8 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
     private int locationDelay = 0;
     private int streak;
     private int locationCount = 0;
+    public ProgressBar mProgressBar;
+    public Button finalizeWalk;
 
 
     @Override
@@ -246,94 +254,146 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         return sb.toString();
     }
 
+    public void launchPopup(View view){
+        timer.stop();
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        View customView = inflater.inflate(R.layout.walk_summary, null);
+        final PopupWindow mPopupWindow = new PopupWindow(customView, RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.MATCH_PARENT);
+        mPopupWindow.setElevation(5.0f);
+        TextView timeSummary = (TextView) customView.findViewById(R.id.time_title);
+        TextView distanceSummary = (TextView) customView.findViewById(R.id.distance_title);
+        TextView mphSummary = (TextView) customView.findViewById(R.id.mph_title);
+        finalizeWalk = (Button) customView.findViewById(R.id.popup_save_button);
+        mProgressBar = (ProgressBar) customView.findViewById(R.id.progressBar2);
+        finalizeWalk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                endWalk(v);
+            }
+        });
+        mPopupWindow.showAtLocation(findViewById(R.id.constraintLayout), Gravity.CENTER,0,0);
+        long ElapsedTime = SystemClock.elapsedRealtime() - timer.getBase();
+        double elaspedTimeFloat =  ElapsedTime / 60000.0;
+        timeSummary.setText("You walked for " + String.format("%.2f", elaspedTimeFloat) + " minutes!");
+        distanceSummary.setText("You went " + String.format("%.2f", distance) + " miles!");
+        if (elaspedTimeFloat != 0){
+            mphSummary.setText("That is " + String.format("%.2f", Math.round(distance) / (elaspedTimeFloat / 60)) + " mph!");
+        }
+        String time[] = {String.format("%.2f",elaspedTimeFloat)};
+        new UpdateDogs().execute(time);
+
+
+    }
+
+    private class  UpdateDogs extends AsyncTask<String,Void,Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressBar.setEnabled(true);
+            finalizeWalk.setEnabled(false);
+
+        }
+
+        @Override
+        protected Void doInBackground(String ... params) {
+            dbRead = DbHelp.getWritableDatabase();
+            Boolean alreadyHitStreak;
+            String[] columns = new String[]{PetContract.WalkTheDog.STREAK,
+                    PetContract.WalkTheDog._ID,
+                    PetContract.WalkTheDog.TIME_GOAL,
+                    PetContract.WalkTheDog.WALKS_GOAL,
+                    PetContract.WalkTheDog.TIME_GOAL,
+                    PetContract.WalkTheDog.CUR_DIST,
+                    PetContract.WalkTheDog.CUR_TIME,
+                    PetContract.WalkTheDog.CUR_WALKS,
+                    PetContract.WalkTheDog.DIST_GOAL,
+                    PetContract.WalkTheDog.BEST_WALKS,
+                    PetContract.WalkTheDog.BEST_DIST,
+                    PetContract.WalkTheDog.BEST_TIME};
+            if (!dogsOnWalkString.equals(null)) {
+                dogIDsOnWalk = dogsOnWalkString.split(" ");
+                String where = PetContract.WalkTheDog._ID + " IN ("
+                        + makePlaceholders(dogIDsOnWalk.length) + ")";
+                Cursor cursor = dbRead.query(
+                        PetContract.WalkTheDog.TABLE_NAME,
+                        columns,
+                        where,
+                        dogIDsOnWalk,
+                        null,
+                        null,
+                        null
+                );
+                while (cursor.moveToNext()) {
+                    Long petID = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID));
+                    streak = cursor.getInt(cursor.getColumnIndex(PetContract.WalkTheDog.STREAK));
+                    Long curWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_WALKS));
+                    double curTime = cursor.getDouble(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
+                    float curDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
+                    Long goalWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.WALKS_GOAL));
+                    double goalTime = cursor.getDouble(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL));
+                    float goalDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
+                    float wBestDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_DIST));
+                    double wBestTime = cursor.getDouble(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME));
+                    if (curWalks < goalWalks || curTime < goalTime || curDist < goalDist){
+                        alreadyHitStreak = false;
+                    } else alreadyHitStreak = true;
+                    curWalks = curWalks +1;
+                    curTime = curTime + (Float.parseFloat(params[0]));
+                    curDist =  (curDist + distance);
+                    if (curWalks >= goalWalks && curTime >= goalTime && curDist >= goalDist && !alreadyHitStreak){
+                        streak = streak + 1;
+                        Achievements.updateAchievements(7, streak,dbRead);
+                        Achievements.updateAchievements(11, 1,dbRead);
+
+                    }
+                    if (wBestDist < distance) wBestDist = distance;
+                    if (wBestTime < (Float.parseFloat(params[0]))) wBestTime = (Float.parseFloat(params[0]));
+                    ContentValues cv = new ContentValues();
+                    cv.put(PetContract.WalkTheDog.CUR_WALKS, curWalks);
+                    cv.put(PetContract.WalkTheDog.CUR_TIME, curTime);
+                    cv.put(PetContract.WalkTheDog.STREAK, streak);
+                    cv.put(PetContract.WalkTheDog.CUR_DIST, curDist);
+                    cv.put(PetContract.WalkTheDog.BEST_DIST, wBestDist);
+                    cv.put(PetContract.WalkTheDog.BEST_TIME, wBestTime);
+                    String whereVal = PetContract.WalkTheDog._ID+"=?";
+                    String[] whereArgs = new String[] {String.valueOf(petID)};
+                    dbRead.update(PetContract.WalkTheDog.TABLE_NAME, cv, whereVal, whereArgs);
+                }
+                cursor.close();
+            }
+            double mph = 0;
+            if ((Float.parseFloat(params[0])) != 0){
+                mph = Math.round(distance) / ((Float.parseFloat(params[0])) / 60);
+            }
+            Achievements.updateAchievements(1, 1, dbRead);
+            Achievements.updateAchievements(2, (Float.parseFloat(params[0])), dbRead);
+            Achievements.updateAchievements(3,distance, dbRead);
+            Achievements.updateAchievements(4, (Float.parseFloat(params[0])), dbRead);
+            Achievements.updateAchievements(5, distance, dbRead);
+            Achievements.updateAchievements(6, mph, dbRead);
+            Achievements.updateAchievements(8, (Float.parseFloat(params[0])), dbRead);
+            Achievements.updateAchievements(9, distance, dbRead);
+            Achievements.updateAchievements(10, 1, dbRead);
+            Achievements.resetAchievements(4,dbRead);
+            Achievements.resetAchievements(5,dbRead);
+            Achievements.resetAchievements(6,dbRead);
+            dbRead.close();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            mProgressBar.setEnabled(false);
+            mProgressBar.setVisibility(View.INVISIBLE);
+            finalizeWalk.setEnabled(true);
+
+        }
+    }
+
 
     public void endWalk(View view) {
         view.setEnabled(false);
-        long ElapsedTime = SystemClock.elapsedRealtime() - timer.getBase();
-        double elaspedTimeFloat =  ElapsedTime / 60000.0;
-        Boolean alreadyHitStreak;
-        timer.stop();
-        dbRead = DbHelp.getWritableDatabase();
-        String[] columns = new String[]{PetContract.WalkTheDog.STREAK,
-                PetContract.WalkTheDog._ID,
-                PetContract.WalkTheDog.TIME_GOAL,
-                PetContract.WalkTheDog.WALKS_GOAL,
-                PetContract.WalkTheDog.TIME_GOAL,
-                PetContract.WalkTheDog.CUR_DIST,
-                PetContract.WalkTheDog.CUR_TIME,
-                PetContract.WalkTheDog.CUR_WALKS,
-                PetContract.WalkTheDog.DIST_GOAL,
-                PetContract.WalkTheDog.BEST_WALKS,
-                PetContract.WalkTheDog.BEST_DIST,
-                PetContract.WalkTheDog.BEST_TIME};
-        if (!dogsOnWalkString.equals(null)) {
-            dogIDsOnWalk = dogsOnWalkString.split(" ");
-            String where = PetContract.WalkTheDog._ID + " IN ("
-                    + makePlaceholders(dogIDsOnWalk.length) + ")";
-            Cursor cursor = dbRead.query(
-                    PetContract.WalkTheDog.TABLE_NAME,
-                    columns,
-                    where,
-                    dogIDsOnWalk,
-                    null,
-                    null,
-                    null
-            );
-            while (cursor.moveToNext()) {
-                Long petID = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID));
-                streak = cursor.getInt(cursor.getColumnIndex(PetContract.WalkTheDog.STREAK));
-                Long curWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_WALKS));
-                double curTime = cursor.getDouble(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_TIME));
-                float curDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_DIST));
-                Long goalWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.WALKS_GOAL));
-                double goalTime = cursor.getDouble(cursor.getColumnIndex(PetContract.WalkTheDog.TIME_GOAL));
-                float goalDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.DIST_GOAL));
-                float wBestDist = cursor.getFloat(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_DIST));
-                double wBestTime = cursor.getDouble(cursor.getColumnIndex(PetContract.WalkTheDog.BEST_TIME));
-                if (curWalks < goalWalks || curTime < goalTime || curDist < goalDist){
-                    alreadyHitStreak = false;
-                } else alreadyHitStreak = true;
-                curWalks = curWalks +1;
-                curTime = curTime + (elaspedTimeFloat);
-                curDist =  (curDist + distance);
-                if (curWalks >= goalWalks && curTime >= goalTime && curDist >= goalDist && !alreadyHitStreak){
-                    streak = streak + 1;
-                    Achievements.updateAchievements(7, streak,dbRead);
-                    Achievements.updateAchievements(11, 1,dbRead);
-
-                }
-                if (wBestDist < distance) wBestDist = distance;
-                if (wBestTime < elaspedTimeFloat) wBestTime = elaspedTimeFloat;
-                ContentValues cv = new ContentValues();
-                cv.put(PetContract.WalkTheDog.CUR_WALKS, curWalks);
-                cv.put(PetContract.WalkTheDog.CUR_TIME, curTime);
-                cv.put(PetContract.WalkTheDog.STREAK, streak);
-                cv.put(PetContract.WalkTheDog.CUR_DIST, curDist);
-                cv.put(PetContract.WalkTheDog.BEST_DIST, wBestDist);
-                cv.put(PetContract.WalkTheDog.BEST_TIME, wBestTime);
-                String whereVal = PetContract.WalkTheDog._ID+"=?";
-                String[] whereArgs = new String[] {String.valueOf(petID)};
-                dbRead.update(PetContract.WalkTheDog.TABLE_NAME, cv, whereVal, whereArgs);
-            }
-            cursor.close();
-        }
-        double mph = 0;
-        if (elaspedTimeFloat != 0){
-            mph = Math.round(distance) / (elaspedTimeFloat / 60);
-        }
-        Achievements.updateAchievements(1, 1, dbRead);
-        Achievements.updateAchievements(2, elaspedTimeFloat, dbRead);
-        Achievements.updateAchievements(3,distance, dbRead);
-        Achievements.updateAchievements(4, elaspedTimeFloat, dbRead);
-        Achievements.updateAchievements(5, distance, dbRead);
-        Achievements.updateAchievements(6, mph, dbRead);
-        Achievements.updateAchievements(8, elaspedTimeFloat, dbRead);
-        Achievements.updateAchievements(9, distance, dbRead);
-        Achievements.updateAchievements(10, 1, dbRead);
-        Achievements.resetAchievements(4,dbRead);
-        Achievements.resetAchievements(5,dbRead);
-        Achievements.resetAchievements(6,dbRead);
-        dbRead.close();
         NotificationUtils.clearNotification(this);
         ReminderUtilities.endWalkReminders(this);
         startActivity(new Intent(this, MainActivity.class));

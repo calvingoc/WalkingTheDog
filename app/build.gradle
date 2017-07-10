@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "online.cagocapps.walkingthedog"
-        minSdkVersion 15
+        minSdkVersion 21
         targetSdkVersion 25
         versionCode 34
         versionName "5.1.2"
