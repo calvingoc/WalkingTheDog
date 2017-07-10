@@ -57,7 +57,7 @@ public class NotificationUtils {
                 ON_WALK_PENDING_INTENT,
                 endIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Action ignoreAction = new NotificationCompat.Action(R.drawable.ic_cancel_black_24px,
+        NotificationCompat.Action ignoreAction = new NotificationCompat.Action(R.drawable.ic_pets_black_24dp,
                 "No",
                 endPendingIntent); //@TODO put back old picture
         return ignoreAction;
@@ -71,7 +71,7 @@ public class NotificationUtils {
                 ACTION_IGNORE_NOTIFICATION_ID,
                 ignoreIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Action ignoreAction = new NotificationCompat.Action(R.drawable.ic_cancel_black_24px,
+        NotificationCompat.Action ignoreAction = new NotificationCompat.Action(R.drawable.ic_pets_black_24dp,
                 "Yes, keep walking",
                 ignorePendingIntent); //@TODO put back old picture
         return ignoreAction;
