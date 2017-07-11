@@ -32,7 +32,7 @@ public class NotificationUtils {
     public static void remindUserOnWalk(Context context){
         NotificationCompat.Builder notBuilder = new NotificationCompat.Builder(context)
                 .setColor(ContextCompat.getColor(context, R.color.colorAccent))
-                .setSmallIcon(R.drawable.ic_cancel_black_24px)
+                .setSmallIcon(R.drawable.ic_pets_black_24dp)
                 .setLargeIcon(largeIcon(context))
                 .setContentTitle(context.getString(R.string.notification_title))
                 .setContentText(context.getString(R.string.notification_text))

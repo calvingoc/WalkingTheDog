@@ -10,7 +10,7 @@
     <TextView
         android:id="@+id/walk_summary_title"
         android:layout_width="0dp"
-        android:layout_height="100dp"
+        android:layout_height="60dp"
         android:textSize="30sp"
         android:gravity="center"
         android:textStyle="bold"
@@ -56,20 +56,37 @@
         android:textSize="20sp"
         android:textColor="@color/black"/>
 
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:id="@+id/popup_divider_one"
+        android:background="@color/colorPrimary"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/time_title"/>
+
     <TextView
         android:id="@+id/distance_title"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
         android:text="You went 5.35 miles!"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/time_title"
+        app:layout_constraintTop_toBottomOf="@+id/popup_divider_one"
         android:gravity="center"
         android:textSize="20sp"
         android:textColor="@color/black"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:id="@+id/popup_divider_two"
+        android:background="@color/colorPrimary"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/distance_title"/>
 
     <TextView
         android:id="@+id/mph_title"
@@ -77,23 +94,37 @@
         android:layout_height="40dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="8dp"
         android:text="That is 0 mph!"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/distance_title"
+        app:layout_constraintTop_toBottomOf="@+id/popup_divider_two"
         android:gravity="center"
         android:textSize="20sp"
         android:textColor="@color/black"/>
 
-    <android.support.v7.widget.RecyclerView
+    <TextView
+        android:id="@+id/achievements_title"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@color/white"
-        android:id="@+id/popup_acheivments_rv"
+        android:layout_height="50dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/mph_title"
+        android:background="@color/colorPrimary"
+        android:text="New Achievements"
+        android:textSize="25sp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/powderBlue"
+        android:id="@+id/popup_achievments_rv"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/achievements_title"
         app:layout_constraintBottom_toTopOf="@+id/popup_save_button"/>
 
     <ProgressBar
