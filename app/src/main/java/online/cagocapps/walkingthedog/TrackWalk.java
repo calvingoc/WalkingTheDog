@@ -268,7 +268,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         TextView timeSummary = (TextView) customView.findViewById(R.id.time_title);
         TextView distanceSummary = (TextView) customView.findViewById(R.id.distance_title);
         TextView mphSummary = (TextView) customView.findViewById(R.id.mph_title);
-        popUpRecyc = (RecyclerView) customView.findViewById(R.id.popup_acheivments_rv);
+        popUpRecyc = (RecyclerView) customView.findViewById(R.id.popup_achievments_rv);
         finalizeWalk = (Button) customView.findViewById(R.id.popup_save_button);
         mProgressBar = (ProgressBar) customView.findViewById(R.id.progressBar2);
         finalizeWalk.setOnClickListener(new View.OnClickListener() {
