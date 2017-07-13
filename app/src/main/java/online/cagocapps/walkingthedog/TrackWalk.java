@@ -423,7 +423,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                 thresholdArray[i] = cursor.getDouble(cursor.getColumnIndex(PetContract.Achievements.THRESHOLD));
                 progressArray[i] = cursor.getDouble(cursor.getColumnIndex(PetContract.Achievements.PROGRESS));
                 completedArray[i] = cursor.getDouble(cursor.getColumnIndex(PetContract.Achievements.COMPLETED));
-                seenArray[i] = cursor.getDouble(cursor.getColumnIndex(PetContract.Achievements.SEEN));
+                seenArray[i] = 1;
                 typeArray[i] = cursor.getDouble(cursor.getColumnIndex(PetContract.Achievements.TYPE));
                 i++;
             }

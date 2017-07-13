@@ -86,7 +86,24 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         pm.setComponentEnabledSetting(receiver,PackageManager.COMPONENT_ENABLED_STATE_ENABLED,PackageManager.DONT_KILL_APP);
 
 
-
+        Cursor cursor = dbRead.query(
+                PetContract.Achievements.TABLE_NAME,
+                null,
+                PetContract.Achievements.SEEN + "=?",
+                new String[]{"0"},
+                null,
+                null,
+                null
+        );
+        if(cursor.getCount() != 0){
+            String toastText = "You have ";
+            if (cursor.getCount() == 1){
+                toastText = toastText + "1 new achievement! Good Job!";
+            }
+            else toastText = toastText + String.valueOf(cursor.getCount()) + " new achievements! Good Job!";
+            Toast toast = Toast.makeText(this, toastText, Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
     @Override
@@ -122,28 +139,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         return true;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Cursor cursor = dbRead.query(
-                PetContract.Achievements.TABLE_NAME,
-                null,
-                PetContract.Achievements.SEEN + "=?",
-                new String[]{"0"},
-                null,
-                null,
-                null
-        );
-        if(cursor.getCount() != 0){
-            String toastText = "You have ";
-            if (cursor.getCount() == 1){
-                toastText = toastText + "1 new achievement! Good Job!";
-            }
-            else toastText = toastText + String.valueOf(cursor.getCount()) + " new achievements! Good Job!";
-            Toast toast = Toast.makeText(this, toastText, Toast.LENGTH_SHORT);
-            toast.show();
-        }
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
