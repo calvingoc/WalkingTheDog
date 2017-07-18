@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.preference.Preference;
 import android.preference.PreferenceManager;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,10 +21,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import online.cagocapps.walkingthedog.data.Achievements;
 import online.cagocapps.walkingthedog.data.DbBitmapUtility;
 import online.cagocapps.walkingthedog.data.DbHelper;
 import online.cagocapps.walkingthedog.data.PetContract;
+import online.cagocapps.walkingthedog.data.RandomString;
 
 import static java.security.AccessController.getContext;
 
@@ -39,15 +47,21 @@ public class AddPet extends AppCompatActivity {
     private EditText petDist;
     private CheckBox defDog;
     private CheckBox autoWalk;
+    private Button generateIDButton;
     //views to update
     private Button addButton;
     private Button deleteButton;
     private TextView header;
     private long petID;
     private ImageView profilePicture;
+    private DatabaseReference ref;
+    private String onlineID;
+
 
     static final int REQUEST_IMAGE_CAPTURE = 12312;
     private byte[] profilePicByte;
+
+    public boolean validID = false;
 
 
 
@@ -71,9 +85,13 @@ public class AddPet extends AppCompatActivity {
         defDog = (CheckBox) findViewById(R.id.default_dog);
         autoWalk = (CheckBox) findViewById(R.id.autoOnWalk);
         profilePicture = (ImageView) findViewById(R.id.profile_picture);
+        generateIDButton = (Button) findViewById(R.id.generateID);
         //Set up DB Helper
         DbHelp = new DbHelper(this);
         dbWrite = DbHelp.getWritableDatabase();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        ref = database.getReference();
 
         setUpPage();
     }
@@ -104,6 +122,30 @@ public class AddPet extends AppCompatActivity {
         finish();
     }
 
+    public void generateID(View view){
+        String id = RandomString.getSaltString();
+        DatabaseReference child = ref.child(id).child("dogName");
+        child.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() == null) validID = true;
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        if (validID) {
+            child.setValue(petName.getText().toString());
+            generateIDButton.setText(id);
+            generateIDButton.setEnabled(false);
+            onlineID = id;
+        }
+
+
+    }
+
     //Add a dog takes String pet name, int walk time, int goal time, int goal distance
     public long addNewDog(String name, int walk, int time, int dist){
         Achievements.updateAchievements(0, 1, dbWrite);
@@ -113,8 +155,13 @@ public class AddPet extends AppCompatActivity {
         cv.put(PetContract.WalkTheDog.TIME_GOAL, time);
         cv.put(PetContract.WalkTheDog.DIST_GOAL, dist);
         if (profilePicByte != null ) cv.put(PetContract.WalkTheDog.PROFILE_PIC, profilePicByte);
+        if (!generateIDButton.isEnabled()) cv.put(PetContract.WalkTheDog.ONLINE_ID, onlineID);
         cv.put(PetContract.WalkTheDog.LAST_DAY_SYNCED, System.currentTimeMillis());
+        if (onlineID.length() == 6){
+            updateFirebase(name, walk, time, dist);
+        }
         return dbWrite.insert(PetContract.WalkTheDog.TABLE_NAME, null, cv);
+
     }
     //update a passed in dog
     public void updateDog(long petID,String name, int walk, int time, int dist){
@@ -124,9 +171,13 @@ public class AddPet extends AppCompatActivity {
         cv.put(PetContract.WalkTheDog.TIME_GOAL, time);
         cv.put(PetContract.WalkTheDog.DIST_GOAL, dist);
         if (profilePicByte != null ) cv.put(PetContract.WalkTheDog.PROFILE_PIC, profilePicByte);
+        if (!generateIDButton.isEnabled()) cv.put(PetContract.WalkTheDog.ONLINE_ID, onlineID);
         String where = PetContract.WalkTheDog._ID+"=?";
         String[] whereArgs = new String[] {String.valueOf(petID)};
         dbWrite.update(PetContract.WalkTheDog.TABLE_NAME, cv, where, whereArgs);
+        if (onlineID.length() == 6){
+            updateFirebase(name, walk, time, dist);
+        }
     }
     public void deleteDog(View view){
         if(dbWrite.delete(PetContract.WalkTheDog.TABLE_NAME, PetContract.WalkTheDog._ID
@@ -157,7 +208,8 @@ public class AddPet extends AppCompatActivity {
                     PetContract.WalkTheDog.TIME_GOAL,
                     PetContract.WalkTheDog.WALKS_GOAL,
                     PetContract.WalkTheDog.DIST_GOAL,
-                    PetContract.WalkTheDog.PROFILE_PIC};
+                    PetContract.WalkTheDog.PROFILE_PIC,
+            PetContract.WalkTheDog.ONLINE_ID};
 
             Cursor cursor = dbWrite.query(
                     PetContract.WalkTheDog.TABLE_NAME,
@@ -193,6 +245,11 @@ public class AddPet extends AppCompatActivity {
                 for (String s : autoDogs){
                     if (s.equals(Long.toString(petID))) autoWalk.setChecked(true);
                 }
+            }
+            onlineID = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.ONLINE_ID));
+            if (onlineID.length() == 6){
+                generateIDButton.setText(onlineID);
+                generateIDButton.setEnabled(false);
             }
             cursor.close();
         }
@@ -286,6 +343,14 @@ public class AddPet extends AppCompatActivity {
             profilePicture.setImageBitmap(imageBitmap);
             profilePicByte = DbBitmapUtility.getBytes(imageBitmap);
         }
+    }
+
+    private void updateFirebase(String name, int walk, int time, int dist){
+        ref.child(onlineID).child("dogName").setValue(name);
+        ref.child(onlineID).child("distGoal").setValue(dist);
+        ref.child(onlineID).child("timeGoal").setValue(time);
+        ref.child(onlineID).child("walksGoal").setValue(walk);
+
     }
 
     @Override

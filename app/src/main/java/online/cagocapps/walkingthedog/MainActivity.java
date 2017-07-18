@@ -29,6 +29,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Calendar;
 
 import online.cagocapps.walkingthedog.data.DbBitmapUtility;
@@ -45,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private AlarmManager alarmMgr;
     private PendingIntent alarmIntent;
+
+    private FirebaseDatabase database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +88,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         ComponentName receiver = new ComponentName(MainActivity.this, DogUpdateReceiver.class);
         PackageManager pm = MainActivity.this.getPackageManager();
         pm.setComponentEnabledSetting(receiver,PackageManager.COMPONENT_ENABLED_STATE_ENABLED,PackageManager.DONT_KILL_APP);
+
+        if (database == null){
+            database = FirebaseDatabase.getInstance();
+        }
 
 
         Cursor cursor = dbRead.query(

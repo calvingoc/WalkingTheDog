@@ -111,12 +111,26 @@
         android:text="@string/add_button_text"
         android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
         android:layout_weight="0.04" />
+
+    <Button
+        android:id="@+id/generateID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorPrimary"
+        android:onClick="generateID"
+        android:text="@string/online_id"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
+        android:layout_weight="0.04" />
+
+
     <Button
         android:id="@+id/delete_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="50dp"
         android:background="#8B0000"
         android:onClick="deleteDog"
         android:text="@string/delete_dog"

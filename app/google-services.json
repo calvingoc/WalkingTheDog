@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "799067845456-uvbje68er7ge652t3al9f5olmfj200d0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "online.cagocapps.walkingthedog",
+            "certificate_hash": "d57139338e04e01e5cc75ca8c598d39989694098"
+          }
+        },
+        {
           "client_id": "799067845456-78adfftah8s868hhekjjtt8hof3ukkq4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -42,6 +50,13 @@
             {
               "client_id": "799067845456-2p2eid6lb0ctstmr0dn9pfc4ltiepr3s.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "799067845456-j6k733ng0lij5b7k835m5aknmrvjgbae.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "cagocapps.online.WalkingTheDog"
+              }
             }
           ]
         },

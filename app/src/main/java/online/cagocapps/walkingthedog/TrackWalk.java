@@ -57,6 +57,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 //Class sets up the Tracking walk screen and lays the basework for timing the walk, tracking the walk with GPS and getting distance.
 public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapterOnClickHandler,
@@ -87,6 +89,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
     public Button finalizeWalk;
     public RecyclerView popUpRecyc;
     public Context mContext;
+    private PopupWindow mPopupWindow;
 
 
     @Override
@@ -263,7 +266,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         timer.stop();
         LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
         View customView = inflater.inflate(R.layout.walk_summary, null);
-        final PopupWindow mPopupWindow = new PopupWindow(customView, RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.MATCH_PARENT);
+        mPopupWindow = new PopupWindow(customView, RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.MATCH_PARENT);
         mPopupWindow.setElevation(5.0f);
         TextView timeSummary = (TextView) customView.findViewById(R.id.time_title);
         TextView distanceSummary = (TextView) customView.findViewById(R.id.distance_title);
@@ -303,6 +306,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
 
         @Override
         protected Void doInBackground(String ... params) {
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
             dbRead = DbHelp.getWritableDatabase();
             Boolean alreadyHitStreak;
             String[] columns = new String[]{PetContract.WalkTheDog.STREAK,
@@ -316,7 +320,8 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                     PetContract.WalkTheDog.DIST_GOAL,
                     PetContract.WalkTheDog.BEST_WALKS,
                     PetContract.WalkTheDog.BEST_DIST,
-                    PetContract.WalkTheDog.BEST_TIME};
+                    PetContract.WalkTheDog.BEST_TIME,
+                    PetContract.WalkTheDog.ONLINE_ID};
             if (!dogsOnWalkString.equals(null)) {
                 dogIDsOnWalk = dogsOnWalkString.split(" ");
                 String where = PetContract.WalkTheDog._ID + " IN ("
@@ -355,6 +360,15 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                     }
                     if (wBestDist < distance) wBestDist = distance;
                     if (wBestTime < (Float.parseFloat(params[0]))) wBestTime = (Float.parseFloat(params[0]));
+                    String onlineID = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.ONLINE_ID));
+                    if (onlineID.length() == 6){
+                        ref.child(onlineID).child("curWalks").setValue(curWalks);
+                        ref.child(onlineID).child("curTime").setValue(curTime);
+                        ref.child(onlineID).child("streak").setValue(streak);
+                        ref.child(onlineID).child("curDist").setValue(curDist);
+                        ref.child(onlineID).child("bestDistWalk").setValue(wBestDist);
+                        ref.child(onlineID).child("bestTimeWalk").setValue(wBestTime);
+                    }
                     ContentValues cv = new ContentValues();
                     cv.put(PetContract.WalkTheDog.CUR_WALKS, curWalks);
                     cv.put(PetContract.WalkTheDog.CUR_TIME, curTime);
@@ -453,6 +467,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         LocationServices.FusedLocationApi.removeLocationUpdates(apiC, this);
         apiC.disconnect();
         DbHelp.close();
+        mPopupWindow.dismiss();
         NotificationUtils.clearNotification(this);
         ReminderUtilities.endWalkReminders(this);
     }

@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Date;
 
 import online.cagocapps.walkingthedog.data.Achievements;
@@ -32,6 +35,8 @@ public class DogUpdateReceiver extends BroadcastReceiver {
             //open database
             DbHelper DbHelp = new DbHelper(context);
             SQLiteDatabase dbWrite = DbHelp.getWritableDatabase();
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
 
             //set up query
             Cursor cursor = dbWrite.query(
@@ -105,6 +110,24 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                     cv.put(PetContract.WalkTheDog.CUR_WALKS, 0);
                     cv.put(PetContract.WalkTheDog.STREAK, streak);
                     cv.put(PetContract.WalkTheDog.LAST_DAY_SYNCED, curDateMillis);
+
+                    String onlineID = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.ONLINE_ID));
+                    if (onlineID.length() == 6){
+                        ref.child(onlineID).child("curWalks").setValue(0);
+                        ref.child(onlineID).child("curTime").setValue(0);
+                        ref.child(onlineID).child("streak").setValue(streak);
+                        ref.child(onlineID).child("curDist").setValue(0);
+                        ref.child(onlineID).child("totDays").setValue(totDays);
+                        ref.child(onlineID).child("totTime").setValue(totTimes);
+                        ref.child(onlineID).child("totWalks").setValue(totWalks);
+                        ref.child(onlineID).child("totDist").setValue(totDist);
+                        ref.child(onlineID).child("bestStreak").setValue(bestStreak);
+                        ref.child(onlineID).child("bestDistDay").setValue(dBestDist);
+                        ref.child(onlineID).child("bestTimeDay").setValue(dBestTime);
+                        ref.child(onlineID).child("bestWalks").setValue(bestWalks);
+                        ref.child(onlineID).child("lastSync").setValue(curDateMillis);
+
+                    }
                     String whereVal = PetContract.WalkTheDog._ID + "=?";
                     String[] whereArgs = new String[]{String.valueOf(petID)};
                     dbWrite.update(PetContract.WalkTheDog.TABLE_NAME, cv, whereVal, whereArgs);
