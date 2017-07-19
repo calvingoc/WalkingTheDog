@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,11 +26,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 
@@ -48,13 +54,13 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private AlarmManager alarmMgr;
     private PendingIntent alarmIntent;
 
-    private FirebaseDatabase database;
+    private DatabaseReference database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DbHelp = new DbHelper(this);
-        dbRead = DbHelp.getReadableDatabase();
+        dbRead = DbHelp.getWritableDatabase();
         setContentView(R.layout.activity_main);
         MobileAds.initialize(getApplicationContext(), getString(R.string.adMob_app_id));
         mAdView = (AdView) findViewById(R.id.main_activity_adview);
@@ -90,8 +96,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         pm.setComponentEnabledSetting(receiver,PackageManager.COMPONENT_ENABLED_STATE_ENABLED,PackageManager.DONT_KILL_APP);
 
         if (database == null){
-            database = FirebaseDatabase.getInstance();
+            database = FirebaseDatabase.getInstance().getReference();
         }
+        setDatabaseListeners();
 
 
         Cursor cursor = dbRead.query(
@@ -112,6 +119,40 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             Toast toast = Toast.makeText(this, toastText, Toast.LENGTH_SHORT);
             toast.show();
         }
+
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                // Code to be executed when an ad finishes loading.
+                Log.i("Ads", "onAdLoaded");
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                // Code to be executed when an ad request fails.
+                Log.i("Ads", "onAdFailedToLoad");
+            }
+
+            @Override
+            public void onAdOpened() {
+                // Code to be executed when an ad opens an overlay that
+                // covers the screen.
+                Log.i("Ads", "onAdOpened");
+            }
+
+            @Override
+            public void onAdLeftApplication() {
+                // Code to be executed when the user has left the app.
+                Log.i("Ads", "onAdLeftApplication");
+            }
+
+            @Override
+            public void onAdClosed() {
+                // Code to be executed when when the user is about to return
+                // to the app after tapping on an ad.
+                Log.i("Ads", "onAdClosed");
+            }
+        });
     }
 
     @Override
@@ -157,8 +198,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.add_dog_item) {
-            Intent intent = new Intent(this, AddPet.class);
-            intent.putExtra(getString(R.string.pet_id), noDog);
+            Intent intent = new Intent(this, ImportDog.class);
             startActivity(intent);
         }
         else if (id == R.id.view_dogs_item)
@@ -365,6 +405,43 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         Intent intent = new Intent(this, AddPet.class);
         intent.putExtra(getString(R.string.pet_id), defaultId);
         startActivity(intent);
+    }
+
+    private void setDatabaseListeners(){
+        final Cursor cursor = dbRead.query(
+                PetContract.WalkTheDog.TABLE_NAME,
+                null,
+                PetContract.WalkTheDog.ONLINE_ID + " != ?",
+                new String[]{"na"},
+                null,
+                null,
+                null
+        );
+        while (cursor.moveToNext()){
+            database.child(cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.ONLINE_ID))).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    ContentValues cv = new ContentValues();
+                    for (DataSnapshot values : dataSnapshot.getChildren()){
+                        if (values.getKey().equals(PetContract.WalkTheDog.DOG_NAME)){
+                            cv.put(PetContract.WalkTheDog.DOG_NAME, values.getValue(String.class));
+                        } else {
+                            Log.d("databaseTS",values.getKey());
+                            cv.put(values.getKey(), values.getValue(Double.class));
+                        }
+                    }
+                    dbRead.update(PetContract.WalkTheDog.TABLE_NAME, cv, PetContract.WalkTheDog.ONLINE_ID + " == ?", new String[]{dataSnapshot.getKey()});
+                    setUpScreen();
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+        cursor.close();
+
     }
 
     @Override

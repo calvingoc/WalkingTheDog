@@ -140,7 +140,7 @@ public class DbHelper extends SQLiteOpenHelper {
                         PetContract.WalkTheDog.LAST_DAY_SYNCED + " INTEGER DEFAULT 0, " +
                         PetContract.WalkTheDog.PROFILE_PIC + " BLOB, " +
                         PetContract.WalkTheDog.BEST_DIST + " INTEGER DEFAULT 0, " +
-                        PetContract.WalkTheDog.ONLINE_ID + " STRING DEFAULT na" +
+                        PetContract.WalkTheDog.ONLINE_ID + " STRING DEFAULT 'na'" +
                         ");";
         sqLiteDatabase.execSQL(SQL_CREATE_WALKTHEDOG_TABLE);
         while(cursor.moveToNext()){

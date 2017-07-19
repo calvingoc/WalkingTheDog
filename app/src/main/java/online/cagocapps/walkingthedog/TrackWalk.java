@@ -362,12 +362,12 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                     if (wBestTime < (Float.parseFloat(params[0]))) wBestTime = (Float.parseFloat(params[0]));
                     String onlineID = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.ONLINE_ID));
                     if (onlineID.length() == 6){
-                        ref.child(onlineID).child("curWalks").setValue(curWalks);
-                        ref.child(onlineID).child("curTime").setValue(curTime);
-                        ref.child(onlineID).child("streak").setValue(streak);
-                        ref.child(onlineID).child("curDist").setValue(curDist);
-                        ref.child(onlineID).child("bestDistWalk").setValue(wBestDist);
-                        ref.child(onlineID).child("bestTimeWalk").setValue(wBestTime);
+                        ref.child(onlineID).child(PetContract.WalkTheDog.CUR_WALKS).setValue(curWalks);
+                        ref.child(onlineID).child(PetContract.WalkTheDog.CUR_TIME).setValue(curTime);
+                        ref.child(onlineID).child(PetContract.WalkTheDog.STREAK).setValue(streak);
+                        ref.child(onlineID).child(PetContract.WalkTheDog.CUR_DIST).setValue(curDist);
+                        ref.child(onlineID).child(PetContract.WalkTheDog.BEST_DIST).setValue(wBestDist);
+                        ref.child(onlineID).child(PetContract.WalkTheDog.BEST_TIME).setValue(wBestTime);
                     }
                     ContentValues cv = new ContentValues();
                     cv.put(PetContract.WalkTheDog.CUR_WALKS, curWalks);

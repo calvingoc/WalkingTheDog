@@ -27,7 +27,9 @@
         android:id="@+id/edit_name"
         android:textAlignment="center"
         android:background="@drawable/edittextstyle"
-        android:layout_weight="0.10" />
+        android:layout_weight="0.10"
+        android:inputType="textPersonName"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -101,6 +103,18 @@
     </android.support.constraint.ConstraintLayout>
 
     <Button
+        android:id="@+id/generateID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorPrimary"
+        android:onClick="generateID"
+        android:text="@string/online_id"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
+        android:layout_weight="0.04" />
+
+    <Button
         android:id="@+id/add_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -112,17 +126,6 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
         android:layout_weight="0.04" />
 
-    <Button
-        android:id="@+id/generateID"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/colorPrimary"
-        android:onClick="generateID"
-        android:text="@string/online_id"
-        android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button.Inverse"
-        android:layout_weight="0.04" />
 
 
     <Button

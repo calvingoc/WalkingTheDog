@@ -86,13 +86,12 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                     if (dBestTime < curTime) dBestTime = curTime;
                     if (bestWalks < curWalks) bestWalks = curWalks;
 
-                    if (goalDist > curDist || goalTime > curTime || goalWalk > curWalks){
+                    if (goalDist > curDist || goalTime > curTime || goalWalk > curWalks) {
                         streak = 0;
-                    };
+                    }
+                    ;
 
                     maxStreak = Math.max(streak, maxStreak);
-
-
 
 
                     // update dog with new values
@@ -112,35 +111,35 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                     cv.put(PetContract.WalkTheDog.LAST_DAY_SYNCED, curDateMillis);
 
                     String onlineID = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.ONLINE_ID));
-                    if (onlineID.length() == 6){
-                        ref.child(onlineID).child("curWalks").setValue(0);
-                        ref.child(onlineID).child("curTime").setValue(0);
-                        ref.child(onlineID).child("streak").setValue(streak);
-                        ref.child(onlineID).child("curDist").setValue(0);
-                        ref.child(onlineID).child("totDays").setValue(totDays);
-                        ref.child(onlineID).child("totTime").setValue(totTimes);
-                        ref.child(onlineID).child("totWalks").setValue(totWalks);
-                        ref.child(onlineID).child("totDist").setValue(totDist);
-                        ref.child(onlineID).child("bestStreak").setValue(bestStreak);
-                        ref.child(onlineID).child("bestDistDay").setValue(dBestDist);
-                        ref.child(onlineID).child("bestTimeDay").setValue(dBestTime);
-                        ref.child(onlineID).child("bestWalks").setValue(bestWalks);
-                        ref.child(onlineID).child("lastSync").setValue(curDateMillis);
+                    if (onlineID != null && !onlineID.isEmpty()) {
+                        if (onlineID.length() == 6) {
+                            ref.child(onlineID).child(PetContract.WalkTheDog.CUR_WALKS).setValue(0);
+                            ref.child(onlineID).child(PetContract.WalkTheDog.CUR_TIME).setValue(0);
+                            ref.child(onlineID).child(PetContract.WalkTheDog.STREAK).setValue(streak);
+                            ref.child(onlineID).child(PetContract.WalkTheDog.CUR_DIST).setValue(0);
+                            ref.child(onlineID).child(PetContract.WalkTheDog.TOTAL_DAYS).setValue(totDays);
+                            ref.child(onlineID).child(PetContract.WalkTheDog.TOTAL_TIME).setValue(totTimes);
+                            ref.child(onlineID).child(PetContract.WalkTheDog.TOTAL_WALKS).setValue(totWalks);
+                            ref.child(onlineID).child(PetContract.WalkTheDog.TOTAL_DIST).setValue(totDist);
+                            ref.child(onlineID).child(PetContract.WalkTheDog.BEST_STREAK).setValue(bestStreak);
+                            ref.child(onlineID).child(PetContract.WalkTheDog.BEST_DIST_DAY).setValue(dBestDist);
+                            ref.child(onlineID).child(PetContract.WalkTheDog.BEST_TIME_DAY).setValue(dBestTime);
+                            ref.child(onlineID).child(PetContract.WalkTheDog.BEST_WALKS).setValue(bestWalks);
+                            ref.child(onlineID).child(PetContract.WalkTheDog.LAST_DAY_SYNCED).setValue(curDateMillis);
 
-                    }
-                    String whereVal = PetContract.WalkTheDog._ID + "=?";
-                    String[] whereArgs = new String[]{String.valueOf(petID)};
-                    dbWrite.update(PetContract.WalkTheDog.TABLE_NAME, cv, whereVal, whereArgs);
-                    Achievements.resetAchievements(8,dbWrite);
-                    Achievements.resetAchievements(9,dbWrite);
-                    Achievements.resetAchievements(10,dbWrite);
-                    Achievements.resetAchievements(11, dbWrite);
-                    if (maxStreak == 0){
-                        Achievements.resetAchievements(7,dbWrite);
-                    }
-
-                    else {
-                        Achievements.updateAchievements(7, maxStreak, dbWrite);
+                        }
+                        String whereVal = PetContract.WalkTheDog._ID + "=?";
+                        String[] whereArgs = new String[]{String.valueOf(petID)};
+                        dbWrite.update(PetContract.WalkTheDog.TABLE_NAME, cv, whereVal, whereArgs);
+                        Achievements.resetAchievements(8, dbWrite);
+                        Achievements.resetAchievements(9, dbWrite);
+                        Achievements.resetAchievements(10, dbWrite);
+                        Achievements.resetAchievements(11, dbWrite);
+                        if (maxStreak == 0) {
+                            Achievements.resetAchievements(7, dbWrite);
+                        } else {
+                            Achievements.updateAchievements(7, maxStreak, dbWrite);
+                        }
                     }
                 }
             }

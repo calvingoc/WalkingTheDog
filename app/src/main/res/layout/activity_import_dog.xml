@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="online.cagocapps.walkingthedog.ImportDog"
+    android:background="@color/powderBlue">
+    
+    <Button
+        android:id="@+id/add_new_dog_button"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:textSize="20sp"
+        android:background="@color/colorPrimary"
+        android:text="@string/create_new_dog"
+        android:textColor="@color/black"
+        android:onClick="launchAddDog"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/or_textview"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:text="@string/or"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@color/black"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/add_new_dog_button"/>
+
+    <TextView
+        android:id="@+id/import_dog_title"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:text="@string/import_shared_dog"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@color/black"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/or_textview"/>
+
+    <TextView
+        android:id="@+id/import_dog_instructions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:text="@string/instructions"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/import_dog_title"/>
+
+    <EditText
+        android:id="@+id/dog_code_edittext"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/import_dog_instructions"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/edittextstyle"
+        android:hint="@string/shared_id_hint"
+        android:gravity="center"
+        android:maxLength="6"/>
+
+    <Button
+        android:id="@+id/import_dog_button"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dog_code_edittext"
+        android:onClick="importDog"
+        android:layout_marginTop="8dp"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:text="@string/check_id"
+        android:background="@color/colorPrimary"/>
+
+    <TextView
+        android:id="@+id/imported_dog_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/import_dog_button"
+        android:layout_marginTop="8dp"
+        android:gravity="center"/>
+
+    <Button
+        android:id="@+id/save_imported_dog_button"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:textSize="20sp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        android:onClick="saveImportedDog"
+        android:visibility="invisible"/>
+
+</android.support.constraint.ConstraintLayout>

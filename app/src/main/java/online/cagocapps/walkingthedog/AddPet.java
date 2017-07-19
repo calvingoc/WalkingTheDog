@@ -61,7 +61,6 @@ public class AddPet extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 12312;
     private byte[] profilePicByte;
 
-    public boolean validID = false;
 
 
 
@@ -123,12 +122,19 @@ public class AddPet extends AppCompatActivity {
     }
 
     public void generateID(View view){
-        String id = RandomString.getSaltString();
-        DatabaseReference child = ref.child(id).child("dogName");
-        child.addListenerForSingleValueEvent(new ValueEventListener() {
+        final String id = RandomString.getSaltString();
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() == null) validID = true;
+                if (!dataSnapshot.child(id).exists()){
+                    ref.child(id).child(PetContract.WalkTheDog.DOG_NAME).setValue(petName.getText().toString());
+                    generateIDButton.setText(id);
+                    generateIDButton.setEnabled(false);
+                    onlineID = id;
+                }
+                else {
+                    Toast.makeText(getBaseContext(), "Couldn't not generate ID at this time. Please try again.", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -136,12 +142,6 @@ public class AddPet extends AppCompatActivity {
 
             }
         });
-        if (validID) {
-            child.setValue(petName.getText().toString());
-            generateIDButton.setText(id);
-            generateIDButton.setEnabled(false);
-            onlineID = id;
-        }
 
 
     }
@@ -247,9 +247,11 @@ public class AddPet extends AppCompatActivity {
                 }
             }
             onlineID = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.ONLINE_ID));
-            if (onlineID.length() == 6){
-                generateIDButton.setText(onlineID);
-                generateIDButton.setEnabled(false);
+            if (onlineID != null && !onlineID.isEmpty()) {
+                if (onlineID.length() == 6) {
+                    generateIDButton.setText(onlineID);
+                    generateIDButton.setEnabled(false);
+                }
             }
             cursor.close();
         }
@@ -346,16 +348,35 @@ public class AddPet extends AppCompatActivity {
     }
 
     private void updateFirebase(String name, int walk, int time, int dist){
-        ref.child(onlineID).child("dogName").setValue(name);
-        ref.child(onlineID).child("distGoal").setValue(dist);
-        ref.child(onlineID).child("timeGoal").setValue(time);
-        ref.child(onlineID).child("walksGoal").setValue(walk);
+        ref.child(onlineID).child(PetContract.WalkTheDog.DOG_NAME).setValue(name);
+        ref.child(onlineID).child(PetContract.WalkTheDog.DIST_GOAL).setValue(dist);
+        ref.child(onlineID).child(PetContract.WalkTheDog.TIME_GOAL).setValue(time);
+        ref.child(onlineID).child(PetContract.WalkTheDog.WALKS_GOAL).setValue(walk);
+        ref.child(onlineID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ContentValues cv = new ContentValues();
+                for (DataSnapshot values : dataSnapshot.getChildren()){
+                    if (values.getKey().equals(PetContract.WalkTheDog.DOG_NAME)){
+                        cv.put(PetContract.WalkTheDog.DOG_NAME, values.getValue(String.class));
+                    } else {
+                        Log.d("databaseTS",values.getKey());
+                        cv.put(values.getKey(), values.getValue(Double.class));
+                    }
+                }
+                dbWrite.insert(PetContract.WalkTheDog.TABLE_NAME, null, cv);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        dbWrite.close();
     }
 }
