@@ -164,8 +164,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         //make user add dog if no dogs in DB
         if (defaultId == noDog){
-            Intent intent = new Intent(this, AddPet.class);
-            intent.putExtra(getString(R.string.pet_id), noDog);
+            Intent intent = new Intent(this, ImportDog.class);
             startActivity(intent);
         } else{
             //set up screen to show current dog stats
