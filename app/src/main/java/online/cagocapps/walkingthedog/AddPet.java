@@ -157,10 +157,11 @@ public class AddPet extends AppCompatActivity {
         if (profilePicByte != null ) cv.put(PetContract.WalkTheDog.PROFILE_PIC, profilePicByte);
         if (!generateIDButton.isEnabled()) cv.put(PetContract.WalkTheDog.ONLINE_ID, onlineID);
         cv.put(PetContract.WalkTheDog.LAST_DAY_SYNCED, System.currentTimeMillis());
+        long newID = dbWrite.insert(PetContract.WalkTheDog.TABLE_NAME, null, cv);
         if (onlineID.length() == 6){
-            updateFirebase(name, walk, time, dist);
+            updateFirebase(name, walk, time, dist, newID);
         }
-        return dbWrite.insert(PetContract.WalkTheDog.TABLE_NAME, null, cv);
+        return newID;
 
     }
     //update a passed in dog
@@ -176,7 +177,7 @@ public class AddPet extends AppCompatActivity {
         String[] whereArgs = new String[] {String.valueOf(petID)};
         dbWrite.update(PetContract.WalkTheDog.TABLE_NAME, cv, where, whereArgs);
         if (onlineID.length() == 6){
-            updateFirebase(name, walk, time, dist);
+            updateFirebase(name, walk, time, dist, petID);
         }
     }
     public void deleteDog(View view){
@@ -347,7 +348,7 @@ public class AddPet extends AppCompatActivity {
         }
     }
 
-    private void updateFirebase(String name, int walk, int time, int dist){
+    private void updateFirebase(String name, int walk, int time, int dist, final long id){
         ref.child(onlineID).child(PetContract.WalkTheDog.DOG_NAME).setValue(name);
         ref.child(onlineID).child(PetContract.WalkTheDog.DIST_GOAL).setValue(dist);
         ref.child(onlineID).child(PetContract.WalkTheDog.TIME_GOAL).setValue(time);
@@ -364,7 +365,7 @@ public class AddPet extends AppCompatActivity {
                         cv.put(values.getKey(), values.getValue(Double.class));
                     }
                 }
-                dbWrite.insert(PetContract.WalkTheDog.TABLE_NAME, null, cv);
+                dbWrite.update(PetContract.WalkTheDog.TABLE_NAME, cv, PetContract.WalkTheDog._ID + " == ?",new String[]{String.valueOf(id)});
             }
 
             @Override
