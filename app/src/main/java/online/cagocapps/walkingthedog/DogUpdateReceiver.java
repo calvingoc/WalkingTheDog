@@ -48,11 +48,11 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                     null,
                     null
             );
+        int maxStreak = 0;
             while (cursor.moveToNext()) { // move through database to update every dog
                 Long lastDaySynced = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.LAST_DAY_SYNCED));
                 Date lastDaySync = new Date(lastDaySynced);
                 Date curDate = new Date(System.currentTimeMillis());
-                int maxStreak = 0;
                 if (curDate.getDate()!=(lastDaySync.getDate())) { //ensure refresh is only done once a day
 
                     // set local variables to do calculations
@@ -132,17 +132,18 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                     String whereVal = PetContract.WalkTheDog._ID + "=?";
                     String[] whereArgs = new String[]{String.valueOf(petID)};
                     dbWrite.update(PetContract.WalkTheDog.TABLE_NAME, cv, whereVal, whereArgs);
-                    Achievements.resetAchievements(8, dbWrite);
-                    Achievements.resetAchievements(9, dbWrite);
-                    Achievements.resetAchievements(10, dbWrite);
-                    Achievements.resetAchievements(11, dbWrite);
-                    if (maxStreak == 0) {
-                        Achievements.resetAchievements(7, dbWrite);
-                    } else {
-                        Achievements.updateAchievements(7, maxStreak, dbWrite);
-                    }
+
                 }
             }
+        Achievements.resetAchievements(8, dbWrite);
+        Achievements.resetAchievements(9, dbWrite);
+        Achievements.resetAchievements(10, dbWrite);
+        Achievements.resetAchievements(11, dbWrite);
+        if (maxStreak == 0) {
+            Achievements.resetAchievements(7, dbWrite);
+        } else {
+            Achievements.updateAchievements(7, maxStreak, dbWrite);
+        }
         cursor.close();
         dbWrite.close();
     }
