@@ -128,18 +128,18 @@ public class DogUpdateReceiver extends BroadcastReceiver {
                             ref.child(onlineID).child(PetContract.WalkTheDog.LAST_DAY_SYNCED).setValue(curDateMillis);
 
                         }
-                        String whereVal = PetContract.WalkTheDog._ID + "=?";
-                        String[] whereArgs = new String[]{String.valueOf(petID)};
-                        dbWrite.update(PetContract.WalkTheDog.TABLE_NAME, cv, whereVal, whereArgs);
-                        Achievements.resetAchievements(8, dbWrite);
-                        Achievements.resetAchievements(9, dbWrite);
-                        Achievements.resetAchievements(10, dbWrite);
-                        Achievements.resetAchievements(11, dbWrite);
-                        if (maxStreak == 0) {
-                            Achievements.resetAchievements(7, dbWrite);
-                        } else {
-                            Achievements.updateAchievements(7, maxStreak, dbWrite);
-                        }
+                    }
+                    String whereVal = PetContract.WalkTheDog._ID + "=?";
+                    String[] whereArgs = new String[]{String.valueOf(petID)};
+                    dbWrite.update(PetContract.WalkTheDog.TABLE_NAME, cv, whereVal, whereArgs);
+                    Achievements.resetAchievements(8, dbWrite);
+                    Achievements.resetAchievements(9, dbWrite);
+                    Achievements.resetAchievements(10, dbWrite);
+                    Achievements.resetAchievements(11, dbWrite);
+                    if (maxStreak == 0) {
+                        Achievements.resetAchievements(7, dbWrite);
+                    } else {
+                        Achievements.updateAchievements(7, maxStreak, dbWrite);
                     }
                 }
             }

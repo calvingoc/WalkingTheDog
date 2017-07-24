@@ -29,7 +29,7 @@
     <string name="online_id">Generate Shareable ID</string>
     <string name="create_new_dog">Create New Dog</string>
     <string name="import_shared_dog">Import Shared Dog</string>
-    <string name="instructions">To import a dog the user that created the dog must generate a six digit sharable ID from their edit dog page. Enter that ID in the field below and hit the "Check ID" button to find them. If you find your dog use the "Import Shared Dog" button to save them.</string>
+    <string name="instructions">To import a dog the user that created the dog must generate a six digit sharable ID from their edit dog page. Enter that ID in the field below and hit the Check ID button to find them. If you find your dog use the Import Shared Dog button to save them.</string>
     <string name="or">~ Or ~</string>
     <string name="shared_id_hint">Shareable ID</string>
     <string name="bad_ID">ID not valid please double ID check and try again.</string>
