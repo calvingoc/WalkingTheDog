@@ -36,6 +36,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.perf.FirebasePerformance;
+import com.google.firebase.perf.metrics.Trace;
 
 import java.util.Calendar;
 
@@ -227,6 +229,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         }
     }
     public void setUpScreen(){
+        Trace mTrace = FirebasePerformance.getInstance().newTrace("MainActivity set up page");
+        mTrace.start();
         String where = PetContract.WalkTheDog._ID + "=?";
         String[] whereArgs = new String[] {String.valueOf(defaultId)};
 
@@ -398,6 +402,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
             onStart();
         }
         cursor.close();
+        mTrace.stop();
     }
 
     public void editDog(View view){

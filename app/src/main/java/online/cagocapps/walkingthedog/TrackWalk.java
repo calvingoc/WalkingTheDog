@@ -14,6 +14,7 @@ import android.icu.text.DecimalFormat;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.SystemClock;
+import com.google.firebase.perf.metrics.Trace;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
@@ -59,6 +60,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.perf.FirebasePerformance;
 
 //Class sets up the Tracking walk screen and lays the basework for timing the walk, tracking the walk with GPS and getting distance.
 public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapterOnClickHandler,
@@ -150,6 +152,8 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
 
     @Override
     protected void onResume() {
+        Trace mTrace = FirebasePerformance.getInstance().newTrace("onResume Walk");
+        mTrace.start();
         apiC.connect();
         super.onResume();
 
@@ -212,6 +216,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                     goalWalks, goalTime, goalDist, images);
             cursor.close();
             dbRead.close();
+            mTrace.stop();
         }
     }
 
@@ -306,6 +311,8 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
 
         @Override
         protected Void doInBackground(String ... params) {
+            Trace myTrace = FirebasePerformance.getInstance().newTrace("Update dogs after walk Android");
+            myTrace.start();
             DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
             dbRead = DbHelp.getWritableDatabase();
             Boolean alreadyHitStreak;
@@ -336,6 +343,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                         null
                 );
                 while (cursor.moveToNext()) {
+                    myTrace.incrementCounter("new dog updated");
                     Long petID = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog._ID));
                     streak = cursor.getInt(cursor.getColumnIndex(PetContract.WalkTheDog.STREAK));
                     Long curWalks = cursor.getLong(cursor.getColumnIndex(PetContract.WalkTheDog.CUR_WALKS));
@@ -399,6 +407,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
             Achievements.resetAchievements(5,dbRead);
             Achievements.resetAchievements(6,dbRead);
             dbRead.close();
+            myTrace.stop();
             return null;
         }
 
