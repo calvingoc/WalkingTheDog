@@ -158,8 +158,10 @@ public class AddPet extends AppCompatActivity {
         if (!generateIDButton.isEnabled()) cv.put(PetContract.WalkTheDog.ONLINE_ID, onlineID);
         cv.put(PetContract.WalkTheDog.LAST_DAY_SYNCED, System.currentTimeMillis());
         long newID = dbWrite.insert(PetContract.WalkTheDog.TABLE_NAME, null, cv);
-        if (onlineID.length() == 6){
-            updateFirebase(name, walk, time, dist, newID);
+        if (onlineID != null) {
+            if (onlineID.length() == 6) {
+                updateFirebase(name, walk, time, dist, newID);
+            }
         }
         return newID;
 
