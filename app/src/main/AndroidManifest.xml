@@ -67,6 +67,9 @@
                 <action android:name="online.cagocapps.walkingthedog.ACTION_EXECUTE" />
             </intent-filter>
         </service>
+        <service android:name=".notifications.WalkService"
+            android:enabled="true"
+            android:exported="false"/>
 
         <receiver
             android:name=".DogUpdateReceiver"

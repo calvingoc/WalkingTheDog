@@ -135,6 +135,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
+            android:layout_marginLeft="10dp"
             app:layout_constraintBottom_toTopOf="@+id/dogs_goals"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/cur_dist_title"
@@ -156,6 +157,7 @@
         android:id="@+id/button_edit_dogs_on_walk"
         android:layout_width="200dp"
         android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
         android:layout_above="@+id/track_walk_adview"
         android:layout_alignParentLeft="true"
         android:text="@string/change_dogs_on_walk"
@@ -168,6 +170,7 @@
         android:layout_height="50dp"
         android:layout_above="@+id/track_walk_adview"
         android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
         android:text="@string/end_walk_button"
         android:background="#8B0000"
         android:onClick="launchPopup" />

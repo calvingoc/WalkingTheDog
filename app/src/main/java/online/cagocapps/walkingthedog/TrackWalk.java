@@ -1,6 +1,10 @@
 package online.cagocapps.walkingthedog;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.Service;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -10,9 +14,12 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.icu.text.DecimalFormat;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
+import android.os.IBinder;
 import android.os.SystemClock;
 import com.google.firebase.perf.metrics.Trace;
 import android.preference.PreferenceManager;
@@ -41,6 +48,7 @@ import online.cagocapps.walkingthedog.data.DbHelper;
 import online.cagocapps.walkingthedog.data.PetContract;
 import online.cagocapps.walkingthedog.notifications.NotificationUtils;
 import online.cagocapps.walkingthedog.notifications.ReminderUtilities;
+import online.cagocapps.walkingthedog.notifications.WalkService;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -111,7 +119,10 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         dogsOnWalkString = shrdPrefs.getString(getString(R.string.default_walks_dog), null);
 
         //notifications
-        ReminderUtilities.schedulteWalkReminder(this);
+// /        ReminderUtilities.schedulteWalkReminder(this);
+        Intent intent = new Intent(this, WalkService.class);
+        intent.putExtra("start",true);
+        startService(intent);
 
         //set up ads
         mAdView = (AdView) findViewById(R.id.track_walk_adview);
@@ -291,7 +302,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         timeSummary.setText("You walked for " + String.format("%.2f", elaspedTimeFloat) + " minutes!");
         distanceSummary.setText("You went " + String.format("%.2f", distance) + " miles!");
         if (elaspedTimeFloat != 0){
-            mphSummary.setText("That is " + String.format("%.2f", Math.round(distance) / (elaspedTimeFloat / 60)) + " mph!");
+            mphSummary.setText("That is " + String.format("%.2f", distance / (elaspedTimeFloat / 60.0)) + " mph!");
         }
         String time[] = {String.format("%.2f",elaspedTimeFloat)};
         new UpdateDogs().execute(time);
@@ -369,7 +380,7 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
                     if (wBestDist < distance) wBestDist = distance;
                     if (wBestTime < (Float.parseFloat(params[0]))) wBestTime = (Float.parseFloat(params[0]));
                     String onlineID = cursor.getString(cursor.getColumnIndex(PetContract.WalkTheDog.ONLINE_ID));
-                    if (onlineID.length() == 6){
+                    if (onlineID != null && onlineID.length() == 6){
                         ref.child(onlineID).child(PetContract.WalkTheDog.CUR_WALKS).setValue(curWalks);
                         ref.child(onlineID).child(PetContract.WalkTheDog.CUR_TIME).setValue(curTime);
                         ref.child(onlineID).child(PetContract.WalkTheDog.STREAK).setValue(streak);
@@ -392,11 +403,11 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
             }
             double mph = 0;
             if ((Float.parseFloat(params[0])) != 0){
-                mph = Math.round(distance) / ((Float.parseFloat(params[0])) / 60);
+                mph = distance / ((Float.parseFloat(params[0])) / 60.0);
             }
             Achievements.updateAchievements(1, 1, dbRead);
             Achievements.updateAchievements(2, (Float.parseFloat(params[0])), dbRead);
-            Achievements.updateAchievements(3,distance, dbRead);
+            Achievements.updateAchievements(3, distance, dbRead);
             Achievements.updateAchievements(4, (Float.parseFloat(params[0])), dbRead);
             Achievements.updateAchievements(5, distance, dbRead);
             Achievements.updateAchievements(6, mph, dbRead);
@@ -457,6 +468,8 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
             if (achievementsArray.length == 0){
                 popUpRecyc.setBackgroundColor(getColor(R.color.powderBlue));
             }
+            Intent intent = new Intent(mContext, WalkService.class);
+            startService(intent);
 
         }
     }
@@ -510,3 +523,4 @@ public class TrackWalk extends AppCompatActivity implements DogAdapter.DogAdapte
         locationDelay++;
     }
 }
+
