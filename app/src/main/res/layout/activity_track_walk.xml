@@ -155,7 +155,7 @@
 
     <Button
         android:id="@+id/button_edit_dogs_on_walk"
-        android:layout_width="200dp"
+        android:layout_width="175dp"
         android:layout_height="50dp"
         android:layout_marginLeft="10dp"
         android:layout_above="@+id/track_walk_adview"
@@ -166,7 +166,7 @@
 
     <Button
         android:id="@+id/end_dog_walk"
-        android:layout_width="200dp"
+        android:layout_width="175dp"
         android:layout_height="50dp"
         android:layout_above="@+id/track_walk_adview"
         android:layout_alignParentRight="true"
